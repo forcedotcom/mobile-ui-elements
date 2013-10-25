@@ -62,7 +62,7 @@ To run the sample app in Safari:
 	<force-ui-app accesstoken="{!$Api.Session_ID}"></force-ui-app>
 	```
 
-2. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of force-ui-app element.
+2. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of `force-ui-app` element.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to render a list.
@@ -75,7 +75,7 @@ To run the sample app in Safari:
 	<force-ui-list sobject="Account" querytype="mru"></force-ui-list>
 	```
 
-3. __force-ui-detail__: force-ui-detail element provides a quick and easy way to render full view of a salesforce record. This element can auto detect the record's relevant page layout and renders the details accordingly. The element can be configured by using the various attributes, such as sobject, recordid etc, to render layout of a particular record. This element should always be a child of force-ui-app element.
+3. __force-ui-detail__: force-ui-detail element provides a quick and easy way to render full view of a salesforce record. This element can auto detect the record's relevant page layout and renders the details accordingly. The element can be configured by using the various attributes, such as sobject, recordid etc, to render layout of a particular record. This element should always be a child of `force-ui-app` element.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to render a list.
