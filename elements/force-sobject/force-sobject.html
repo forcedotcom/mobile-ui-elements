@@ -1,0 +1,20 @@
+<!--
+    force-sobject element wraps the SmartSync Force.SObject into a polymer element.
+    Why: a) Auto manages the offline store for caching.
+    b) Provides a simpler DOM based interface to interact with Smartsync SObject Model.
+    c) Allows other polymer elements to easily comsume smartsync.
+
+    @attributes:
+    sobject: (Required) Type of sobject on which you want to fetch the record
+    recordid: (Required) Id of the record that needs to be fetched.
+    fieldlist: (Optional) Comma separated list of fields that need to be fetched for the record. Default: All fields.
+    idfield: (Optional) Name of the ID field, especially for the cases of External Object. Default: ID.
+
+    @methods:
+    fetch: Initiate the fetching of record data from the relevant data store (server/offline store).
+    save: Initiate the saving of record data to the relevant data store (server/offline store).
+    delete: Initiate the deleting of record data from the relevant data store (server/offline store).
+-->
+<polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield">
+  <script src="force-sobject.js"></script>
+</polymer-element>

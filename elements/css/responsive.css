@@ -1,0 +1,22 @@
+.ui-responsive { overflow: hidden; }
+.ui-responsive .ui-block:first { clear: left; }
+.ui-block {
+	width: 50%;
+	margin: 0; 
+	padding: 0; 
+	border: 0; 
+	float: left; 
+	min-height: 1px; 
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box; 
+	-ms-box-sizing: border-box; 
+	box-sizing: border-box; 
+}
+
+/* preset breakpoint to switch to stacked grid styles below 35em (560px) */
+@media all and (max-width: 35em) {
+	.ui-responsive .ui-block { 
+		width: 100%; 
+		float:none; 
+	}
+}

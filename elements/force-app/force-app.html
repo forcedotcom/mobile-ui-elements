@@ -1,0 +1,48 @@
+<!--
+    force-app element is a top level element that builds the base for consuming all other force.com Mobile UI Elements.
+    Why: a) Manages all the Javascript dependencies for the elements.
+    b) Manages user session.
+
+    @attributes:
+    accesstoken: (Required) Session ID or OAuth access token to make API calls to Salesforce.
+    instanceurl: (Optional) Default: Host url of current application. Host instance URL of the salesforce org to make API calls. Eg. https://na1.salesforce.com
+
+    @methods:
+    launch: Initiate the launch to start rendering all the other child elements. Cannot be done until the accesstoken and instanceurl are provided.
+-->
+<polymer-element name="force-app" attributes="accesstoken, instanceurl">
+  <script src="../../dependencies/jquery/jquery.js"></script>
+  <script src="../../dependencies/underscore/underscore.js"></script>
+  <script src="../../dependencies/backbone/backbone.js"></script>
+  <script src="../../dependencies/mobilesdk-shared/forcetk.mobilesdk.js"></script>
+  <script src="../../dependencies/mobilesdk-shared/smartsync.js"></script>
+  <script src="force-app.js"></script>
+
+  <script>
+    (function() {
+      Polymer('force-app', {
+        accesstoken: '',
+        instanceurl: 'https://' + window.location.hostname,
+        //applyAuthorStyles: true,
+        //resetStyleInheritance: true,
+        ready: function() {
+          this.launch();
+        },
+        launch: function() {
+          if (this.accesstoken.length > 0 && this.instanceurl.length > 0) {
+            SFDC.launch({
+                accessToken: this.accesstoken,
+                instanceUrl: this.instanceurl
+            });
+          }
+        },
+        accesstokenChanged: function() {
+          this.launch();
+        },
+        instanceurlChanged: function() {
+          this.launch();
+        }
+      });
+    })();
+  </script>
+</polymer-element>

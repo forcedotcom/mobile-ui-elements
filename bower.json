@@ -1,0 +1,29 @@
+{
+  "name": "polymer2",
+  "version": "0.0.0",
+  "dependencies": {
+    "modernizr": "~2.6.2",
+    "polymer": "latest",
+    "polymer-elements": "latest",
+    "jquery": "latest",
+    "underscore": "latest",
+    "backbone": "latest",
+    "mobilesdk-shared": "git+https://github.com/forcedotcom/SalesforceMobileSDK-Shared.git",
+    "ratchet": "latest"
+  },
+  "devDependencies": {},
+  "exportsOverride": {
+    "modernizr": {
+      ".": "modernizr*.js"
+    },
+    "backbone": {
+      ".": "backbone*.js"
+    },
+    "underscore": {
+      ".": "underscore*.js"
+    },
+    "mobilesdk-shared": {
+      ".": "libs/*.js"
+    }
+  }
+}

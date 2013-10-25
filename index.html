@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="dependencies/ratchet/ratchet.css"/>
+
+        <!-- Importing Google Polymer framework -->
+        <script src="dependencies/polymer/polymer.min.js"></script>
+
+        <!-- Place your HTML imports here -->
+        <link rel="import" href="elements/mobile-ui-elements.html">
+    </head>
+    <body>
+        <polymer-element name="mobile-app">
+            <template>
+                <force-ui-app id="force_app" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}">
+                    <force-ui-list id="force_ui_list" class="page content" on-polymer-select="showDetail"></force-ui-list>
+                    <force-ui-detail flex id="force_ui_detail" recordid="{{$.force_ui_list.selected}}" class="page content"></force-ui-detail>
+                </force-ui-app>
+            </template>
+            <script type="text/javascript">
+              Polymer('mobile-app', {
+                accesstoken: '',
+                instanceurl: ''
+              });
+            </script>
+        </polymer-element>
+
+        <mobile-app></mobile-app>
+    </body>
+</html>

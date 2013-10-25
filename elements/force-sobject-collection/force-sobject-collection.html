@@ -1,0 +1,17 @@
+<!--
+    force-sobject-collection element wraps the SmartSync Force.SObjectCollection into a polymer element.
+    Why: a) Auto manages the offline store for caching.
+    b) Provides a simple DOM based interface to interact with Smartsync.
+    c) Allows other polymer elements to easily comsume smartsync.
+
+    @attributes:
+    sobject: (Required) Type of sobject on which you want to render a list
+    query: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
+    querytype: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+
+    @methods:
+    fetch: Initiates the fetching of records from the relevant data store (server/offline store).
+-->
+<polymer-element name="force-sobject-collection" attributes="sobject query querytype maxsize">
+  <script src="force-sobject-collection.js"></script>
+</polymer-element>

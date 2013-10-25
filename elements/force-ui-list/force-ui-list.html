@@ -1,0 +1,25 @@
+<!--
+    force-ui-list element enables the rendering of simple list of salesforce records driven by a force-sobject-collection. It extends the force-selector-list element to allow all the fetching of records and to detect record selection based on user's tap actions.
+    Why: a) Renders the list of records within a Force.SObjectCollection as an Unordered List.
+
+    @extends force-selector-list
+-->
+<link rel="import" href="../force-selector-list/force-selector-list.html">
+<polymer-element name="force-ui-list" extends="force-selector-list" noscript>
+  <template>
+      <shadow></shadow>
+      <ul id="list" class="list">
+        <template repeat="{{collection.models}}">
+            <li name="{{attributes.Id}}">{{attributes.Name}}</li>
+        </template>
+      </ul>
+  </template>
+  <script>
+    Polymer('force-ui-list', {
+      ready: function() {
+        this.super();
+        this.target = this.$.list;
+      }
+    });
+  </script>
+</polymer-element>
