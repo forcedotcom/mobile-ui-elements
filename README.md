@@ -5,12 +5,45 @@ Note: The library is still in heavy development and is missing certain features 
 This document is intended to introduce you to the app's architecture and design and make it as easy as possible for you to jump in, run it, and start contributing.
 
 - What is it?
+- Setup
 - Available UI Elements
 - Third-party Code
 - Mobile UI Elements License
 
 ## What is it? ##
 Mobile UI Elements is a set of web components built using [Google’s Polymer framework](http://www.polymer-project.org). The library utilizes the future of HTML5 standards, such as Custom Elements, ShadowDOM, Templates, HTML imports etc., to provide a set of new HTML tags that generate the Saleforce driven UI for your mobile application. It's built on top of [Salesforce Mobile SDK 2.0](http://www2.developerforce.com/en/mobile/services/mobile-sdk) and extends the open source frameworks such as [Backbone.js](http://backbonejs.org/) and [Undescore.js](http://underscorejs.org/) and [JQuery](http://jquery.com/). It also comes with some stylesheets, providing the responsive design for tablets and phones, and Sample Apps to showcase how to use them in a real application. You can easily combine and extend this library to develop UI specific to your application.
+
+## Setup
+
+### Global Dependencies
+
+Install
+
+* [node.js](http://nodejs.org)
+* [GitHub Client](http://mac.github.com/) (with Git Terminal option)
+* [Safari](http://www.apple.com/safari/)
+
+and then open Terminal:
+
+    $ sudo npm install -g grunt-cli
+    $ sudo npm install -g node-dev
+
+### Project Setup
+
+    $ git clone git@github.com:ForceDotComLabs/mobile-ui-elements.git
+    $ cd mobile-ui-elements
+    $ npm install
+
+To build the project and fetch all the dependencies, execute:
+
+    $ grunt
+
+To run the sample app in Safari:
+    - Open index.html in an editor
+    - At line 25, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
+    - At line 26, plug in the instance url of the org. Eg. https://na1.salesforce.com
+    - Open index.html in Safari and you should be able to browse a simple list and detail of an account.
+
 
 ## Available UI Elements ##
 1. **force-ui-app **: force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element also contains the polymer-flex-layout element to enable flexible sections on the page, esp. in single page view with split view panels. Supported attributes include: accesstoken, instanceurl, multipage, startpage, hideheader. Eg. when using inside Visualforce: `<force-ui-app accesstoken="{!$Api.Session_ID}"></force-ui-app>`
