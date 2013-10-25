@@ -15,15 +15,18 @@
     <body>
         <polymer-element name="mobile-app">
             <template>
-                <force-ui-app id="force_app" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}">
-                    <force-ui-list id="force_ui_list" class="page content" on-polymer-select="showDetail"></force-ui-list>
+                <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}">
+                    <force-ui-list id="force_ui_list" class="page content" on-polymer-activate="{{showDetail}}"></force-ui-list>
                     <force-ui-detail flex id="force_ui_detail" recordid="{{$.force_ui_list.selected}}" class="page content"></force-ui-detail>
                 </force-ui-app>
             </template>
             <script type="text/javascript">
               Polymer('mobile-app', {
                 accesstoken: '',
-                instanceurl: ''
+                instanceurl: '',
+                showDetail: function(e) {
+                    this.$.force_app.navigateTo('#force_ui_detail');
+                }
               });
             </script>
         </polymer-element>
