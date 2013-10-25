@@ -26,7 +26,6 @@ Install
 and then open Terminal:
 
     $ sudo npm install -g grunt-cli
-    $ sudo npm install -g node-dev
 
 ### Project Setup
 
@@ -39,17 +38,59 @@ To build the project and fetch all the dependencies, execute:
     $ grunt
 
 To run the sample app in Safari:
-    - Open index.html in an editor
-    - At line 25, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
-    - At line 26, plug in the instance url of the org. Eg. https://na1.salesforce.com
-    - Open index.html in Safari and you should be able to browse a simple list and detail of an account.
 
+```
+1. Open index.html in an editor
+2. At line 25, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
+3. At line 26, plug in the instance url of the org. Eg. https://na1.salesforce.com
+4. Open index.html in Safari and you should be able to browse a simple list and detail of an account.
+```
 
 ## Available UI Elements ##
-1. **force-ui-app **: force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element also contains the polymer-flex-layout element to enable flexible sections on the page, esp. in single page view with split view panels. Supported attributes include: accesstoken, instanceurl, multipage, startpage, hideheader. Eg. when using inside Visualforce: `<force-ui-app accesstoken="{!$Api.Session_ID}"></force-ui-app>`
-2. **force-ui-list **: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of force-ui-app element. Supported attributes include: query, sobject, querytype. Eg. `<force-ui-list sobject="Account" querytype="mru"></force-ui-list>`
-3. **force-ui-detail **: force-ui-detail element provides a quick and easy way to render full view of a salesforce record. This element can auto detect the record's relevant page layout and renders the details accordingly. The element can be configured by using the various attributes, such as sobject, recordid etc, to render layout of a particular record. This element should always be a child of force-ui-app element. Supported attributes include: sobject, recordid, hasrecordtypes, recordtypeid. Eg. `<force-ui-detail sobject="Account" recordid="001000000000AAA"></force-ui-detail>`
+1. __force-ui-app__: force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element also contains the polymer-flex-layout element to enable flexible sections on the page, esp. in single page view with split view panels. 
 
+	Supported attributes include: 
+	
+	- `accesstoken`: (Required) Session ID or OAuth access token to make API calls to Salesforce.
+	- `instanceurl`: (Optional) Default: Host url of current application. Host instance URL of the salesforce org to make API calls. Eg. https://na1.salesforce.com
+	- `multipage`: (Optional) Default: false. When true, force-ui-app shows only one direct child, with class="page", at a time and allows navigation to other child elements.
+	- `startpage`: (Optional) Default: first direct child element with class="page". Instance of the DOM element, with class="page", that should be shown first when the app loads.
+	- `hideheader`: (Optional) Default: false. Show/Hide default header on the page.
+
+	Example: when using inside Visualforce: 
+	
+	```
+	<force-ui-app accesstoken="{!$Api.Session_ID}"></force-ui-app>
+	```
+
+2. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of force-ui-app element. 
+
+	Supported attributes include: 
+	
+	- `sobject`: (Required) Type of sobject on which you want to render a list.
+	- `query`: (Optional) Default: null. SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
+	- `querytype`: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+
+	Example:
+	
+	```
+	<force-ui-list sobject="Account" querytype="mru"></force-ui-list>
+	```
+
+3. __force-ui-detail__: force-ui-detail element provides a quick and easy way to render full view of a salesforce record. This element can auto detect the record's relevant page layout and renders the details accordingly. The element can be configured by using the various attributes, such as sobject, recordid etc, to render layout of a particular record. This element should always be a child of force-ui-app element. 
+
+	Supported attributes include: 
+	
+	- `sobject`: (Required) Type of sobject on which you want to render a list.
+	- `recordid`: (Required) Id of the record that needs to be fetched.
+	- `hasrecordtypes`: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
+	- `recordtypeid`: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
+	
+	Example:
+	
+	```
+	<force-ui-detail sobject="Account" recordid="001000000000AAA"></force-ui-detail>
+	```
 
 ## Third-party Code ##
 
