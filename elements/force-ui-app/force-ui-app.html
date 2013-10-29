@@ -29,6 +29,7 @@
 -->
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../../dependencies/polymer-elements/polymer-flex-layout/polymer-flex-layout.html">
+<link rel="import" href="../../dependencies/polymer-elements/polymer-animation/polymer-translate.html">
 <polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" extends="force-app">
   <script src="../js/jq-slide.js"></script>
   <template>
@@ -50,9 +51,9 @@
           position: static;
           margin-top: 44px;
         }
-        header[class*="bar-"], .content {
-          position: absolute;
-        }
+      }
+      header[class*="bar-"], .content {
+        position: absolute;
       }
     </style>
     <template if="{{!hideheader}}">
@@ -121,43 +122,50 @@
       });
 
       function navigate(parent, source, target, reverse) {
-          /*var width = source.parent().width();
-          var sourceAnimation = document.createElement('polymer-translate');
-          $(sourceAnimation).appendTo(this.shadowRoot)
-          .on('animation-end', function() {
-            source.hide();
-            this.parentNode.removeChild(this);
-          });
-          sourceAnimation.target = source[0];
-          sourceAnimation.fromX = 0;
-          sourceAnimation.toX = reverse ? width : -1*width;
-          sourceAnimation.autoplay = true;
-          sourceAnimation.duration = 0.3;
 
-          var targetAnimation = document.createElement('polymer-translate');
-          $(targetAnimation).appendTo(this.shadowRoot)
-          .on('animation-start', function() {
-            target.show();
-          })
-          .on('animation-end', function() {
-            this.parentNode.removeChild(this);
-          });
-          targetAnimation.target = target[0];
-          targetAnimation.fromX = reverse ? -1*width : width;
-          targetAnimation.toX = 0;
-          targetAnimation.autoplay = true;
-          targetAnimation.duration = 0.3;*/
+          var eventDetails = {
+            from: source,
+            to: target
+          };
+          parent.activepage = target;
+          parent.fire('force-navigation-start', eventDetails);
 
           // Create jquery versions
           var $source = $(source);
-          var $target = $(target);
+          var $target = $(target).show();
+          var width = $(parent).width();
+/*
+          var sourceAnimation = document.createElement('polymer-translate');
+          sourceAnimation.fromX = 0;
+          sourceAnimation.toX = reverse ? width : -1*width;
+          sourceAnimation.duration = 0.3;
+          //sourceAnimation.autoplay = true;
+          sourceAnimation.target = source;
 
-          var eventDetails = {
-            from: $source[0],
-            to: $target[0]
-          };
+          $(sourceAnimation).appendTo(parent.shadowRoot)
+          .one('polymer-animation-end', function() {
+            $source.hide();
+            this.parentNode.removeChild(this);
+          });
 
-          parent.fire('navigation-start', eventDetails);
+          var targetAnimation = document.createElement('polymer-translate');
+          targetAnimation.fromX = reverse ? -1*width : width;
+          targetAnimation.toX = 0;
+          targetAnimation.duration = 0.3;
+          //targetAnimation.autoplay = true;
+          targetAnimation.target = target;
+
+          $(targetAnimation).appendTo(parent.shadowRoot)
+          .one('polymer-animation-end', function() {
+            this.parentNode.removeChild(this);
+            parent.fire('force-navigation-end', eventDetails);
+          });
+
+          parent.async(function() {
+            sourceAnimation.play();
+            targetAnimation.play();
+          });
+*/
           var sourceFinalPos = (reverse ? 1 : -1) * $source.parent().width();
           $source.slideOut('X', sourceFinalPos, function() {
             $source.hide();

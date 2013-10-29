@@ -28,6 +28,10 @@
         ready: function() {
           this.launch();
         },
+        observe: {
+          accesstoken: 'launch',
+          instanceurl: 'launch'
+        },
         launch: function() {
           if (this.accesstoken.length > 0 && this.instanceurl.length > 0) {
             SFDC.launch({
@@ -35,12 +39,6 @@
                 instanceUrl: this.instanceurl
             });
           }
-        },
-        accesstokenChanged: function() {
-          this.launch();
-        },
-        instanceurlChanged: function() {
-          this.launch();
         }
       });
     })();

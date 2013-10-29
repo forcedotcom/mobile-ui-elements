@@ -1,6 +1,6 @@
-"use strict";
-
 (function(SFDC) {
+
+    "use strict";
 
     var viewProps = {
         sobject: "Account",
@@ -55,7 +55,9 @@
         },
         fetch: function() {
             var that = this;
-            SFDC.launcher.done(function() { that.collection.fetch({reset: true}); });
+            SFDC.launcher.done(function() {
+                that.collection.fetch({ reset: true });
+            });
         }
     }));
 
