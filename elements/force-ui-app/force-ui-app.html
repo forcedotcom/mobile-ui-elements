@@ -46,6 +46,10 @@
           height: 100%;
           background-color: white;
           z-index: 0;
+          font: 14px/1.25 "Helvetica Neue", sans-serif;
+          color: #222;
+          position: absolute;
+          top: 0; left: 0;
         }
         .splitview .content {
           position: static;
@@ -61,7 +65,7 @@
         <template if="{{multipage && pageStack.length > 0}}">
           <a class="button-prev" on-click="{{navigateBack}}">Previous</a>
         </template>
-        <content id="header" select="header">
+        <content id="header" select="header"></content>
       </header>
     </template>
     <content id="pages" select="*"></content>
