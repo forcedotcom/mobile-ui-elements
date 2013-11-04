@@ -7,13 +7,6 @@
     hasrecordtypes: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
     recordtypeid: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
 -->
-<link rel="import" href="../force-sobject/force-sobject.html">
-<link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
-<polymer-element name="force-ui-detail" attributes="hasrecordtypes, recordtypeid, foredit" extends="force-sobject">
-  <template>
-    <force-sobject-layout id="layout" sobject="{{sobject}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
-    <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
-    <content select="*"></content>
-  </template>
-  <script src="force-ui-detail.js"></script>
+<polymer-element name="force-sobject-layout" attributes="sobject, recordtypeid">
+  <script src="force-sobject-layout.js"></script>
 </polymer-element>

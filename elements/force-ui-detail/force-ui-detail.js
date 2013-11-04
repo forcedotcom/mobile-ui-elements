@@ -1,78 +1,160 @@
 (function($, SFDC) {
 
-    var SObjectInfoManager = (function() {
-        var sobjectTypes = {};
-        var sobjectViewHelpers = {};
-
-        return {
-            getViewHelper: function(sobjectName) {
-                sobjectName = sobjectName.toLowerCase();
-                var helper = sobjectViewHelpers[sobjectName];
-
-                if (!helper) {
-                    helper = new SObjectViewHelper(sobjectName);
-                    sobjectViewHelpers[sobjectName] = helper;
-                }
-                return helper;
-            },
-            getSObjectType: function(sobjectName) {
-                sobjectName = sobjectName.toLowerCase();
-                var typeInfo = sobjectTypes[sobjectName];
-
-                if (!typeInfo) {
-                    typeInfo = new Force.SObjectType(sobjectName);
-                    sobjectTypes[sobjectName] = typeInfo;
-                }
-                return typeInfo;
-            }
-        };
-    })();
-
-    var SObjectViewHelper = function(type) {
-        this.sobjectType = SObjectInfoManager.getSObjectType(type);
-        this.initialize();
-    }
-
-    _.extend(SObjectViewHelper.prototype, {
-
-        initialize: function() {
-            this._detailTemplates = {};
-            this._editTemplates = {};
+    Polymer('force-ui-detail', {
+        foredit: false,
+        hasrecordtypes: false,
+        recordtypeid: null,
+        //applyAuthorStyles: true,
+        //resetStyleInheritance: true,
+        ready: function() {
+            this.super();
+            this.render();
         },
-
-        getLayoutTemplate: function(recordTypeId, type) {
-            var templateInfoMap = (type == 'edit') ? this._editTemplates :
-                              this._detailTemplates;
-
-            var parse = function(layoutInfo) {
-                var sections = (type == 'edit') ? layoutInfo.editLayoutSections :
-                               layoutInfo.detailLayoutSections;
-                return compileLayout(sections);
-            }
-
-            return $.when(templateInfoMap[recordTypeId] ||
-                        this.sobjectType.describeLayout(recordTypeId)
-                       .then(parse)
-                       .then(function(templateInfo) {
-                            templateInfoMap[recordTypeId] = templateInfo;
-                            return templateInfo;
-                       })
-                    );
+        render: function() {
+            var that = this;
+            SFDC.launcher.done(function() { renderView(that); });
         },
-
-        getDetailTemplate: function(recordTypeId) {
-            return this.getLayoutTemplate(recordTypeId, 'detail');
-        },
-
-        getEditTemplate: function(recordTypeId) {
-            return this.getLayoutTemplate(recordTypeId, 'edit');
-        },
-
-        reset: function() {
-            this.sobjectType.reset();
-            this.initialize();
+        attributeChanged: function(attrName, oldVal, newVal) {
+            this.super(arguments);
+            this.async(this.render);
         }
     });
+
+    // Returns whether the current view has an overriden layout.
+    var isLayoutOverriden = function(elem) {
+        var shadowRoot = elem.shadowRoot;
+        while (shadowRoot.olderShadowRoot) {
+            if (shadowRoot.olderShadowRoot.olderShadowRoot)
+                shadowRoot = shadowRoot.olderShadowRoot;
+            else break;
+        }
+        return shadowRoot.querySelector('shadow') != null;
+    }
+
+    // Fetches the record type id for the required layout.
+    // Returns a promise which is resolved when the record type id is fetched from the server.
+    var fetchRecordTypeId = function(view) {
+        var fetchStatus = $.Deferred();
+
+        var resolveStatus = function(recordTypeId) {
+            fetchStatus.resolve(view, recordTypeId);
+        }
+
+        // If record types are not present, then use the default recordtypeid
+        if (!view.hasrecordtypes) resolveStatus('012000000000000AAA');
+        // If record types are present, then get the recordtypeid
+        else {
+            // If record type id is provided then use that.
+            if (view.recordtypeid) resolveStatus(view.recordtypeid);
+            // If not but the recordid is available, then get the recordtype info from sfdc
+            else if (view.recordid && view.recordid.length) {
+                // Fetch the record's recordtypeid
+                view.model.fetch({
+                    fieldlist: ['recordTypeId'],
+                    success: function() {
+                        // Once we get the recordtypeid, fetch the layout
+                        resolveStatus(this.get('recordTypeId'));
+                    },
+                    error: function() {
+                        fetchStatus.reject(view);
+                    }
+                });
+            }
+        }
+
+        return fetchStatus.promise();
+    }
+
+    // Given the recordtypeid, it fetches the related layout sections based on the view settings
+    // Returns a promise, which gets resolved when the response is received from the salesforce
+    var fetchLayoutSections = function(view, recordtypeid) {
+        // Get the reference of layout element in the view
+        var layoutElem = view.$.layout;
+        // assign the appropriate recordtypeid
+        layoutElem.recordtypeid = recordtypeid;
+        // fetch layout sections (detail or edit) based on view setting
+        return (view.foredit) ? layoutElem.whenEditSections()
+            : layoutElem.whenDetailSections();
+    }
+
+    var describeField = function(sobject, fieldname) {
+        var sobjectType = SFDC.getSObjectType(sobject);
+        // split the field path to get the base reference. eg. for field Owner.Name
+        var fieldPathParts = fieldname.split('.');
+
+        var fieldPicker = function(describeInfo) {
+            var fieldInfos = describeInfo.fields;
+            // if relationship path, i.e. more than 1 parts after split
+            if (fieldPathParts.length > 1) {
+                // Find the corresponding relationship field.
+                var propFilter = {relationshipName: fieldPathParts[0]};
+                var parentSObject = _.findWhere(fieldInfos, propFilter).referenceTo[0];
+                return describeField(parentSObject, fieldPathParts.slice(1).join('.'));
+            } else {
+                var propFilter = {name: fieldPathParts[0]};
+                return _.findWhere(fieldInfos, propFilter);
+            }
+        }
+
+        return sobjectType.describe().then(fieldPicker);
+    }
+
+    // Given the sobject name and fieldlist, it fetches the field infos for each field.
+    // Returns a promise, which on resolution returns a map of fieldnames as keys and the respective field info as value.
+    var fetchFieldInfos = function(sobject, fields) {
+        var sobjectType = SFDC.getSObjectType(sobject);
+        var fieldInfos = {};
+        var infoStatus = $.Deferred();
+
+        fields.forEach(function(fieldPath) {
+            describeField(sobject, fieldPath).then(function(fieldInfo) {
+                fieldInfos[fieldPath] = fieldInfo;
+                // Check if we got the details on all fields.
+                // If yes, then resolve the deferred.
+                if (_.difference(fields, _.keys(fieldInfos)).length == 0)
+                    infoStatus.resolve(fieldInfos);
+            });
+        });
+        return infoStatus.promise();
+    }
+
+    // Returns a promise, which on resolution returns an object with template information for rendering the view.
+    // FIXME: Need to handle the case where multiple calls to prepareLayout happen and then have to kill older async processes.
+    var generateViewTemplate = function(view) {
+        // Check if default layout is overriden. Don't do anything if yes.
+        if (!isLayoutOverriden(view) && view.sobject) {
+            if (view.fieldlist && view.fieldlist.trim().length) {
+                return fetchFieldInfos(view.sobject, view.fieldlist.split(','))
+                    .then(function(fieldInfos) {
+                        return compileTemplateForFields(fieldInfos, view.foredit);
+                    });
+            } else {
+                return fetchRecordTypeId(view)
+                    .then(fetchLayoutSections)
+                    .then(compileTemplateForLayout)
+            }
+        }
+    }
+
+    // Renders the view based on the current layout settings
+    function renderView(view) {
+
+        var renderTemplate = function(templateInfo) {
+            // Template info is null when there's no template generated
+            if (templateInfo && view.model.id) {
+                // Perform data fetch for the fieldlist used in template
+                view.model.fetch({ fieldlist: templateInfo.fields });
+
+                // Attach the template instance to the view
+                var template = templateInfo.template;
+                var templateModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
+                $(view.$.viewContainer).empty().append(template.createInstance(templateModel));
+            }
+        };
+
+        return generateViewTemplate(view)
+            .then(renderTemplate);
+    }
 
     var SObjectViewModel = function(model, fieldInfos) {
         var _self = this;
@@ -119,91 +201,6 @@
         setupProps(_.keys(model.attributes));
     }
 
-    // FIXME: Need to handle the case where multiple calls to prepareLayout happen and then have to kill older async processes.
-    function prepareLayout(view) {
-
-        var fetchTemplateInfo = function(recordTypeId) {
-            // Fetch the layout template info using the Sobject View Helper
-            var viewHelper = SObjectInfoManager.getViewHelper(view.sobject);
-            var templateInfoPromise = (view.foredit) ? viewHelper.getEditTemplate(recordTypeId)
-                                        : viewHelper.getDetailTemplate(recordTypeId);
-
-            templateInfoPromise.then(function(templateInfo) {
-                // Check if the current view's monitor has been replaced by another promise.
-                // If no, continue to resolve. Else reject the old deferred.
-                /*if (_self._statusMonitor === statusDeferred.promise())
-                    statusDeferred.resolve(templateInfo);
-                else statusDeferred.reject();*/
-                // Render the layout and set the model
-                //TODO: Otimize this. We shouldn't need to always re-create instance and models
-
-                // Perform data fetch for the fieldlist used in template
-                view.model.fetch({ fieldlist: templateInfo.fields });
-
-                // Attach the template instance to the view
-                var template = templateInfo.template;
-                var templateModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
-                $(view.$.viewContainer).empty().append(template.createInstance(templateModel));
-                //setTimeout(function() { _self.trigger('afterRender'); }, 0);
-            });
-        }
-
-        // Check if default layout is overriden. Don't do anything if yes.
-        if (!isLayoutOverriden(view) && view.sobject) {
-            // Fetch the layout
-            if (view.hasrecordtypes) {
-                // If record type id is provided then use that.
-                if (view.recordtypeid) {
-                    fetchTemplateInfo(view.recordtypeid);
-                }
-                // If record type id not available but the recordid is, then get the recordtype info from sfdc
-                else if (view.recordid) {
-                    // Fetch the record's recordtypeid
-                    view.model.fetch({ fieldlist: ['recordTypeId'] });
-                    // Once we get the recordtypeid, fetch the layout
-                    view.model.once('change:recordTypeId', function() {
-                        // Async step 1
-                        // Only do layout fetch if view's model hasn't changed since event was attached
-                        if (this == view.model) fetchTemplateInfo(view.model.get('recordTypeId'));
-                    });
-                }
-            }
-            // If record types are not present, then fetch layout for default recordtype
-            else {
-                fetchTemplateInfo('012000000000000AAA');
-            }
-        }
-    }
-
-    function isLayoutOverriden(elem) {
-        var shadowRoot = elem.shadowRoot;
-        while (shadowRoot.olderShadowRoot) {
-            if (shadowRoot.olderShadowRoot.olderShadowRoot)
-                shadowRoot = shadowRoot.olderShadowRoot;
-            else break;
-        }
-        return shadowRoot.querySelector('shadow') != null;
-    }
-
-    Polymer('force-ui-detail', {
-        foredit: false,
-        recordtypeid: null,
-        //applyAuthorStyles: true,
-        //resetStyleInheritance: true,
-        ready: function() {
-            this.super();
-            this.render();
-        },
-        render: function() {
-            var that = this;
-            SFDC.launcher.done(function() { prepareLayout(that); });
-        },
-        attributeChanged: function(attrName, oldVal, newVal) {
-            this.super(arguments);
-            this.async(this.render);
-        }
-    });
-
     //------------------------- INTERNAL METHODS -------------------------
     var getTemplateFor = function(template){
         if (template) {
@@ -237,13 +234,22 @@
 
     // Generates layout template for specific fields. Used by the DetailController.
     // TBD: Support the parent look up fields
-    var compileLayoutForFields = function(fields, fieldSet, fieldInfoMap) {
+    var compileTemplateForFields = function(fieldInfoMap, foredit) {
         var row = {layoutItems: [], columns: 2},
             column = 1, item,
             section = {heading: '', layoutRows:[]};
 
-        modArray(fields).forEach(function(field) {
-            item = {placeholder:"false", editable: "true", label: fieldInfoMap[field].label, layoutComponents: {type: 'Field', value: field}};
+        _.keys(fieldInfoMap).forEach(function(field) {
+            item = {
+                placeholder: false,
+                editable: foredit,
+                label: fieldInfoMap[field].label,
+                layoutComponents: {
+                    type: 'Field',
+                    value: field,
+                    details: fieldInfoMap[field]
+                }
+            };
             row.layoutItems.push(item);
 
             if (column++ == 2) {
@@ -254,7 +260,7 @@
         });
         if (row.layoutItems.length) section.layoutRows.push(row);
 
-        return compileLayout({detailLayoutSections: section, editLayoutSections: section}, fieldSet, fieldInfoMap);
+        return compileTemplateForLayout([section]);
     }
 
     // Generates handlebar template for a layout object, which is returned by describeLayout api call.
@@ -284,7 +290,7 @@
     */
     //TBD: Allow way to hide empty values
     //TBD: Allow way to show selective field types
-    var compileLayout = function(layoutSections) {
+    var compileTemplateForLayout = function(layoutSections) {
 
         // Utility method to return input element type for a corresponding salesforce field type.
         var inputType = function(fieldType) {

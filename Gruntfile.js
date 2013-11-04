@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         },
         exec: {
             vulcan: {
-              command: 'node tools/vulcanize/vulcanize --csp -i elements/mobile-ui-elements.html -o <%= yeoman.dist %>/mobile-ui-elements.html',
+              command: 'node tools/vulcanize/vulcanize elements/mobile-ui-elements.html -o <%= yeoman.dist %>/mobile-ui-elements.html',
               stdout: true,
               stderr: true
             }

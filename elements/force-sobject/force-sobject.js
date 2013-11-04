@@ -2,8 +2,8 @@
 
     var viewProps = {
         sobject: "Account",
-        recordid: "",
-        fieldlist: "",
+        recordid: null,
+        fieldlist: null,
         idfield: "Id"
         /* autosave: false */ // Could add this property to allow auto save of model whenever it changes
     };

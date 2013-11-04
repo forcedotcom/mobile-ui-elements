@@ -52,6 +52,21 @@
         return SFDC.isOnline() ? Force.CACHE_MODE.SERVER_FIRST : Force.CACHE_MODE.CACHE_ONLY;
     }
 
+    // Key value object store to cache all the sobject type infos.
+    var sobjectTypes = {};
+
+    // Utility method to get the cached instance of Force.SObjectType
+    SFDC.getSObjectType = function(sobjectName) {
+        sobjectName = sobjectName.toLowerCase();
+        var typeInfo = sobjectTypes[sobjectName];
+
+        if (!typeInfo) {
+            typeInfo = new Force.SObjectType(sobjectName);
+            sobjectTypes[sobjectName] = typeInfo;
+        }
+        return typeInfo;
+    }
+
     window.SFDC = SFDC;
 
-})(jQuery);
+}).call(this, jQuery);
