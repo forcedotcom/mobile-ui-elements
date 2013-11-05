@@ -1,4 +1,4 @@
-(function($, SFDC) {
+(function($, SFDC, Path) {
 
     Polymer('force-ui-detail', {
         foredit: false,
@@ -80,7 +80,7 @@
     var describeField = function(sobject, fieldname) {
         var sobjectType = SFDC.getSObjectType(sobject);
         // split the field path to get the base reference. eg. for field Owner.Name
-        var fieldPathParts = fieldname.split('.');
+        var fieldPathParts = Path.get(fieldname);
 
         var fieldPicker = function(describeInfo) {
             var fieldInfos = describeInfo.fields;
@@ -88,8 +88,12 @@
             if (fieldPathParts.length > 1) {
                 // Find the corresponding relationship field.
                 var propFilter = {relationshipName: fieldPathParts[0]};
-                var parentSObject = _.findWhere(fieldInfos, propFilter).referenceTo[0];
-                return describeField(parentSObject, fieldPathParts.slice(1).join('.'));
+                var referenceField = _.findWhere(fieldInfos, propFilter);
+                // If the referenceField is found, then get the field info for rest of the path
+                if (referenceField) {
+                    return describeField(referenceField.referenceTo[0],
+                        fieldPathParts.slice(1).join('.'));
+                }
             } else {
                 var propFilter = {name: fieldPathParts[0]};
                 return _.findWhere(fieldInfos, propFilter);
@@ -105,16 +109,22 @@
         var sobjectType = SFDC.getSObjectType(sobject);
         var fieldInfos = {};
         var infoStatus = $.Deferred();
+        var describeTracker = [];
 
         fields.forEach(function(fieldPath) {
-            describeField(sobject, fieldPath).then(function(fieldInfo) {
-                fieldInfos[fieldPath] = fieldInfo;
-                // Check if we got the details on all fields.
-                // If yes, then resolve the deferred.
-                if (_.difference(fields, _.keys(fieldInfos)).length == 0)
-                    infoStatus.resolve(fieldInfos);
-            });
+            var fieldDescribeStatus = describeField(sobject, fieldPath)
+                .then(function(fieldInfo) {
+                    if (fieldInfo) fieldInfos[fieldPath] = fieldInfo;
+                });
+            // Capture the promise in an array to track status
+            describeTracker.push(fieldDescribeStatus);
         });
+        // When all field describe promises are done, then resolve the infoStatus promise with field infos.
+        // This also handles FLS cases where the end user may not be able to see field info on a field.
+        $.when.apply($, describeTracker).then(function() {
+            infoStatus.resolve(fieldInfos);
+        });
+
         return infoStatus.promise();
     }
 
@@ -237,7 +247,7 @@
     var compileTemplateForFields = function(fieldInfoMap, foredit) {
         var row = {layoutItems: [], columns: 2},
             column = 1, item,
-            section = {heading: '', layoutRows:[]};
+            section = {heading: '', columns: 2, layoutRows:[]};
 
         _.keys(fieldInfoMap).forEach(function(field) {
             item = {
@@ -394,4 +404,4 @@
         };
     }
 
-})(jQuery, window.SFDC);
+})(jQuery, window.SFDC, window.Path);
