@@ -24,7 +24,7 @@
       ".": "underscore*.js"
     },
     "mobilesdk-shared": {
-      ".": "libs/*.js"
+      ".": ["libs/*js", "test/Mock*.js"]
     },
     "web-animations-js": {
       ".": "*.js"

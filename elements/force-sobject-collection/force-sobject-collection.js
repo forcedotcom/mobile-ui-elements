@@ -25,7 +25,7 @@
             else if (navigator.smartstore) {
                 // Only run cache queries. If none provided, fetch all data.
                 config.type = 'cache';
-                if (props.querytype == 'cache' && props.query) config.query = props.query;
+                if (props.querytype == 'cache' && props.query) config.cacheQuery = props.query;
                 else config.cacheQuery = navigator.smartstore.buildExactQuerySpec('attributes.type', props.sobject);
             }
             return config;
@@ -36,7 +36,6 @@
     Polymer('force-sobject-collection', _.extend({}, viewProps, {
         ready: function() {
             this.collection = new (Force.SObjectCollection.extend({
-                cache: SFDC.dataStore,
                 cacheMode: SFDC.cacheMode,
                 config: generateConfig(_.pick(this, _.keys(viewProps)))
             }));
@@ -56,7 +55,10 @@
         fetch: function() {
             var that = this;
             SFDC.launcher.done(function() {
-                that.collection.fetch({ reset: true });
+                that.collection.fetch({
+                    cache: SFDC.dataStore,
+                    reset: true
+                });
             });
         }
     }));
