@@ -36,16 +36,21 @@
             if (navigator.smartstore) {
                 SFDC.dataStore = new Force.StoreCache('sobjects', [{path:'Name', type:'string'}, {path:'attributes.type', type:'string'}], 'Id');
                 SFDC.metadataStore = new Force.StoreCache('sobjectTypes', [], 'type');
-                SFDC.dataStore.init();
-                SFDC.metadataStore.init();
-            }
 
-            initialized = true;
+                $.when(SFDC.dataStore.init(), SFDC.metadataStore.init()).then(function() {
+                    initialized = true;
+                    readyDeferred.resolve();
+                });
+            }
+            else {
+                initialized = true;
+                readyDeferred.resolve();
+            }
         } else {
             // Forcetk already initialized. So refresh the session info.
             Force.forcetkClient.impl.setSessionToken(options.accessToken, options.apiVersion, options.instanceUrl);
+            readyDeferred.resolve();
         }
-        readyDeferred.resolve();
     }
 
     SFDC.cacheMode = function() {

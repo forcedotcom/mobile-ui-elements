@@ -10,21 +10,44 @@
 
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
+        <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
+        <style>
+        .bottomright {
+            position:absolute;
+            bottom:8px;
+            right:24px;
+        }
+        </style>
     </head>
     <body>
         <polymer-element name="mobile-app">
             <template>
                 <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}">
-                    <force-ui-list id="force_ui_list" class="page content" on-polymer-activate="{{showDetail}}"></force-ui-list>
-                    <force-ui-detail flex id="force_ui_detail" recordid="{{$.force_ui_list.selected}}" class="page content"></force-ui-detail>
+                    <force-ui-list id="force_ui_list" class="page content" on-polymer-activate="{{showDetail}}" sobject="Contact" querytype="soql" query="SELECT Id, Name FROM Contact  "></force-ui-list>
+                    <!-- <force-ui-detail flex id="force_ui_detail" recordid="{{$.force_ui_list.selected}}" class="page content" sobject="Contact"></force-ui-detail> -->
                 </force-ui-app>
+                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}"></polymer-ui-toggle-button>
             </template>
             <script type="text/javascript">
               Polymer('mobile-app', {
-                accesstoken: '',
-                instanceurl: '',
+                _onlineStatus: true,
+                accesstoken: '00Di0000000gWVG!ARcAQKlIpkpHHRGGWaZPUzcbrsfv7811DHKW4pkJApee7SDiFZ72b1i_Znk6Fvkf8yAyhqh4iyev63hwuOQDAQS_IrErQo2J',
+                instanceurl: 'https://na15.salesforce.com',
                 showDetail: function(e) {
                     this.$.force_app.navigateTo('#force_ui_detail');
+                },
+
+                get onlineStatus() {
+                    return this._onlineStatus;
+                },
+                set onlineStatus(status) {
+                    SFDC.isOnline = function() {return status};
+                    console.log("onlineStatus:" + status);
+                    this._onlineStatus = status;
+                    this.$.force_ui_list.querytype = (status ? "soql" : "cache");
+                    this.$.force_ui_list.query = (status 
+                        ? "SELECT Id, Name FROM Contact LIMIT 25" 
+                        : null);
                 }
               });
             </script>
