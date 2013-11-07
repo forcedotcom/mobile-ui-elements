@@ -17,13 +17,27 @@
 <polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector">
   <template>
     <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}"></force-sobject-collection>
+    <content id="content" select="template"></content>
     <shadow></shadow>
   </template>
   <script>
     Polymer('force-selector-list', {
-      get collection() {
-        return this.$.listsource.collection;
-      }
-    })
+        get collection() {
+            return this.$.listsource.collection;
+        },
+        ready: function() {
+            var that = this;
+            this.super();
+            $(document).one('WebComponentsReady',
+              function() {
+                that.$.content.getDistributedNodes()
+                .forEach(function(node) {
+                    var model = node.model || node.templateInstance.model || {};
+                    model = _.extend({}, model, that);
+                    node.model = model;
+                });
+            });
+        }
+    });
   </script>
 </polymer-element>
