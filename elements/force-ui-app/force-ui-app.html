@@ -86,6 +86,10 @@
           this.super();
           this.async(this.arrangePages);
         },
+        observe: {
+          multipage: 'arrangePages',
+          startpage: 'arrangePages'
+        },
         get pages() {
           return $(this.$.pages.getDistributedNodes()).filter('.page').toArray();
         },
@@ -94,19 +98,14 @@
 
           if (this.multipage) {
             $(this).removeClass('splitview');
-            this.activepage = $pages.filter(this.startpage).show()[0];
+            this.activepage = $pages.filter(this.startpage)[0];
+            this.activepage.style.display = 'block';
             $pages.not(this.startpage).hide();
             this.pageStack = [];
           } else {
-            $pages.show();
+            $pages.each(function() { this.style.display = "block"; });
             $(this).addClass('splitview');
           }
-        },
-        multipageChanged: function() {
-          this.arrangePages();
-        },
-        startpageChanged: function(oldVal, newVal) {
-          this.arrangePages();
         },
         navigateBack: function(e) {
           if (this.multipage) {
@@ -136,7 +135,7 @@
 
           // Create jquery versions
           var $source = $(source);
-          var $target = $(target).show();
+          var $target = $(target);
           var width = $(parent).width();
 /*
           var sourceAnimation = document.createElement('polymer-translate');
@@ -179,7 +178,7 @@
             parent.activepage = $target[0];
             parent.fire('navigation-end', eventDetails);
           });
-          $target.show();
+          $target[0].style.display = "block";
           //$source.changePage($target.show(), reverse, function() { $source.hide(); });
         }
     })();

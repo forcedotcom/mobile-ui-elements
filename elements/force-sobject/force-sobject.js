@@ -44,8 +44,10 @@
         fetch: function() {
             var that = this;
             //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
-            if (this.model.sobjectType && this.model.id) SFDC.launcher.done(function() { that.model.fetch(); });
-            else console.warn('sobject Type and recordid required for fetch.');
+            if (this.model.sobjectType && this.model.id)
+                SFDC.launcher.done(function() { that.model.fetch(); });
+            else
+                console.warn('sobject Type and recordid required for fetch.');
 
             return this;
         },
