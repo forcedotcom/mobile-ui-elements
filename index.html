@@ -13,6 +13,7 @@
 
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
+        <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
     </head>
     <body>
         <polymer-element name="mobile-app">
@@ -21,13 +22,23 @@
                     <force-ui-list id="force_ui_list" class="page content" on-polymer-activate="{{showDetail}}"></force-ui-list>
                     <force-ui-detail flex id="force_ui_detail" recordid="{{$.force_ui_list.selected}}" class="page content"></force-ui-detail>
                 </force-ui-app>
+                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
             </template>
             <script type="text/javascript">
               Polymer('mobile-app', {
+                _onlineStatus: true,
                 accesstoken: '',
                 instanceurl: '',
                 showDetail: function(e) {
                     this.$.force_app.navigateTo('#force_ui_detail');
+                },
+                get onlineStatus() {
+                    return this._onlineStatus;
+                },
+                set onlineStatus(status) {
+                    SFDC.isOnline = function() { return status };
+                    this._onlineStatus = status;
+                    this.$.force_ui_list.querytype = (status ? "mru" : "cache");
                 }
               });
             </script>

@@ -6,6 +6,7 @@
     "polymer": "latest",
     "web-animations-js": "git+https://github.com/web-animations/web-animations-js.git",
     "polymer-elements": "latest",
+    "polymer-ui-elements": "latest",
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
