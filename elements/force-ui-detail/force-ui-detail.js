@@ -392,8 +392,6 @@
                 html += '</div>';
             });
             html += '</div>';
-
-            console.log ('layout section template: ' + html);
         });
 
         // Templatize the markup

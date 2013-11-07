@@ -11,7 +11,7 @@
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
 <polymer-element name="force-ui-detail" attributes="hasrecordtypes, recordtypeid, foredit" extends="force-sobject">
   <template>
-    <force-sobject-layout id="layout" sobject="{{sobject}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
+    <force-sobject-layout id="layout" sobject="{{sobject}}"></force-sobject-layout>
     <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
     <content select="*"></content>
   </template>
