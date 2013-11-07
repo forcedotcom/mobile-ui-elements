@@ -36,9 +36,8 @@
             Force.init(options, options.apiVersion, null, authenticator);
 
             if (navigator.smartstore) {
-                SFDC.dataStore = new Force.StoreCache('sobjects', [{path:'Name', type:'string'}, {path:'attributes.type', type:'string'}], 'Id');
                 SFDC.metadataStore = new Force.StoreCache('sobjectTypes', [], 'type');
-                $.when(SFDC.dataStore.init(), SFDC.metadataStore.init())
+                SFDC.metadataStore.init()
                 .done(function() {
                     readyDeferred.resolve();
                 });

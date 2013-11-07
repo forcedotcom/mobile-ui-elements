@@ -10,8 +10,8 @@
 
     Polymer('force-sobject', _.extend({}, viewProps, {
         init: function() {
+            var that = this;
             this.model = new (Force.SObject.extend({
-                cache: SFDC.dataStore, //FIXME: Create separate data store for each sobjectype
                 cacheMode: SFDC.cacheMode,
                 sobjectType: this.sobject,
                 fieldlist: this.fieldlist,
@@ -42,12 +42,15 @@
             this.async( this.reset );
         },
         fetch: function() {
-            var that = this;
+            var model = this.model;
             //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
-            if (this.model.sobjectType && this.model.id)
-                SFDC.launcher.done(function() { that.model.fetch(); });
-            else
-                console.warn('sobject Type and recordid required for fetch.');
+            if (model.sobjectType && model.id) {
+                $.when(this.$.store.cacheReady, SFDC.launcher)
+                .done(function(cache) {
+                    model.cache = cache;
+                    model.fetch();
+                });
+            } else console.warn('sobject Type and recordid required for fetch.');
 
             return this;
         },

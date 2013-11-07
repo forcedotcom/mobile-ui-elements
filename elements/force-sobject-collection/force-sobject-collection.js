@@ -26,7 +26,7 @@
                 // Only run cache queries. If none provided, fetch all data.
                 config.type = 'cache';
                 if (props.querytype == 'cache' && props.query) config.cacheQuery = props.query;
-                else config.cacheQuery = navigator.smartstore.buildExactQuerySpec('attributes.type', props.sobject);
+                else config.cacheQuery = navigator.smartstore.buildAllQuerySpec('attributes.type');
             }
             return config;
         }
@@ -53,12 +53,12 @@
             }
         },
         fetch: function() {
-            var that = this;
-            SFDC.launcher.done(function() {
-                that.collection.fetch({
-                    cache: SFDC.dataStore,
-                    reset: true
-                });
+            var collection = this.collection;
+
+            $.when(this.$.store.cacheReady, SFDC.launcher)
+            .done(function(cache) {
+                collection.cache = cache;
+                collection.fetch({ reset: true });
             });
         }
     }));
