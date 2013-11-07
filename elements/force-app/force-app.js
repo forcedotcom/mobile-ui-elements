@@ -64,7 +64,7 @@
         var typeInfo = sobjectTypes[sobjectName];
 
         if (!typeInfo) {
-            typeInfo = new Force.SObjectType(sobjectName);
+            typeInfo = new Force.SObjectType(sobjectName, SFDC.metadataStore);
             sobjectTypes[sobjectName] = typeInfo;
         }
         return typeInfo;
