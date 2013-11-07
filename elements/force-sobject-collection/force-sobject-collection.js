@@ -14,19 +14,18 @@
 
         // Fetch if only sobject type is specified.
         if (props.sobject) {
-            // Is device online
-            if (SFDC.isOnline()) {
-                // Send the user config for fetch
-                config.sobjectType = props.sobject;
-                config.type = props.querytype;
-                config.query = props.query;
-            }
             // Is device offline and smartstore is available
-            else if (navigator.smartstore) {
+            if (!SFDC.isOnline() && navigator.smartstore) {
                 // Only run cache queries. If none provided, fetch all data.
                 config.type = 'cache';
                 if (props.querytype == 'cache' && props.query) config.cacheQuery = props.query;
                 else config.cacheQuery = navigator.smartstore.buildAllQuerySpec('attributes.type');
+            } else {
+                // Send the user config for fetch
+                config.sobjectType = props.sobject;
+                config.type = props.querytype;
+                if (props.querytype == 'cache') config.cacheQuery = props.query;
+                else config.query = props.query;
             }
             return config;
         }
@@ -36,7 +35,6 @@
     Polymer('force-sobject-collection', _.extend({}, viewProps, {
         ready: function() {
             this.collection = new (Force.SObjectCollection.extend({
-                cacheMode: SFDC.cacheMode,
                 config: generateConfig(_.pick(this, _.keys(viewProps)))
             }));
 
