@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Importing Google Polymer framework -->
+        <script src="dependencies/polymer/polymer.min.js"></script>
+        <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
+
+        <!-- Place your HTML imports here -->
+        <link rel="import" href="elements/mobile-ui-elements.html">
+        <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
+    </head>
+    <body>
+        <polymer-element name="account-search">
+            <template>
+                <header class="bar-title">
+                    <h1 class="title">Accounts</h1>
+                    <a class="button" on-click="{{create}}">Create</a>
+                </header>
+                <div class="bar-standard bar-header-secondary">
+                    <input type="search" class="search-key" placeholder="Search" value={{criteria}} on-keyup={{search}}/>
+                </div>
+                <div class="content">
+                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{showDetail}}"/>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('account-search', {
+                search: function() {
+                    this.$.list.querytype = "soql";
+                    this.$.list.query = "SELECT Id, Name FROM Account WHERE Name LIKE '" + this.criteria + "%' ORDER BY Name LIMIT 25";
+                    this.$.list.cacheQuery = {queryType:"smart", smartSql:"SELECT {accounts:_soup} FROM {accounts} WHERE {accounts:Name} LIKE '" + (this.criteria == null ? "" : this.criteria) + "%' ORDER BY LOWER({accounts:Name})", pageSize:25};
+                },
+
+                create: function() {
+                    $("mobile-app")[0].showDetail(null);
+                },
+
+                showDetail: function() {
+                    $("mobile-app")[0].showDetail(this.$.list.selected);
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <polymer-element name="account-detail" attributes="accountId">
+            <template>
+                <header class="bar-title">
+                    <a class="button-prev">Back</a>
+                    <h1 class="title">Account</h1>
+                    <a class="button toggleDelete">Delete</a>
+                </header>
+                <div class="content">
+                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}"/>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('offline-toggler', {
+                    _onlineStatus: true,
+
+                    get onlineStatus() {
+                        return this._onlineStatus;
+                    },
+                    set onlineStatus(status) {
+                        console.log("online:" + status);
+                        SFDC.isOnline = function() { return status }; // XXX
+                        this._onlineStatus = status;
+                    }
+            });
+            </script>
+        </polymer-element>
+
+        <polymer-element name="offline-toggler">
+            <template>
+                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
+            </template>
+            <script type="text/javascript">
+            </script>
+
+        <polymer-element name="mobile-app">
+            <template>
+                <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
+                    <account-search id="account_search" class="page"/>
+                    <account-detail id="account_detail" class="page"/>
+                </force-ui-app>
+                <offline-toggler />
+            </template>
+            <script type="text/javascript">
+                Polymer('mobile-app', {
+                    accesstoken: '',
+                    instanceurl: '',
+
+                    showDetail: function(accountId) {
+                        this.$.account_detail.accountId = accountId;
+                        this.$.force_app.navigateTo('#account_detail');                        
+                    }
+                });
+            </script>
+        </polymer-element>
+
+        <mobile-app></mobile-app>
+    </body>
+</html>
