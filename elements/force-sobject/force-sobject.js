@@ -1,17 +1,23 @@
 (function(SFDC) {
 
     var viewProps = {
-        sobject: "Account",
+        sobject: null,
         recordid: null,
         fieldlist: null,
-        idfield: "Id"
-        /* autosave: false */ // Could add this property to allow auto save of model whenever it changes
+        idfield: "Id",
+        autosync: true
     };
 
     Polymer('force-sobject', _.extend({}, viewProps, {
+        observe: {
+            sobject: "reset",
+            recordid: "reset",
+            fieldlist: "reset",
+            idfield: "reset"
+        },
         init: function() {
+            var that = this;
             this.model = new (Force.SObject.extend({
-                cache: SFDC.dataStore, //FIXME: Create separate data store for each sobjectype
                 cacheMode: SFDC.cacheMode,
                 sobjectType: this.sobject,
                 fieldlist: this.fieldlist,
@@ -19,11 +25,16 @@
             }));
             this.model.set(this.idfield, this.recordid);
 
+            $.when(this.$.store.cacheReady, SFDC.launcher)
+            .done(function(cache) {
+                that.model.cache = cache;
+            });
+
             return this;
         },
         ready: function() {
             this.init();
-            this.async(this.fetch);
+            if (this.autosync) this.fetch();
         },
         reset: function() {
             if (!this.model ||
@@ -32,20 +43,21 @@
                 this.model.idAttribute != this.idfield ||
                 this.model.fieldlist != this.fieldlist) {
 
-                //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
-                this.init().fetch();
+                this.init();
+                if (this.autosync) this.fetch();
             }
             return this;
         },
-        attributeChanged: function(attrName, oldVal, newVal) {
-            // Doing asynchronous reset so that all simultaneous property changes can be processed before the refetch begins.
-            this.async( this.reset );
-        },
         fetch: function() {
-            var that = this;
+            var model = this.model;
             //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
-            if (this.model.sobjectType && this.model.id) SFDC.launcher.done(function() { that.model.fetch(); });
-            else console.warn('sobject Type and recordid required for fetch.');
+            if (model.sobjectType && model.id) {
+                $.when(this.$.store.cacheReady, SFDC.launcher)
+                .done(function(cache) {
+                    model.cache = cache;
+                    model.fetch();
+                });
+            } else console.warn('sobject Type and recordid required for fetch.');
 
             return this;
         },

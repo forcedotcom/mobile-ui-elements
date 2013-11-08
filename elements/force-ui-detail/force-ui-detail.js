@@ -7,12 +7,15 @@
         //applyAuthorStyles: true,
         //resetStyleInheritance: true,
         ready: function() {
+            this.autosync = false;
             this.super();
             this.render();
         },
         render: function() {
             var that = this;
-            SFDC.launcher.done(function() { renderView(that); });
+            if (this.sobject) {
+                SFDC.launcher.done(function() { renderView(that); });
+            }
         },
         attributeChanged: function(attrName, oldVal, newVal) {
             this.super(arguments);
@@ -392,8 +395,6 @@
                 html += '</div>';
             });
             html += '</div>';
-
-            console.log ('layout section template: ' + html);
         });
 
         // Templatize the markup

@@ -12,6 +12,10 @@
     @methods:
     fetch: Initiates the fetching of records from the relevant data store (server/offline store).
 -->
-<polymer-element name="force-sobject-collection" attributes="sobject query querytype maxsize">
-  <script src="force-sobject-collection.js"></script>
+<link rel="import" href="../force-sobject-store/force-sobject-store.html">
+<polymer-element name="force-sobject-collection" attributes="sobject query querytype autosync maxsize">
+    <template>
+        <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
+    </template>
+    <script src="force-sobject-collection.js"></script>
 </polymer-element>

@@ -31,19 +31,17 @@
         var opts = {apiVersion: 'v29.0', userAgent: 'SalesforceMobileUI/alpha'};
         options = _.extend(opts, options);
         if (!initialized) {
+
+            initialized = true;
             Force.init(options, options.apiVersion, null, authenticator);
 
             if (navigator.smartstore) {
-                SFDC.dataStore = new Force.StoreCache('sobjects', [{path:'Name', type:'string'}, {path:'attributes.type', type:'string'}], 'Id');
                 SFDC.metadataStore = new Force.StoreCache('sobjectTypes', [], 'type');
-
-                $.when(SFDC.dataStore.init(), SFDC.metadataStore.init()).then(function() {
-                    initialized = true;
+                SFDC.metadataStore.init()
+                .done(function() {
                     readyDeferred.resolve();
                 });
-            }
-            else {
-                initialized = true;
+            } else {
                 readyDeferred.resolve();
             }
         } else {
@@ -66,7 +64,7 @@
         var typeInfo = sobjectTypes[sobjectName];
 
         if (!typeInfo) {
-            typeInfo = new Force.SObjectType(sobjectName);
+            typeInfo = new Force.SObjectType(sobjectName, SFDC.metadataStore);
             sobjectTypes[sobjectName] = typeInfo;
         }
         return typeInfo;
