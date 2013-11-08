@@ -17,7 +17,6 @@
 <polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector">
   <template>
     <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}" autosync="false"></force-sobject-collection>
-    <content id="content" select="template"></content>
     <shadow></shadow>
   </template>
   <script>
@@ -33,21 +32,9 @@
         fetch: function() {
           this.$.listsource.fetch();
         },
-        renderTemplates: function() {
-          var that = this;
-
-          that.$.content.getDistributedNodes()
-          .forEach(function(node) {
-              var model = node.model || node.templateInstance.model || {};
-              model = _.extend({}, model, that);
-              node.model = model;
-          });
-        },
         ready: function() {
             this.super();
             this.fetch();
-
-            $(document).one('WebComponentsReady', this.renderTemplates.bind(this));
         }
     });
   </script>
