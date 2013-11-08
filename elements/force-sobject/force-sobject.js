@@ -1,7 +1,7 @@
 (function(SFDC) {
 
     var viewProps = {
-        sobject: "Account",
+        sobject: null,
         recordid: null,
         fieldlist: null,
         idfield: "Id",

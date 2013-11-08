@@ -19,8 +19,8 @@
         <polymer-element name="mobile-app">
             <template>
                 <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}">
-                    <force-ui-list id="force_ui_list" class="page content" on-polymer-activate="{{showDetail}}"></force-ui-list>
-                    <force-ui-detail flex id="force_ui_detail" recordid="{{$.force_ui_list.selected}}" class="page content"></force-ui-detail>
+                    <force-ui-list id="force_ui_list" sobject="Account" class="page content" on-polymer-activate="{{showDetail}}"></force-ui-list>
+                    <force-ui-detail flex id="force_ui_detail" sobject="Account" recordid="{{$.force_ui_list.selected}}" class="page content"></force-ui-detail>
                 </force-ui-app>
                 <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
             </template>

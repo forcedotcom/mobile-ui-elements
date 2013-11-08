@@ -3,7 +3,7 @@
     "use strict";
 
     var viewProps = {
-        sobject: "Account",
+        sobject: null,
         query: "",
         querytype: "mru",
         maxsize: -1,
