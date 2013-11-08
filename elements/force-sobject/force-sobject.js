@@ -4,11 +4,17 @@
         sobject: "Account",
         recordid: null,
         fieldlist: null,
-        idfield: "Id"
-        /* autosave: false */ // Could add this property to allow auto save of model whenever it changes
+        idfield: "Id",
+        autosync: true
     };
 
     Polymer('force-sobject', _.extend({}, viewProps, {
+        observe: {
+            sobject: "reset",
+            recordid: "reset",
+            fieldlist: "reset",
+            idfield: "reset"
+        },
         init: function() {
             var that = this;
             this.model = new (Force.SObject.extend({
@@ -23,7 +29,7 @@
         },
         ready: function() {
             this.init();
-            this.async(this.fetch);
+            if (this.autosync) this.fetch();
         },
         reset: function() {
             if (!this.model ||
@@ -32,14 +38,10 @@
                 this.model.idAttribute != this.idfield ||
                 this.model.fieldlist != this.fieldlist) {
 
-                //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
-                this.init().fetch();
+                this.init();
+                if (this.autosync) this.fetch();
             }
             return this;
-        },
-        attributeChanged: function(attrName, oldVal, newVal) {
-            // Doing asynchronous reset so that all simultaneous property changes can be processed before the refetch begins.
-            this.async( this.reset );
         },
         fetch: function() {
             var model = this.model;

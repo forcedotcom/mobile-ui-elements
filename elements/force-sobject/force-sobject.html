@@ -16,7 +16,7 @@
     delete: Initiate the deleting of record data from the relevant data store (server/offline store).
 -->
 <link rel="import" href="../force-sobject-store/force-sobject-store.html">
-<polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield">
+<polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield autosync">
     <template>
         <force-sobject-store id="store" sobject="{{sobject}}" keyfield="{{idfield}}"></force-sobject-store>
     </template>

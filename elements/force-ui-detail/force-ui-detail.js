@@ -7,6 +7,7 @@
         //applyAuthorStyles: true,
         //resetStyleInheritance: true,
         ready: function() {
+            this.autosync = false;
             this.super();
             this.render();
         },

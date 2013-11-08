@@ -16,27 +16,38 @@
 <link rel="import" href="../../dependencies/polymer-elements/polymer-selector/polymer-selector.html">
 <polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector">
   <template>
-    <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}"></force-sobject-collection>
+    <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}" autosync="false"></force-sobject-collection>
     <content id="content" select="template"></content>
     <shadow></shadow>
   </template>
   <script>
     Polymer('force-selector-list', {
+        observe: {
+          sobject: "fetch",
+          query: "fetch",
+          querytype: "fetch"
+        },
         get collection() {
-            return this.$.listsource.collection;
+          return this.$.listsource.collection;
+        },
+        fetch: function() {
+          this.$.listsource.fetch();
+        },
+        renderTemplates: function() {
+          var that = this;
+
+          that.$.content.getDistributedNodes()
+          .forEach(function(node) {
+              var model = node.model || node.templateInstance.model || {};
+              model = _.extend({}, model, that);
+              node.model = model;
+          });
         },
         ready: function() {
-            var that = this;
             this.super();
-            $(document).one('WebComponentsReady',
-              function() {
-                that.$.content.getDistributedNodes()
-                .forEach(function(node) {
-                    var model = node.model || node.templateInstance.model || {};
-                    model = _.extend({}, model, that);
-                    node.model = model;
-                });
-            });
+            this.fetch();
+
+            $(document).one('WebComponentsReady', this.renderTemplates.bind(this));
         }
     });
   </script>

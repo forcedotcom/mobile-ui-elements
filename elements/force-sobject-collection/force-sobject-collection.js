@@ -5,7 +5,8 @@
     var viewProps = {
         sobject: "Account",
         query: "",
-        querytype: "mru"
+        querytype: "mru",
+        autosync: true
         /* async: false */ // Optional property to perform fetch as a web worker operation. Useful for data priming.
     };
 
@@ -33,25 +34,30 @@
     }
 
     Polymer('force-sobject-collection', _.extend({}, viewProps, {
+        observe: {
+            sobject: "reset",
+            query: "reset",
+            querytype: "reset"
+        },
         ready: function() {
             this.collection = new (Force.SObjectCollection.extend({
                 config: generateConfig(_.pick(this, _.keys(viewProps)))
             }));
 
-            //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
-            this.async(this.fetch);
+            if (this.autosync) this.fetch();
         },
-        attributeChanged: function(attrName, oldVal, newVal) {
+        reset: function() {
             var config = generateConfig(_.pick(this, _.keys(viewProps)));
             // FIXME: Polymer is calling this method multiple times for single attribute change.
             // That's why adding the isEqual check to prevent multiple server calls.
             if (!_.isEqual(config, this.collection.config)) {
                 this.collection.config = config;
-                this.async( this.fetch );
+                if (this.autosync) this.fetch();
             }
         },
         fetch: function() {
             var collection = this.collection;
+            collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
 
             $.when(this.$.store.cacheReady, SFDC.launcher)
             .done(function(cache) {
