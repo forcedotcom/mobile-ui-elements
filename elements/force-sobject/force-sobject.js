@@ -25,6 +25,11 @@
             }));
             this.model.set(this.idfield, this.recordid);
 
+            $.when(this.$.store.cacheReady, SFDC.launcher)
+            .done(function(cache) {
+                that.model.cache = cache;
+            });
+
             return this;
         },
         ready: function() {

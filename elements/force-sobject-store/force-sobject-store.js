@@ -21,16 +21,14 @@
         sobject: null,
         keyField: null,
         get cacheReady() {
-            return $.when(sobjectStores[this.sobject]);
-        },
-        get cache() {
-            var cache = sobjectStores[this.sobject];
-            if (cache instanceof Force.StoreCache) return cache;
+            return SFDC.launcher.then(this.init.bind(this));
         },
         init: function() {
             var dataStore;
             var sobject = this.sobject;
-            var keyField = keyField || (sobject.toLowerCase().indexOf('__x') > 0 ? 'ExternalId' : 'Id');
+            var keyField = this.keyField ||
+                ((sobject && sobject.toLowerCase().indexOf('__x') > 0)
+                    ? 'ExternalId' : 'Id');
 
             // Create StoreCache is smartstore is available.
             if (navigator.smartstore) {
@@ -48,20 +46,15 @@
                     // Capture the store creation promise, until the real store gets assigned.
                     sobjectStores[sobject] = storePromise;
                 }
+                return sobjectStores[sobject];
             }
         },
         sobjectChanged: function() {
-            var that = this;
-            SFDC.launcher.done(function() {
-                that.init();
-            });
+            SFDC.launcher.then(this.init.bind(this));
         },
         ready: function() {
             if (this.sobject) {
-                var that = this;
-                SFDC.launcher.done(function() {
-                    that.init();
-                });
+                SFDC.launcher.then(this.init.bind(this));
             }
         }
     });

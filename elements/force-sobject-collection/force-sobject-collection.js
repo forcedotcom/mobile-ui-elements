@@ -6,6 +6,7 @@
         sobject: "Account",
         query: "",
         querytype: "mru",
+        maxsize: -1,
         autosync: true
         /* async: false */ // Optional property to perform fetch as a web worker operation. Useful for data priming.
     };
@@ -59,10 +60,16 @@
             var collection = this.collection;
             collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
 
+            var onFetch = function() {
+                if ((this.maxsize < 0 || this.maxsize > collection.length)
+                    && collection.hasMore())
+                    collection.getMore().then(onFetch);
+            }.bind(this);
+
             $.when(this.$.store.cacheReady, SFDC.launcher)
             .done(function(cache) {
                 collection.cache = cache;
-                collection.fetch({ reset: true });
+                collection.fetch({ reset: true, success: onFetch });
             });
         }
     }));
