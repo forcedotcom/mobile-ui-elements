@@ -1,0 +1,43 @@
+<!--
+    force-ui-detail element enables the rendering of full view of a salesforce record. It extends the force-sobject element to allow all the CRUD operations on an SObject. This element can auto detect the record's relevant page layout and renders the details accordingly.
+    Why: a) Reads the layout settings of an object and renders the detail accordingly.
+    b) Provides a simpler DOM based interface to fetch full or partial record.
+
+    @attributes:
+    hasrecordtypes: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
+    recordtypeid: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
+-->
+<link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
+<link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
+<link rel="import" href="../../dependencies/polymer-elements/polymer-selector/polymer-selector.html">
+<polymer-element name="force-related-list" attributes="related" extends="polymer-selector-list">
+  <template>
+      <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}"></force-sobject-collection>
+      <shadow></shadow>
+  </template>
+  <script>
+    Polymer('force-related-list', {
+      related: null,
+      models: [],
+      updateModels: function() {
+        var _self = this;
+        _self.models = [];
+        $.force_sobjects.collection.models
+        .forEach(function(model) {
+          var wrappedModel = [];
+          var columns = _self.related.columns;
+          for (var i in columns) {
+            wrappedModel.push(model.get(columns[i]));
+          }
+          _self.models.push(wrappedModel);
+        });
+      }
+    });
+  </script>
+</polymer-element>
+<polymer-element name="force-ui-related" attributes="recordid, idfield, hasrecordtypes, relationships" extends="force-sobject-layout">
+  <template>
+    <force-sobject id="model" sobject="{{sobject}}" recordid="{{recordid}}" idfield="{{idfield}}"/>
+  </template>
+  <script src="force-ui-related.js"></script>
+</polymer-element>

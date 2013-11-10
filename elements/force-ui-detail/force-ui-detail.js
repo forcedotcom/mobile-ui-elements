@@ -2,8 +2,7 @@
 
     Polymer('force-ui-detail', {
         foredit: false,
-        hasrecordtypes: false,
-        recordtypeid: null,
+        fieldlist: null,
         //applyAuthorStyles: true,
         //resetStyleInheritance: true,
         ready: function() {
@@ -16,6 +15,9 @@
             if (this.sobject) {
                 SFDC.launcher.done(function() { renderView(that); });
             }
+        },
+        get model() {
+            return this.$.force_sobject.model;
         },
         attributeChanged: function(attrName, oldVal, newVal) {
             this.super(arguments);
@@ -34,50 +36,12 @@
         return shadowRoot.querySelector('shadow') != null;
     }
 
-    // Fetches the record type id for the required layout.
-    // Returns a promise which is resolved when the record type id is fetched from the server.
-    var fetchRecordTypeId = function(view) {
-        var fetchStatus = $.Deferred();
-
-        var resolveStatus = function(recordTypeId) {
-            fetchStatus.resolve(view, recordTypeId);
-        }
-
-        // If record types are not present, then use the default recordtypeid
-        if (!view.hasrecordtypes) resolveStatus('012000000000000AAA');
-        // If record types are present, then get the recordtypeid
-        else {
-            // If record type id is provided then use that.
-            if (view.recordtypeid) resolveStatus(view.recordtypeid);
-            // If not but the recordid is available, then get the recordtype info from sfdc
-            else if (view.recordid && view.recordid.length) {
-                // Fetch the record's recordtypeid
-                view.model.fetch({
-                    fieldlist: ['recordTypeId'],
-                    success: function() {
-                        // Once we get the recordtypeid, fetch the layout
-                        resolveStatus(this.get('recordTypeId'));
-                    },
-                    error: function() {
-                        fetchStatus.reject(view);
-                    }
-                });
-            }
-        }
-
-        return fetchStatus.promise();
-    }
-
     // Given the recordtypeid, it fetches the related layout sections based on the view settings
     // Returns a promise, which gets resolved when the response is received from the salesforce
-    var fetchLayoutSections = function(view, recordtypeid) {
-        // Get the reference of layout element in the view
-        var layoutElem = view.$.layout;
-        // assign the appropriate recordtypeid
-        layoutElem.recordtypeid = recordtypeid;
+    var fetchLayoutSections = function(view) {
         // fetch layout sections (detail or edit) based on view setting
-        return (view.foredit) ? layoutElem.whenEditSections()
-            : layoutElem.whenDetailSections();
+        return (view.foredit) ? view.whenEditSections()
+            : view.whenDetailSections();
     }
 
     var describeField = function(sobject, fieldname) {
@@ -142,8 +106,7 @@
                         return compileTemplateForFields(fieldInfos, view.foredit);
                     });
             } else {
-                return fetchRecordTypeId(view)
-                    .then(fetchLayoutSections)
+                return fetchLayoutSections(view)
                     .then(compileTemplateForLayout)
             }
         }

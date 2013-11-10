@@ -7,6 +7,10 @@
     hasrecordtypes: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
     recordtypeid: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
 -->
-<polymer-element name="force-sobject-layout" attributes="sobject, recordtypeid">
+<link rel="import" href="../force-sobject/force-sobject.html">
+<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield">
+  <template>
+    <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" idfield="{{idfield}}" recordid="{{recordid}}" autosync="false"></force-sobject>
+  </template>
   <script src="force-sobject-layout.js"></script>
 </polymer-element>

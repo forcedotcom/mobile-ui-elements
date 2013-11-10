@@ -40,10 +40,14 @@
             query: "reset",
             querytype: "reset"
         },
+        fireSyncEvent: function() {
+            this.asyncFire('sync');
+        },
         ready: function() {
             this.collection = new (Force.SObjectCollection.extend({
                 config: generateConfig(_.pick(this, _.keys(viewProps)))
             }));
+            this.collection.on('sync', this.fireSyncEvent.bind(this));
 
             if (this.autosync) this.fetch();
         },
