@@ -14,36 +14,63 @@
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
         <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
+
+        <!-- XXX following will go away once routing is moved inside force-ui-app -->
+        <script src="dependencies/jquery/jquery.js"></script>
+        <script src="dependencies/underscore/underscore.js"></script>
+        <script src="dependencies/backbone/backbone.js"></script>
     </head>
     <body>
         <polymer-element name="account-search">
             <template>
                 <header class="bar-title">
                     <h1 class="title">Accounts</h1>
-                    <a class="button" on-click="{{create}}">Create</a>
+                    <a class="button" href="#add">Create</a>
                 </header>
                 <div class="bar-standard bar-header-secondary">
-                    <input type="search" class="search-key" placeholder="Search" value={{criteria}} on-keyup={{search}}/>
+                    <input type="search" class="search-key" placeholder="Search" value={{criteria}} on-keyup={{doSearch}}/>
                 </div>
                 <div class="content">
-                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{showDetail}}"/>
+                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{doEdit}}"/>
                 </div>
             </template>
             <script type="text/javascript">
             Polymer('account-search', {
-                search: function() {
-                    this.$.list.querytype = "soql";
-                    this.$.list.query = "SELECT Id, Name FROM Account WHERE Name LIKE '" + this.criteria + "%' ORDER BY Name LIMIT 25";
-                    this.$.list.cacheQuery = {queryType:"smart", smartSql:"SELECT {accounts:_soup} FROM {accounts} WHERE {accounts:Name} LIKE '" + (this.criteria == null ? "" : this.criteria) + "%' ORDER BY LOWER({accounts:Name})", pageSize:25};
+                doSearch: function() {
+                    var criteria = (this.criteria == null ? "" : this.criteria);
+                    if (SFDC.isOnline()) {
+                        this.$.list.querytype = "soql";
+                        this.$.list.query = "SELECT Id, Name FROM Account WHERE Name LIKE '" + criteria + "%' ORDER BY Name LIMIT 25";
+                    }
+                    else {
+                        this.$.list.querytype = "cache";
+                        this.$.list.query = {queryType:"smart", smartSql:"SELECT {Account:_soup} FROM {Account} WHERE {Account:Name} LIKE '" + criteria + "%' ORDER BY LOWER({Account:Name})", pageSize:25};
+                    }
                 },
 
-                create: function() {
-                    $("mobile-app")[0].showDetail(null);
-                },
-
-                showDetail: function() {
-                    $("mobile-app")[0].showDetail(this.$.list.selected);
+                doEdit: function() {
+                    app.router.navigate("#edit/accounts/" + this.$.list.selected, {trigger:true});
                 }
+            });
+            </script>
+        </polymer-element>
+
+        <polymer-element name="account-sync">
+            <template>
+                <header class="bar-title">
+                    <a class="button-prev" on-click="{{goBack}}">Back</a>
+                    <h1 class="title">Sync</h1>
+                </header>
+                <div class="bar-standard bar-header-secondary">
+                    <a class="button button-block sync">Process {{countLocallyModified}} records</a>
+                </div>
+                <div class="content">
+                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{doEdit}}"/>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('account-sync', {
+
             });
             </script>
         </polymer-element>
@@ -51,13 +78,31 @@
         <polymer-element name="account-detail" attributes="accountId">
             <template>
                 <header class="bar-title">
-                    <a class="button-prev">Back</a>
+                    <a class="button-prev" on-click="{{goBack}}">Back</a>
                     <h1 class="title">Account</h1>
                     <a class="button toggleDelete">Delete</a>
                 </header>
+                <div class="bar-standard bar-header-secondary">
+                  <a class="button save">Save</a>
+                  <a class="button merge">Merge</a>
+                  <a class="button overwrite">Overwrite</a>
+              </div>
                 <div class="content">
-                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}"/>
+                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true"/>
                 </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('account-detail', {
+                goBack: function() {
+                    app.router.navigate("#list", {trigger:true});
+                }
+            })
+            </script>
+        </polymer-element>
+
+        <polymer-element name="offline-toggler" attributes="onlineStatus">
+            <template>
+                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
             </template>
             <script type="text/javascript">
             Polymer('offline-toggler', {
@@ -67,7 +112,6 @@
                         return this._onlineStatus;
                     },
                     set onlineStatus(status) {
-                        console.log("online:" + status);
                         SFDC.isOnline = function() { return status }; // XXX
                         this._onlineStatus = status;
                     }
@@ -75,34 +119,84 @@
             </script>
         </polymer-element>
 
-        <polymer-element name="offline-toggler">
-            <template>
-                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
-            </template>
-            <script type="text/javascript">
-            </script>
-
         <polymer-element name="mobile-app">
             <template>
                 <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
-                    <account-search id="account_search" class="page"/>
-                    <account-detail id="account_detail" class="page"/>
+                    <account-search id="account_search" class="page absolute"></account-search>
+                    <account-detail id="account_detail" class="page absolute"></account-detail>
+                    <account-sync id="account_sync" class="page absolute"></account-sync>
                 </force-ui-app>
-                <offline-toggler />
+                <offline-toggler/>
             </template>
             <script type="text/javascript">
-                Polymer('mobile-app', {
-                    accesstoken: '',
-                    instanceurl: '',
+            Polymer('mobile-app', {
+                accesstoken: '00Di0000000gWVG!ARcAQFdk8ckd8cVNecTgOLu3RhaSXwThKeFw.g5BI8OZ4elICn_W4ytHPZOMbRHpJzTVlUqekDVwBWaX3LBUlZ7i9VQhqKR9',
+                instanceurl: 'https://na15.salesforce.com',
 
-                    showDetail: function(accountId) {
-                        this.$.account_detail.accountId = accountId;
-                        this.$.force_app.navigateTo('#account_detail');                        
-                    }
-                });
+                ready: function() {
+                    var app = this;
+                    var Router = Backbone.Router.extend({
+                        currentPageId: null,
+                        hashHistory: [],
+
+                        routes: {
+                            "": "list",
+                            "list": "list",
+                            "add": "addAccount",
+                            "edit/accounts/:id": "editAccount",
+                            "sync":"sync"
+                        },
+
+                        gotoPage: function(targetId) {
+                            console.log("+ Navigating to [" + window.location.hash + "]");
+
+                            // First page loaded
+                            if (!this.currentPageId) {
+                                this.hashHistory = [window.location.hash];
+                                this.currentPageId = targetId;
+                                // first page is automatically loaded, we don't need to "navigate" to it
+                            }
+                            // New page is the same as the previous page -> back transition
+                            else if (this.hashHistory.length > 1 && window.location.hash === this.hashHistory[this.hashHistory.length - 2]) {
+                                this.hashHistory.pop();
+                                app.$.force_app.navigateBack();
+                            } 
+                            // Otherwise forward transition
+                            else {
+                                this.hashHistory.push(window.location.hash);
+                                app.$.force_app.navigateTo(targetId);
+                            }
+                        },
+
+                        list: function() {
+                            this.gotoPage('#account_search');
+                        },
+
+                        addAccount: function() {
+                            this.editAccount(null);
+                        },
+
+                        editAccount: function(accountId) {
+                            app.$.account_detail.accountId = accountId;
+                            this.gotoPage('#account_detail');
+                        },
+
+                        sync: function() {
+                            this.gotoPage('#account_sync');
+                        }
+
+                    });
+                    this.router = new Router();
+                    Backbone.history.start();
+                }
+            });
             </script>
         </polymer-element>
 
         <mobile-app></mobile-app>
+        
+        <script type="text/javascript">
+        var app = $("mobile-app")[0];
+        </script>
     </body>
 </html>
