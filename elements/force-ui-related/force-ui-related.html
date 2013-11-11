@@ -10,7 +10,7 @@
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
 <link rel="import" href="../../dependencies/polymer-elements/polymer-selector/polymer-selector.html">
-<polymer-element name="force-related-list" attributes="related" extends="polymer-selector-list">
+<polymer-element name="force-related-list" attributes="related" extends="polymer-selector">
   <template>
       <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}"></force-sobject-collection>
       <shadow></shadow>
@@ -22,7 +22,7 @@
       updateModels: function() {
         var _self = this;
         _self.models = [];
-        $.force_sobjects.collection.models
+        this.$.force_sobjects.collection.models
         .forEach(function(model) {
           var wrappedModel = [];
           var columns = _self.related.columns;
