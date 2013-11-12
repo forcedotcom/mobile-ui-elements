@@ -88,7 +88,7 @@
                   <a class="button" id="overwriteButton" on-click="{{doOverwrite}}">Overwrite</a>
               </div>
                 <div class="content">
-                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true"/>
+                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true" fieldlist="Id,Name,Industry,Phone,Owner.Name,LastModifiedBy.Name,LastModifiedDate"/>
                 </div>
             </template>
             <script type="text/javascript">
@@ -126,7 +126,8 @@
                         mergeMode: mergeMode,
                         success: function() { app.router.navigate(that.backAction, {trigger:true}); },
                         error: function(data, err, options) { that.handleError(new Force.Error(err)); },
-                        fieldlist: _.keys(this.$.detail.model.changed) // XXX shouldn't have to do that
+                        fieldlist: ["Id", "Name", "Industry", "Phone"]
+                        // fieldlist: _.keys(this.$.detail.model.changed) // XXX shouldn't have to do that
                     };
                 },
 
@@ -216,7 +217,7 @@
             </template>
             <script type="text/javascript">
             Polymer('mobile-app', {
-                accesstoken: '00Di0000000gWVG!ARcAQFdk8ckd8cVNecTgOLu3RhaSXwThKeFw.g5BI8OZ4elICn_W4ytHPZOMbRHpJzTVlUqekDVwBWaX3LBUlZ7i9VQhqKR9',
+                accesstoken: '00Di0000000gWVG!ARcAQPJDGKwaAxQtEMBhhpzl51GpirIzCp23z6I4.rGcijNhrWdoaj36XupiLpvm8meJO8_eXLen6MtJkghyvTRmd2y4bMV9',
                 instanceurl: 'https://na15.salesforce.com',
 
                 ready: function() {
@@ -259,6 +260,7 @@
                         },
 
                         list: function() {
+                            app.$.account_search.$.list.fetch();
                             this.gotoPage('#account_search');
                         },
 
