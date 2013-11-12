@@ -1,10 +1,6 @@
 (function($, SFDC) {
 
     Polymer('force-sobject-relatedlists', {
-        recordid: null,
-        idfield: 'Id',
-        hasrecordtypes: false,
-        relationships: null,
         //applyAuthorStyles: true,
         //resetStyleInheritance: true,
         relatedLists: [],

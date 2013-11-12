@@ -1,3 +1,17 @@
-<polymer-element name="force-sobject-store" attributes="sobject">
+<!--
+    force-sobject-store element wraps the SmartSync Force.StoreCache into a polymer element.
+    Why: a) Auto manages the lifecycle of the smartstore soup for each sobject type.
+    b) Auto creates index spec based on the lookup relationships on the sobject.
+    c) Provides a simpler DOM based interface to interact with Smartsync SObject Model.
+    d) Allows other polymer elements to easily comsume smartstore.
+
+    @attributes:
+    sobject: (Required) Type of sobject that you would like to store in this cache.
+    keyField: (Optional) Default: ID or ExternalId(for external objects). Name of the ID field, especially for the cases of External Object.
+
+    @properties:
+    get cacheReady: Returns a promise that on completion returns an instance of storecache if smartstore is available.
+-->
+<polymer-element name="force-sobject-store" attributes="sobject keyField">
   <script src="force-sobject-store.js"></script>
 </polymer-element>
