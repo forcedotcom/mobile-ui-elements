@@ -27,29 +27,13 @@
                     <h1 class="title">Accounts</h1>
                     <a class="button" href="#add">Create</a>
                 </header>
-                <div class="bar-standard bar-header-secondary">
-                    <input type="search" class="search-key" placeholder="Search" value={{criteria}} on-keyup={{doSearch}}/>
-                </div>
-                <div class="content">
-                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{doEdit}}"/>
+                <force-ui-search id="search" sobject="Account" on-polymer-activate="{{doEdit}}"/>
                 </div>
             </template>
             <script type="text/javascript">
             Polymer('account-search', {
-                doSearch: function() {
-                    var criteria = (this.criteria == null ? "" : this.criteria);
-                    if (SFDC.isOnline()) {
-                        this.$.list.querytype = "soql";
-                        this.$.list.query = "SELECT Id, Name FROM Account WHERE Name LIKE '" + criteria + "%' ORDER BY Name LIMIT 25";
-                    }
-                    else {
-                        this.$.list.querytype = "cache";
-                        this.$.list.query = {queryType:"smart", smartSql:"SELECT {Account:_soup} FROM {Account} WHERE {Account:Name} LIKE '" + criteria + "%' ORDER BY LOWER({Account:Name})", pageSize:25};
-                    }
-                },
-
                 doEdit: function() {
-                    app.router.navigate("#edit/accounts/" + this.$.list.selected, {trigger:true});
+                    app.router.navigate("#edit/accounts/" + this.$.search.selected, {trigger:true});
                 }
             });
             </script>
@@ -88,7 +72,7 @@
                   <a class="button" id="overwriteButton" on-click="{{doOverwrite}}">Overwrite</a>
               </div>
                 <div class="content">
-                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true" fieldlist="Id,Name,Industry,Phone,Owner.Name,LastModifiedBy.Name,LastModifiedDate"/>
+                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true"/>
                 </div>
             </template>
             <script type="text/javascript">
@@ -126,8 +110,8 @@
                         mergeMode: mergeMode,
                         success: function() { app.router.navigate(that.backAction, {trigger:true}); },
                         error: function(data, err, options) { that.handleError(new Force.Error(err)); },
-                        fieldlist: ["Id", "Name", "Industry", "Phone"]
-                        // fieldlist: _.keys(this.$.detail.model.changed) // XXX shouldn't have to do that
+                        // fieldlist: ["Id", "Name", "Industry", "Phone"]
+                        fieldlist: _.keys(this.$.detail.model.changed) // XXX shouldn't have to do that
                     };
                 },
 
@@ -172,7 +156,7 @@
                         this.$.detail.model.save(null, this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
                     }
                     else {
-                        this.$.detail.destroy({
+                        this.$.detail.delete({
                             success: function(data) {
                                 app.router.navigate("#", {trigger:true});
                             },
@@ -217,7 +201,7 @@
             </template>
             <script type="text/javascript">
             Polymer('mobile-app', {
-                accesstoken: '00Di0000000gWVG!ARcAQPJDGKwaAxQtEMBhhpzl51GpirIzCp23z6I4.rGcijNhrWdoaj36XupiLpvm8meJO8_eXLen6MtJkghyvTRmd2y4bMV9',
+                accesstoken: '00Di0000000gWVG!ARcAQCgwf6m7XUEYbam1lpFqKTJDwBoEo_p9iJ.AVObK8hUR0.Bpt05HDd03Rm7oeusg9h.lQ7MuwB1cjXt5iWnisK5FDvGf',
                 instanceurl: 'https://na15.salesforce.com',
 
                 ready: function() {
@@ -260,7 +244,7 @@
                         },
 
                         list: function() {
-                            app.$.account_search.$.list.fetch();
+                            app.$.account_search.$.search.refresh();
                             this.gotoPage('#account_search');
                         },
 
