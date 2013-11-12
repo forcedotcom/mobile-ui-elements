@@ -1,6 +1,6 @@
 (function($, SFDC) {
 
-    Polymer('force-ui-related', {
+    Polymer('force-sobject-relatedlists', {
         recordid: null,
         idfield: 'Id',
         hasrecordtypes: false,
@@ -45,15 +45,18 @@
 
     var generateQuery = function(recordid, related, describeResult) {
         var rel = _.findWhere(describeResult.childRelationships, {relationshipName : related.name});
-        var fieldList = _.union(_.pluck(related.columns, "name"), [related.sobject + '.Id']);
-        related.soql = "SELECT " + fieldList.join(",")
+        // Column names are used for generating the soql query
+        var colNameList = _.union(_.pluck(related.columns, "name"), ['Id']);
+        related.soql = "SELECT " + colNameList.join(",")
                 + " FROM " + related.sobject
                 + " WHERE " + rel.field + " = '" + recordid + "'"
                 + " ORDER BY " + related.sort[0].column + (related.sort[0].ascending ? ' asc' : ' desc')
                 + " LIMIT " + related.limitRows;
 
+        // the column field value should be used for generating the smartsql
+        var fieldList = _.union(_.pluck(related.columns, "field"), [related.sobject + '.Id']);
         var wrapFieldName = function(name) {
-            return name.replace(/\./, ':');
+            return "{" + name.replace(/\./, ':') + "}";
         }
         related.smartSql = "SELECT " + _.map(fieldList, wrapFieldName).join(",")
                 + " FROM {" + related.sobject + "}"
@@ -63,7 +66,9 @@
 
         _.extend(related, {
             get query() {
-                return (!SFDC.isOnline() && navigator.smartstore) ? related.smartSql : related.soql;
+                if (!SFDC.isOnline() && navigator.smartstore)
+                    return navigator.smartstore.buildSmartQuerySpec(related.smartSql);
+                else return related.soql;
             },
             get querytype() {
                 return (!SFDC.isOnline() && navigator.smartstore) ? "cache" : "soql";

@@ -1,33 +1,34 @@
-<!--
-    force-ui-detail element enables the rendering of full view of a salesforce record. It extends the force-sobject element to allow all the CRUD operations on an SObject. This element can auto detect the record's relevant page layout and renders the details accordingly.
-    Why: a) Reads the layout settings of an object and renders the detail accordingly.
-    b) Provides a simpler DOM based interface to fetch full or partial record.
-
-    @attributes:
-    hasrecordtypes: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
-    recordtypeid: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
--->
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
 <link rel="import" href="../../dependencies/polymer-elements/polymer-selector/polymer-selector.html">
-<polymer-element name="force-related-list" attributes="related" extends="polymer-selector">
+<polymer-element name="force-selector-relatedlist" attributes="related" extends="polymer-selector">
   <template>
-      <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}"></force-sobject-collection>
-      <shadow></shadow>
+    <shadow></shadow>
+    <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}">
+    </force-sobject-collection>
   </template>
   <script>
-    Polymer('force-related-list', {
+    Polymer('force-selector-relatedlist', {
       related: null,
       models: [],
       updateModels: function() {
         var _self = this;
+        var sobjectType = _self.related.sobject;
         _self.models = [];
         this.$.force_sobjects.collection.models
         .forEach(function(model) {
-          var wrappedModel = [];
-          var columns = _self.related.columns;
+          var fieldValuesAsArray = [];
+          var columns = _.pluck(_self.related.columns, 'field');
+          columns = _.map(columns, function(col) {
+            return col.replace(new RegExp("^" + sobjectType + "\."), "");
+          });
           for (var i in columns) {
-            wrappedModel.push(model.get(columns[i]));
+            fieldValuesAsArray.push(model.get(columns[i]));
+          }
+          var wrappedModel = {
+            impl: model,
+            id: model.id,
+            fieldValues: fieldValuesAsArray
           }
           _self.models.push(wrappedModel);
         });
@@ -35,7 +36,35 @@
     });
   </script>
 </polymer-element>
-<polymer-element name="force-ui-related" attributes="recordid, idfield, hasrecordtypes, relationships" extends="force-sobject-layout">
+<polymer-element name="force-ui-relatedlist" extends="force-selector-relatedlist">
+  <template>
+    <shadow></shadow>
+    <template if="{{models.length > 0}}">
+    <ul id="listview" class="list">
+      <li class="list-divider">{{related.label}}</li>
+      <template id="item">
+        <template if="{{idx == 0}}">{{value}}</template>
+        <template if="{{idx > 0}}"><p style="font-size: 0.9em; color: grey;">{{value}}</p></template>
+      </template>
+      <template repeat="{{models}}">
+          <li name="{{id}}">
+            <template repeat="{{value, idx in fieldValues}}" ref="item">
+            </template>
+          </li>
+      </template>
+    </ul>
+    </template>
+  </template>
+  <script>
+    Polymer('force-ui-relatedlist', {
+      ready: function() {
+        this.super();
+        this.target = this.$.listview;
+      }
+    });
+  </script>
+</polymer-element>
+<polymer-element name="force-sobject-relatedlists" attributes="recordid, idfield, hasrecordtypes, relationships" extends="force-sobject-layout">
   <template>
     <force-sobject id="model" sobject="{{sobject}}" recordid="{{recordid}}" idfield="{{idfield}}" autosync="false"/>
   </template>

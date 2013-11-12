@@ -20,7 +20,12 @@
             <template>
                 <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}">
                     <force-ui-list id="force_ui_list" sobject="Account" class="page content" on-polymer-activate="{{showDetail}}"></force-ui-list>
-                    <force-ui-detail flex id="force_ui_detail" sobject="Account" recordid="{{$.force_ui_list.selected}}" class="page content"></force-ui-detail>
+                    <force-ui-detail flex id="force_ui_detail" sobject="Account" recordid="{{$.force_ui_list.selected}}" class="page content">
+                        <force-sobject-relatedlists id="force_relatedlists" sobject="Account" recordid="{{$.force_ui_list.selected}}"></force-sobject-relatedlists>
+                        <template repeat="{{related in $.force_relatedlists.relatedLists}}">
+                            <force-ui-relatedlist related="{{related}}"></force-ui-relatedlist>
+                        </template>
+                    </force-ui-detail>
                 </force-ui-app>
                 <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
             </template>
@@ -45,5 +50,8 @@
         </polymer-element>
 
         <mobile-app></mobile-app>
+        <script>
+            mockStore.useSessionStorage();
+        </script>
     </body>
 </html>
