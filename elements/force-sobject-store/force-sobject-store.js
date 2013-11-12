@@ -4,13 +4,19 @@
 
     var sobjectStores = {};
 
-    var generateIndexSpec = function(describeResult) {
+    var generateIndexSpec = function(describeResult, fieldsToIndex) {
         var indexSpecs = [{path: "attributes.type", type: "string"}];
         describeResult.fields.forEach(function(field) {
-            if (field.type == 'reference') {
+            if (field.type == 'reference' || _.indexOf(fieldsToIndex, field.name) >= 0) { 
+                var storeType;
+                switch(field.type) {
+                    case 'int': storeType = 'integer'; break;
+                    case 'double': storeType = 'real'; break;
+                    default: storeType = 'string'; 
+                }
                 indexSpecs.push({
                     path: field.name,
-                    type: 'string'
+                    type: storeType
                 })
             }
         })
@@ -29,14 +35,16 @@
             var keyField = this.keyField ||
                 ((sobject && sobject.toLowerCase().indexOf('__x') > 0)
                     ? 'ExternalId' : 'Id');
+            var fieldsToIndex = this.fieldstoindex || [];
 
             // Create StoreCache is smartstore is available.
             if (navigator.smartstore) {
                 // Initiate store cache creation if none initiated already for this sobject
                 if (sobject && !sobjectStores[sobject]) {
                     var storePromise = SFDC.getSObjectType(sobject).describe()
-                        .then(generateIndexSpec)
-                        .then(function(indexSpecs) {
+                        .then(function(describeResult) {
+                            return generateIndexSpec(describeResult, fieldsToIndex);
+                        }).then(function(indexSpecs) {
                             dataStore = new Force.StoreCache(sobject, indexSpecs, keyField);
                             return dataStore.init();
                         }).then(function() {
