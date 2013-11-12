@@ -61,11 +61,11 @@
 
             return this;
         },
-        save: function() {
-            // Perform save (upsert) against the server
+        save: function(options) {
+            this.model.save(null, options);
         },
-        delete: function() {
-            // Perform delete of record against the server
+        delete: function(options) {
+            this.model.destroy(options)
         }
     }));
 

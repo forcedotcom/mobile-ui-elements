@@ -79,13 +79,13 @@
             <template>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
-                    <h1 class="title">Account</h1>
-                    <a class="button toggleDelete">Delete</a>
+                    <h1 class="title">{{action}} Account</h1>
+                    <a class="button" id="toggleDeleteButton" on-click="{{doToggleDelete}}">Delete</a>
                 </header>
                 <div class="bar-standard bar-header-secondary">
-                  <a class="button save">Save</a>
-                  <a class="button merge">Merge</a>
-                  <a class="button overwrite">Overwrite</a>
+                  <a class="button" id="saveButton" on-click="{{doSave}}">Save</a>
+                  <a class="button" id="mergeButton" on-click="{{doMerge}}">Merge</a>
+                  <a class="button" id="overwriteButton" on-click="{{doOverwrite}}">Overwrite</a>
               </div>
                 <div class="content">
                     <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true"/>
@@ -93,8 +93,94 @@
             </template>
             <script type="text/javascript">
             Polymer('account-detail', {
+                observe: {
+                    "accountId": "reset"
+                },
+
+                reset: function() {
+                    this.action = (null == this.accountId) ? "Add" : "Edit";
+                    if (this.action == "Add") { this.$.detail.model.set({__local__: false, Name:"", Industry:"", Phone:"", LastModifiedDate:"", attributes : { type: "Account"}}); }
+                    this.backAction = app.router.getPreviousPage();
+
+                    $(this.$.mergeButton).hide();
+                    $(this.$.overwriteButton).hide();
+
+                    if (this.action == "Add") {
+                        $(this.$.toggleDelete).hide();
+                    }
+                    else {
+                        var deleted = this.$.detail.model.get("__locally_deleted__");
+                        $(this.$.toggleDelete).html(deleted?"Undelete":"Delete");
+                    }
+                },
+
                 goBack: function() {
-                    app.router.navigate("#list", {trigger:true});
+                    app.router.navigate("#", {trigger:true});
+                },
+
+                getSaveOptions: function(mergeMode, cacheMode) {
+                    var that = this;
+
+                    return {
+                        cacheMode: cacheMode,
+                        mergeMode: mergeMode,
+                        success: function() { app.router.navigate(that.backAction, {trigger:true}); },
+                        error: function(data, err, options) { that.handleError(new Force.Error(err)); },
+                        fieldlist: _.keys(this.$.detail.model.changed) // XXX shouldn't have to do that
+                    };
+                },
+
+                handleError: function(error) {
+                    // var that = this;
+                    // if (error.type === "RestError") {
+                    //     _.each(error.details, function(detail) {
+                    //         if (detail.fields == null || detail.fields.length == 0) { alert(detail.message); }
+                    //         else {_.each(detail.fields, function(field) {that.showFieldError(field, detail.message);});}
+                    //     });
+                    // }
+                    // else if (error.type == "ConflictError") {
+                    //     _.each(error.remoteChanges, function(field) {
+                    //         var conflict = error.conflictingChanges.indexOf(field) >=0;
+                    //         that.showFieldError(field, "Server: " +  error.theirs[field], conflict);
+                    //     });
+                    //     $(".merge", this.el).show();
+                    //     $(".overwrite", this.el).show();
+                    // }
+                    if (error.type == "ConflictError") {
+                        $(this.$.mergeButton).show();
+                        $(this.$.overwriteButton).show();
+                    }
+                },
+
+
+                doSave: function() {
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
+                },
+
+                doSaveMerge: function() {
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
+                },
+
+                doSaveOverwrite: function() {
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
+                },
+
+                doToggleDelete: function() {
+                    if (this.$.detail.model.get("__locally_deleted__")) {
+                        this.$.detail.model.set("__locally_deleted__", false);
+                        this.$.detail.model.save(null, this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
+                    }
+                    else {
+                        this.$.detail.destroy({
+                            success: function(data) {
+                                app.router.navigate("#", {trigger:true});
+                            },
+                            error: function(data, err, options) {
+                                var error = new Force.Error(err);
+                                alert("Failed to delete account: " + (error.type === "RestError" ? error.details[0].message : "Remote change detected - delete aborted"));
+                            }
+                        });
+                    }
                 }
             })
             </script>
@@ -166,6 +252,10 @@
                                 this.hashHistory.push(window.location.hash);
                                 app.$.force_app.navigateTo(targetId);
                             }
+                        },
+
+                        getPreviousPage: function() {
+                            return (this.hashHistory != null && this.hashHistory.length > 1 ? this.hashHistory[this.hashHistory.length - 2] : "#");
                         },
 
                         list: function() {
