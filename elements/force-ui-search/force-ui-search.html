@@ -1,0 +1,35 @@
+<!--
+    force-ui-search element enables the rendering of search screen made of an input field and a list.
+-->
+<link rel="import" href="../force-sobject-store/force-sobject-store.html">
+<link rel="import" href="../force-ui-list/force-ui-list.html">
+<polymer-element name="force-ui-search" attributes="sobject selected">
+  <template>
+      <force-sobject-store sobject="{{sobject}}" fieldstoindex="Name"></force-sobject-store>
+      <div class="bar-standard bar-header-secondary">
+          <input type="search" class="search-key" value={{criteria}} on-keyup={{doSearch}}/>
+      </div>
+      <div class="content">
+          <force-ui-list id="list" sobject="{{sobject}}" selected="{{selected}}"/>
+      </div>
+  </template>
+  <script>
+    Polymer('force-ui-search', {
+        doSearch: function() {
+            var criteria = (this.criteria == null ? "" : this.criteria);
+            if (SFDC.isOnline()) {
+                this.$.list.querytype = "soql";
+                this.$.list.query = "SELECT Id, Name FROM " + this.sobject + " WHERE Name LIKE '" + criteria + "%' ORDER BY Name LIMIT 25";
+            }
+            else {
+                this.$.list.querytype = "cache";
+                this.$.list.query = {queryType:"smart", smartSql:"SELECT {" + this.sobject + ":_soup} FROM {" + this.sobject + "} WHERE {" + this.sobject + ":Name} LIKE '" + criteria + "%' ORDER BY LOWER({" + this.sobject + ":Name})", pageSize:25};
+            }
+        },
+
+        refresh: function() {
+          this.$.list.fetch();
+        }
+    });
+  </script>
+</polymer-element>
