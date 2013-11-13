@@ -61,6 +61,13 @@
 
         <polymer-element name="account-detail" attributes="accountId">
             <template>
+                <style>
+                .right {
+                    position: fixed; 
+                    right: 0; 
+                    margin: 20px;
+                }
+                </style>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
                     <h1 class="title">{{action}} Account</h1>
@@ -70,6 +77,7 @@
                   <a class="button" id="saveButton" on-click="{{doSave}}">Save</a>
                   <a class="button" id="mergeButton" on-click="{{doMerge}}">Merge</a>
                   <a class="button" id="overwriteButton" on-click="{{doOverwrite}}">Overwrite</a>
+                  <span class="count-main right" id="localChangeSpan"></span>
               </div>
                 <div class="content">
                     <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true"/>
@@ -82,19 +90,31 @@
                 },
 
                 reset: function() {
-                    this.action = (null == this.accountId) ? "Add" : "Edit";
-                    if (this.action == "Add") { this.$.detail.model.set({__local__: false, Name:"", Industry:"", Phone:"", LastModifiedDate:"", attributes : { type: "Account"}}); }
-                    this.backAction = app.router.getPreviousPage();
-
+                    var model = this.$.detail.model;
                     $(this.$.mergeButton).hide();
                     $(this.$.overwriteButton).hide();
+                    this.backAction = app.router.getPreviousPage();
 
-                    if (this.action == "Add") {
+                    if (model.get("__local__")) {
+                        $(this.$.localChangeSpan).html("Locally " 
+                                + (model.get("__locally_created__") ? "created " : "") 
+                                + (model.get("__locally_updated__") ? "updated " : "") 
+                                + (model.get("__locally_deleted__") ? "deleted" : ""))
+                        $(this.$.localChangeSpan).show();
+                    }
+                    else {
+                        $(this.$.localChangeSpan).hide();
+                    }
+
+                    if (this.accountId == null) {
+                        this.action = "Add";
+                        // model.set({__local__: false, Name:"", Industry:"", Phone:"", LastModifiedDate:"", attributes : { type: "Account"}});   
                         $(this.$.toggleDelete).hide();
                     }
                     else {
-                        var deleted = this.$.detail.model.get("__locally_deleted__");
-                        $(this.$.toggleDelete).html(deleted?"Undelete":"Delete");
+                        this.action = "Edit";
+                        $(this.$.toggleDeleteButton).html(model.get("__locally_deleted__") ? "Undelete" : "Delete");
+                        $(this.$.toggleDelete).show();
                     }
                 },
 
@@ -173,7 +193,15 @@
 
         <polymer-element name="offline-toggler" attributes="onlineStatus">
             <template>
-                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
+                <style>
+                .bottomright {
+                    position: fixed; 
+                    bottom: 0; 
+                    right: 0; 
+                    margin: 20px;
+                }
+                </style>
+                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline"></polymer-ui-toggle-button>
             </template>
             <script type="text/javascript">
             Polymer('offline-toggler', {
