@@ -62,12 +62,12 @@
 <polymer-element name="force-ui-relatedlist" extends="force-selector-relatedlist">
   <template>
     <shadow></shadow>
-    <template if="{{models.length > 0}}">
+    <template if="{{models.length}}">
     <ul id="listview" class="list">
       <li class="list-divider">{{related.label}}</li>
       <template id="item">
-        <template if="{{idx == 0}}">{{value}}</template>
-        <template if="{{idx > 0}}"><p style="font-size: 0.9em; color: #696e71;">{{value}}</p></template>
+        <template if="{{!idx}}">{{value}}</template>
+        <template if="{{idx}}"><p style="font-size: 0.9em; color: #696e71;">{{value}}</p></template>
       </template>
       <template repeat="{{models}}">
           <li name="{{id}}">

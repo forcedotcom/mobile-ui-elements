@@ -62,7 +62,7 @@
     </style>
     <template if="{{!hideheader}}">
       <header class="bar-title">
-        <template if="{{multipage && pageStack.length > 0}}">
+        <template if="{{multipage && pageStack.length}}">
           <a class="button-prev" on-click="{{navigateBack}}">Previous</a>
         </template>
         <content id="header" select="header"></content>
