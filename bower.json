@@ -18,6 +18,9 @@
     "modernizr": {
       ".": "modernizr*.js"
     },
+    "jquery": {
+      ".": ["jquery.js", "jquery.min.js"]
+    },
     "backbone": {
       ".": "backbone*.js"
     },
