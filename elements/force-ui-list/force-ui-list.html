@@ -5,7 +5,7 @@
     @extends force-selector-list
 -->
 <link rel="import" href="../force-selector-list/force-selector-list.html">
-<polymer-element name="force-ui-list" extends="force-selector-list">
+<polymer-element name="force-ui-list" extends="force-selector-list" target="{{$.list}}">
   <template>
       <shadow></shadow>
       <ul id="list" class="list">
@@ -14,12 +14,4 @@
         </template>
       </ul>
   </template>
-  <script>
-    Polymer('force-ui-list', {
-      ready: function() {
-        //this.super();
-        this.target = this.$.list;
-      }
-    });
-  </script>
 </polymer-element>
