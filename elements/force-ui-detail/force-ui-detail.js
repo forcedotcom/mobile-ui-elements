@@ -154,9 +154,11 @@
 
         var renderTemplate = function(templateInfo) {
             // Template info is null when there's no template generated
-            if (templateInfo && view.model.id) {
-                // Perform data fetch for the fieldlist used in template
-                view.model.fetch({ fieldlist: templateInfo.fields });
+            if (templateInfo) {
+                if (view.model.id) {
+                    // Perform data fetch for the fieldlist used in template
+                    view.model.fetch({ fieldlist: templateInfo.fields });
+                }
 
                 // Attach the template instance to the view
                 var template = templateInfo.template;
