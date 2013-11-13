@@ -24,6 +24,11 @@
     }
 
     Polymer('force-sobject-store', {
+        observe: {
+            "sobject": "init",
+            "keyfield": "init",
+            "fieldstoindex": "init"
+        },
         sobject: null,
         keyField: null,
         get cacheReady() {
@@ -35,14 +40,16 @@
             var keyField = this.keyField ||
                 ((sobject && sobject.toLowerCase().indexOf('__x') > 0)
                     ? 'ExternalId' : 'Id');
-            var fieldsToIndex = this.fieldstoindex || [];
+            var fieldsToIndex = this.fieldstoindex != null ? this.fieldstoindex.split(",") : [];
 
-            // Create StoreCache is smartstore is available.
+            // Create StoreCache if smartstore is available.
             if (navigator.smartstore) {
                 // Initiate store cache creation if none initiated already for this sobject
                 if (sobject && !sobjectStores[sobject]) {
-                    var storePromise = SFDC.getSObjectType(sobject).describe()
-                        .then(function(describeResult) {
+                    var storePromise = SFDC.launcher
+                        .then(function() {
+                            return SFDC.getSObjectType(sobject).describe();
+                        }).then(function(describeResult) {
                             return generateIndexSpec(describeResult, fieldsToIndex);
                         }).then(function(indexSpecs) {
                             dataStore = new Force.StoreCache(sobject, indexSpecs, keyField);
@@ -55,14 +62,6 @@
                     sobjectStores[sobject] = storePromise;
                 }
                 return sobjectStores[sobject];
-            }
-        },
-        sobjectChanged: function() {
-            SFDC.launcher.then(this.init.bind(this));
-        },
-        ready: function() {
-            if (this.sobject) {
-                SFDC.launcher.then(this.init.bind(this));
             }
         }
     });

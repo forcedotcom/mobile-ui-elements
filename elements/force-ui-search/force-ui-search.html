@@ -1,11 +1,15 @@
 <!--
     force-ui-search element enables the rendering of search screen made of an input field and a list.
+
+    @attributes:
+    sobject: (Required) Type of sobject that you want to be searching on.
+    searchfield: (Required) Field you want to be searching by.
 -->
 <link rel="import" href="../force-sobject-store/force-sobject-store.html">
 <link rel="import" href="../force-ui-list/force-ui-list.html">
-<polymer-element name="force-ui-search" attributes="sobject selected">
+<polymer-element name="force-ui-search" attributes="sobject searchfield selected">
   <template>
-      <force-sobject-store sobject="{{sobject}}" fieldstoindex="Name"></force-sobject-store>
+      <force-sobject-store sobject="{{sobject}}" fieldstoindex="{{searchfield}}"></force-sobject-store>
       <div class="bar-standard bar-header-secondary">
           <input type="search" class="search-key" value={{criteria}} on-keyup={{doSearch}}/>
       </div>
@@ -19,11 +23,11 @@
             var criteria = (this.criteria == null ? "" : this.criteria);
             if (SFDC.isOnline()) {
                 this.$.list.querytype = "soql";
-                this.$.list.query = "SELECT Id, Name FROM " + this.sobject + " WHERE Name LIKE '" + criteria + "%' ORDER BY Name LIMIT 25";
+                this.$.list.query = "SELECT Id, " + this.searchfield + " FROM " + this.sobject + " WHERE " + this.searchfield + " LIKE '" + criteria + "%' ORDER BY " + this.searchfield + " LIMIT 25";
             }
             else {
                 this.$.list.querytype = "cache";
-                this.$.list.query = {queryType:"smart", smartSql:"SELECT {" + this.sobject + ":_soup} FROM {" + this.sobject + "} WHERE {" + this.sobject + ":Name} LIKE '" + criteria + "%' ORDER BY LOWER({" + this.sobject + ":Name})", pageSize:25};
+                this.$.list.query = {queryType:"smart", smartSql:"SELECT {" + this.sobject + ":_soup} FROM {" + this.sobject + "} WHERE {" + this.sobject + ":" + this.searchfield + "} LIKE '" + criteria + "%' ORDER BY LOWER({" + this.sobject + ":" + this.searchfield + "})", pageSize:25};
             }
         },
 
