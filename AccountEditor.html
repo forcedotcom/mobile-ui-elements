@@ -27,13 +27,25 @@
                     <h1 class="title">Accounts</h1>
                     <a class="button" href="#add">Create</a>
                 </header>
-                <force-ui-search id="search" sobject="Account" searchfield="Name" on-polymer-activate="{{doEdit}}"/>
+                <force-ui-search id="search" sobject="Account" searchfield="Name"></force-ui-search>
+                <force-selector-list id="list" sobject="Account" querytype="{{$.search.querytype}}" query="{{$.search.query}}" target="{{$.listbody}}" on-polymer-activate="{{doEdit}}">
+                </force-selector-list>
+                <div style="margin-top:88px /*XXX*/">
+                    <ul id="listbody" class="list">
+                        <template repeat="{{$.list.collection.models}}">
+                            <li name="{{id}}">{{attributes.Name}}</li>
+                        </template>
+                    </ul>
                 </div>
             </template>
             <script type="text/javascript">
             Polymer('account-search', {
                 doEdit: function() {
-                    app.router.navigate("#edit/accounts/" + this.$.search.selected, {trigger:true});
+                    app.router.navigate("#edit/accounts/" + this.$.list.selected, {trigger:true});
+                },
+
+                refresh: function() {
+                    this.$.list.fetch();
                 }
             });
             </script>
@@ -229,7 +241,7 @@
             </template>
             <script type="text/javascript">
             Polymer('mobile-app', {
-                accesstoken: '00Di0000000gWVG!ARcAQCgwf6m7XUEYbam1lpFqKTJDwBoEo_p9iJ.AVObK8hUR0.Bpt05HDd03Rm7oeusg9h.lQ7MuwB1cjXt5iWnisK5FDvGf',
+                accesstoken: '00Di0000000gWVG!ARcAQARIGWPjWqSVsJg0OP.stxh5m8zrPB6IWSOCsJWWgznAzQIWPssPv3yuadxQI3.dZ.3YDGy4mV33bZ_dGj1nD1Xg68tW',
                 instanceurl: 'https://na15.salesforce.com',
 
                 ready: function() {
@@ -272,12 +284,12 @@
                         },
 
                         list: function() {
-                            app.$.account_search.$.search.refresh();
+                            app.$.account_search.refresh();
                             this.gotoPage('#account_search');
                         },
 
                         addAccount: function() {
-                            this.editAccount(null);
+                            this.editAccount("");
                         },
 
                         editAccount: function(accountId) {
