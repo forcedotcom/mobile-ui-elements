@@ -18,6 +18,16 @@ module.exports = function (grunt) {
                 }
             }
         },
+        uglify: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.dist %>',
+                    src: '*.js',
+                    dest: '<%= yeoman.dist %>'
+                }]
+            }
+        },
         exec: {
             vulcan: {
               command: 'node tools/vulcanize/vulcanize --csp elements/mobile-ui-elements.html -o <%= yeoman.dist %>/mobile-ui-elements.html',
@@ -34,7 +44,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dist', [
         'build',
-        'exec'
+        'exec',
+        'uglify:dist'
     ]);
 
     grunt.registerTask('default', ['build']);
