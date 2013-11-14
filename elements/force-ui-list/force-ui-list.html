@@ -3,6 +3,9 @@
     Why: a) Renders the list of records within a Force.SObjectCollection as an Unordered List.
 
     @extends force-selector-list
+
+    @properties:
+    selected: Returns the value of "idfield" of the selected records.
 -->
 <link rel="import" href="../force-selector-list/force-selector-list.html">
 <polymer-element name="force-ui-list" extends="force-selector-list" target="{{$.list}}">

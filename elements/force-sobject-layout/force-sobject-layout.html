@@ -1,12 +1,25 @@
 <!--
-    force-ui-detail element enables the rendering of full view of a salesforce record. It extends the force-sobject element to allow all the CRUD operations on an SObject. This element can auto detect the record's relevant page layout and renders the details accordingly.
-    Why: a) Reads the layout settings of an object and renders the detail accordingly.
-    b) Provides a simpler DOM based interface to fetch full or partial record.
+    force-sobject-layout element provides the layout information for a particular sobject record.
+    Why: a) Wraps the describeLayout API call.
+    b) Layout information is cached in memory for existing session and stored in smartstore for offline consumption.
+    c) Provides a base definition for elements that depend on page layouts, such as force-ui-detail and force-sobject-related.
 
     @attributes:
-    hasrecordtypes: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
-    recordtypeid: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
+    sobject: (Required) Type of sobject on which you want to fetch the layout
+    hasrecordtypes: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
+    recordtypeid: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
+    recordid: (Optional) Default: null. Id of the record for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordtypeid" is not provided.
+    idfield: (Optional) Default: ID. Name of the ID field, required especially for the cases of External Object.
+
+    @methods:
+    whenDetailSections: Initiate the fetching of layout's detail view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all detail sections.
+    whenEditSections: Initiate the fetching of layout's edit view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all edit sections.
+    whenRelatedLists: Initiate the fetching of layout's related lists data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all related list infos.
 -->
-<polymer-element name="force-sobject-layout" attributes="sobject, recordtypeid">
+<link rel="import" href="../force-sobject/force-sobject.html">
+<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield">
+  <template>
+    <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" idfield="{{idfield}}" recordid="{{recordid}}" autosync="false"></force-sobject>
+  </template>
   <script src="force-sobject-layout.js"></script>
 </polymer-element>

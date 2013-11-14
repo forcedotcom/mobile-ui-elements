@@ -18,9 +18,19 @@ module.exports = function (grunt) {
                 }
             }
         },
+        uglify: {
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.dist %>',
+                    src: '*.js',
+                    dest: '<%= yeoman.dist %>'
+                }]
+            }
+        },
         exec: {
             vulcan: {
-              command: 'node tools/vulcanize/vulcanize elements/mobile-ui-elements.html -o <%= yeoman.dist %>/mobile-ui-elements.html',
+              command: 'node tools/vulcanize/vulcanize --csp elements/mobile-ui-elements.html -o <%= yeoman.dist %>/mobile-ui-elements.html',
               stdout: true,
               stderr: true
             }
@@ -30,6 +40,12 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean',
         'bower'
+    ]);
+
+    grunt.registerTask('dist', [
+        'build',
+        'exec',
+        'uglify:dist'
     ]);
 
     grunt.registerTask('default', ['build']);

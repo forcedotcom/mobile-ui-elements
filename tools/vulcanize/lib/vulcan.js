@@ -49,8 +49,9 @@ function resolvePaths($, input, output) {
   });
   // resolve style elements
   $('style').each(function() {
-    var val = this.html();
-    this.html(rewriteURL(input, output, val));
+    // directly update the textnode child of <style>
+    // equivalent to <style>.textContent
+    this[0].children[0].data = rewriteURL(input, output, this.text());
   });
   $(ELEMENTS).each(function() {
     //this.attr('assetpath', assetPath);
@@ -172,11 +173,11 @@ function insertInlinedImports($, storedPosition, importText) {
   pos[operation](importText);
 }
 
-function inlineScripts(htmlstring) {
+function inlineScripts(htmlstring, dir) {
   return htmlstring.replace(SCRIPT_SRC, function(match, src) {
     var out = match;
     if (!ABS_URL.test(src)) {
-      //out = '<script>' + fs.readFileSync(path.resolve(options.outputDir, src), 'utf8') + '</script>';
+      out = '<script>' + fs.readFileSync(path.resolve(dir, src), 'utf8') + '</script>';
     }
     return out;
   });
@@ -188,6 +189,7 @@ function handleMainDocument() {
   // find the position of the last import's nextSibling
   var import_pos = $(IMPORTS).last().next();
   processImports($, dir);
+  resolvePaths($, dir, options.outputDir);
   var output = import_buffer.join(EOL);
 
   if (!fs.existsSync(options.outputDir)) fs.mkdirSync(options.outputDir);
@@ -206,9 +208,7 @@ function handleMainDocument() {
       if (src) {
         // external script
         if (!ABS_URL.test(src)) {
-          var scriptContent = fs.readFileSync(path.resolve(options.outputDir, src), 'utf8');
-          scriptContent = (";(function() {\n" + scriptContent + "\n}).call(this);");
-          scripts.push(scriptContent);
+          scripts.push(fs.readFileSync(path.resolve(options.outputDir, src), 'utf8'));
         } else {
           // put an absolute path script after polymer.js in main document
           scripts_after_polymer.push(this.html());
@@ -230,7 +230,7 @@ function handleMainDocument() {
   insertInlinedImports($, import_pos, output);
   var outhtml = $.html();
   if (!options.csp && options.inline) {
-    outhtml = inlineScripts(outhtml);
+    outhtml = inlineScripts(outhtml, options.outputDir);
   }
   fs.writeFileSync(options.output, outhtml, 'utf8');
 }

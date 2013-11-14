@@ -8,6 +8,8 @@
     sobject: (Required) Type of sobject on which you want to render a list
     query: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
     querytype: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+    autosync: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
+    maxsize: (Optional) Default: -1. If positive
 
     @methods:
     fetch: Initiates the fetching of records from the relevant data store (server/offline store).

@@ -1,0 +1,104 @@
+<link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
+<link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
+<link rel="import" href="../../dependencies/polymer-elements/polymer-selector/polymer-selector.html">
+<!--
+    force-selector-relatedlist element is an extension of polymer-selector element and provides a wrapper around force-sobject-collection element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+
+    @extends polymer-selector
+
+    @attributes:
+    related: (Required) Object instance of each related list item from the array obtained via force-sobject-relatedlists element. The object must contain the query and querytype properties to fetch the related items..
+
+    @properties:
+    models: Returns an array of all the related records. Each item is an object with properties "impl", "id" and "fieldValues". "impl" is the instance of the Force.SObject. "id" is the ID of the current record. "fieldValues" is an array containing field values in the column/field order on the related list.
+
+    @methods:
+    updateModels: Updates the "models" property on the element based on the current set of models in the collection.
+-->
+<polymer-element name="force-selector-relatedlist" attributes="related" extends="polymer-selector">
+  <template>
+    <shadow></shadow>
+    <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}">
+    </force-sobject-collection>
+  </template>
+  <script>
+    Polymer('force-selector-relatedlist', {
+      related: null,
+      models: [],
+      updateModels: function() {
+        var _self = this;
+        var sobjectType = _self.related.sobject;
+        _self.models = [];
+        this.$.force_sobjects.collection.models
+        .forEach(function(model) {
+          var fieldValuesAsArray = [];
+          var columns = _.pluck(_self.related.columns, 'field');
+          columns = _.map(columns, function(col) {
+            return col.replace(new RegExp("^" + sobjectType + "\."), "");
+          });
+          for (var i in columns) {
+            fieldValuesAsArray.push(model.get(columns[i]));
+          }
+          var wrappedModel = {
+            impl: model,
+            id: model.id,
+            fieldValues: fieldValuesAsArray
+          }
+          _self.models.push(wrappedModel);
+        });
+      }
+    });
+  </script>
+</polymer-element>
+
+<!--
+    force-ui-relatedlist element is an extension of force-selector-relatedlist element and renders a list of related records to an sobject record.
+
+    @extends force-selector-relatedlist
+
+    @properties:
+    selected: Returns the value of "idfield" of the selected records.
+-->
+<polymer-element name="force-ui-relatedlist" extends="force-selector-relatedlist">
+  <template>
+    <shadow></shadow>
+    <template if="{{models.length}}">
+    <ul id="listview" class="list">
+      <li class="list-divider">{{related.label}}</li>
+      <template id="item">
+        <template if="{{!idx}}">{{value}}</template>
+        <template if="{{idx}}"><p style="font-size: 0.9em; color: #696e71;">{{value}}</p></template>
+      </template>
+      <template repeat="{{models}}">
+          <li name="{{id}}">
+            <template repeat="{{value, idx in fieldValues}}" ref="item">
+            </template>
+          </li>
+      </template>
+    </ul>
+    </template>
+  </template>
+  <script>
+    Polymer('force-ui-relatedlist', {
+      ready: function() {
+        this.super();
+        this.target = this.$.listview;
+      }
+    });
+  </script>
+</polymer-element>
+
+<!--
+    force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It extends the force-sobject-layout element to fetch the related lists configuraton from the page layout settings.
+    Why: a) Parses the related lists configuration for a particular sobject type.
+    b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
+
+    @attributes:
+    relationships: (Optional) Default: null. A comma separated list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
+
+    @properties:
+    relatedLists: An array of all the related list information.
+-->
+<polymer-element name="force-sobject-relatedlists" attributes="relationships" extends="force-sobject-layout">
+  <script src="force-ui-relatedlist.js"></script>
+</polymer-element>

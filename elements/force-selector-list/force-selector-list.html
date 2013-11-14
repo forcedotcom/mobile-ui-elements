@@ -1,5 +1,5 @@
 <!--
-  force-selector-list element is an extension of polymer-selector element and provides a wrapper around force-data-collection element. The element acts as a base for any list UI element that also needs the selector functionality.
+  force-selector-list element is an extension of polymer-selector element and provides a wrapper around force-sobject-collection element. The element acts as a base for any list UI element that also needs the selector functionality.
 
   @extends polymer-selector
 
@@ -11,6 +11,9 @@
 
   @properties:
   get collection: Returns an instance of Force.SObjectCollection with associated models
+
+  @methods:
+  fetch: Executes a fetch request on the underlying collection object based on the current config.
 -->
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
 <link rel="import" href="../../dependencies/polymer-elements/polymer-selector/polymer-selector.html">

@@ -1,17 +1,19 @@
 <!--
-    force-ui-detail element enables the rendering of full view of a salesforce record. It extends the force-sobject element to allow all the CRUD operations on an SObject. This element can auto detect the record's relevant page layout and renders the details accordingly.
+    force-ui-detail element enables the rendering of full view of a salesforce record. It extends the force-sobject-layout to fetch the page layout for the record. This element also embeds a force-sobject element to allow all the CRUD operations on an SObject.
     Why: a) Reads the layout settings of an object and renders the detail accordingly.
     b) Provides a simpler DOM based interface to fetch full or partial record.
 
     @attributes:
     hasrecordtypes: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
     recordtypeid: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
+
+    @extends force-sobject-layout
 -->
 <link rel="import" href="../force-sobject/force-sobject.html">
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
-<polymer-element name="force-ui-detail" attributes="hasrecordtypes, recordtypeid, foredit" extends="force-sobject">
+<polymer-element name="force-ui-detail" attributes="foredit fieldlist" extends="force-sobject-layout">
   <template>
-    <force-sobject-layout id="layout" sobject="{{sobject}}"></force-sobject-layout>
+    <force-sobject id="force_sobject" sobject="{{sobject}}" idfield="{{idfield}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
     <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
     <content select="*"></content>
   </template>

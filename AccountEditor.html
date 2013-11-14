@@ -101,6 +101,10 @@
                     "accountId": "reset"
                 },
 
+                get force_sobject() {
+                    return this.$.detail.$.force_sobject;
+                },
+
                 reset: function() {
                     var model = this.$.detail.model;
                     $(this.$.mergeButton).hide();
@@ -171,24 +175,25 @@
 
 
                 doSave: function() {
-                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
+                    this.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
                 },
 
                 doSaveMerge: function() {
-                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
+                    this.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
                 },
 
                 doSaveOverwrite: function() {
-                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
+                    this.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
                 },
 
                 doToggleDelete: function() {
-                    if (this.$.detail.model.get("__locally_deleted__")) {
-                        this.$.detail.model.set("__locally_deleted__", false);
-                        this.$.detail.model.save(null, this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
+                    var model = this.$.detail.model;
+                    if (model.get("__locally_deleted__")) {
+                        model.set("__locally_deleted__", false);
+                        this.force_sobject.save(this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
                     }
                     else {
-                        this.$.detail.delete({
+                        this.force_sobject.delete({
                             success: function(data) {
                                 app.router.navigate("#", {trigger:true});
                             },
