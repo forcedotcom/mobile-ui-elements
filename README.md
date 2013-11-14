@@ -37,6 +37,10 @@ To build the project and fetch all the dependencies, execute:
 
     $ grunt
 
+To build the project for distribution, execute (all assets will be generated in dist directory):
+
+    $ grunt dist
+
 To run the sample app in Safari:
 
 ```
