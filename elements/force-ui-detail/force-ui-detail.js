@@ -3,6 +3,7 @@
     Polymer('force-ui-detail', {
         foredit: false,
         fieldlist: null,
+        updateablefields: [],
         //applyAuthorStyles: true,
         //resetStyleInheritance: true,
         ready: function() {
@@ -122,6 +123,10 @@
                     // Perform data fetch for the fieldlist used in template
                     view.model.fetch({ fieldlist: templateInfo.fields });
                 }
+
+                view.updateablefields = _.filter(templateInfo.fields, function(field) {
+                    return templateInfo.fieldInfos[field].updateable;
+                });
 
                 // Attach the template instance to the view
                 var template = templateInfo.template;

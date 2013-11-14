@@ -72,9 +72,11 @@ var instances  =[];
                     collection.getMore().then(onFetch);
             }.bind(this);
 
-            $.when(this.$.store.cacheReady, SFDC.launcher)
+            var store = this.$.store;
+            $.when(store.cacheReady, SFDC.launcher)
             .done(function(cache) {
                 collection.cache = cache;
+                collection.cacheForOriginals = store.cacheForOriginals;
                 collection.fetch({ reset: true, success: onFetch });
             });
         }

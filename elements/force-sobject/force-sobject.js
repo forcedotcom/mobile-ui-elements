@@ -38,6 +38,7 @@
         },
         reset: function() {
             if (!this.model ||
+                !this.model.id ||
                 this.model.sobjectType != this.sobject ||
                 this.model.id != this.recordid ||
                 this.model.idAttribute != this.idfield ||
@@ -66,6 +67,12 @@
         },
         delete: function(options) {
             this.model.destroy(options)
+        },
+        set: function(key, val) {
+            this.model.set(key, val);
+        },
+        get: function(key) {
+            return this.model.get(key);
         }
     }));
 

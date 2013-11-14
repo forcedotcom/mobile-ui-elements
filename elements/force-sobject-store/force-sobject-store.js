@@ -3,6 +3,7 @@
     "use strict";
 
     var sobjectStores = {};
+    var originalSObjectStores = {};
 
     var generateIndexSpec = function(describeResult, fieldsToIndex) {
         var indexSpecs = [{path: "attributes.type", type: "string"}];
@@ -30,14 +31,18 @@
             "fieldstoindex": "init"
         },
         sobject: null,
-        keyField: null,
+        keyfield: null,
         get cacheReady() {
             return SFDC.launcher.then(this.init.bind(this));
         },
+        get cacheForOriginals() {
+            return originalSObjectStores[this.sobject];
+        },
         init: function() {
             var dataStore;
+            var originalDataStore;
             var sobject = this.sobject;
-            var keyField = this.keyField ||
+            var keyfield = this.keyfield ||
                 ((sobject && sobject.toLowerCase().indexOf('__x') > 0)
                     ? 'ExternalId' : 'Id');
             var fieldsToIndex = this.fieldstoindex != null ? this.fieldstoindex.split(",") : [];
@@ -48,11 +53,15 @@
                 if (sobject && !sobjectStores[sobject]) {
                     var storePromise = SFDC.launcher
                         .then(function() {
+                            originalDataStore = new Force.StoreCache(sobject + "-originals", null, keyfield);
+                            return originalDataStore.init();
+                        }).then(function() {
+                            originalSObjectStores[sobject] = originalDataStore;
                             return SFDC.getSObjectType(sobject).describe();
                         }).then(function(describeResult) {
                             return generateIndexSpec(describeResult, fieldsToIndex);
                         }).then(function(indexSpecs) {
-                            dataStore = new Force.StoreCache(sobject, indexSpecs, keyField);
+                            dataStore = new Force.StoreCache(sobject, indexSpecs, keyfield);
                             return dataStore.init();
                         }).then(function() {
                             sobjectStores[sobject] = dataStore;

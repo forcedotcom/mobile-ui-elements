@@ -28,22 +28,30 @@
                     <a class="button" href="#add">Create</a>
                 </header>
                 <force-ui-search id="search" sobject="Account" searchfield="Name"></force-ui-search>
-                <force-selector-list id="list" sobject="Account" querytype="{{$.search.querytype}}" query="{{$.search.query}}" target="{{$.listbody}}" on-polymer-activate="{{doEdit}}">
-                </force-selector-list>
+                <force-selector-list id="list" sobject="Account" querytype="{{$.search.querytype}}" query="{{$.search.query}}"></force-selector-list>
                 <div style="margin-top:88px /*XXX*/">
                     <ul id="listbody" class="list">
                         <template repeat="{{$.list.collection.models}}">
-                            <li name="{{id}}">{{attributes.Name}}</li>
+                            <li name="{{id}}">
+                                <a href="#edit/{{id}}">
+                                    {{attributes.Name}}                                
+                                    <template if="{{attributes.__sync_failed__}}"><span class="count-negative">Failed to sync</span></template>
+                                    <template if="{{attributes.__local__}}">
+                                        <span class="count-main">Locally 
+                                            <template if="{{attributes.__locally_created__}}"> created</template>
+                                            <template if="{{attributes.__locally_updated__}}"> updated</template>
+                                            <template if="{{attributes.__locally_deleted__}}"> deleted</template>
+                                        </span>
+                                    </template>
+                                    <template if="{{!attributes.__local__}}"><span class="count-positive">Cached</span></template>
+                                </a>
+                            </li>
                         </template>
                     </ul>
                 </div>
             </template>
             <script type="text/javascript">
             Polymer('account-search', {
-                doEdit: function() {
-                    app.router.navigate("#edit/accounts/" + this.$.list.selected, {trigger:true});
-                },
-
                 refresh: function() {
                     this.$.list.fetch();
                 }
@@ -82,7 +90,7 @@
                             mergeMode: Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED,
                             success: function() {
                                 if (collection.length == 0) {
-                                    app.router.navigate("#", {trigger:true});
+                                    app.router.navigateFirst();
                                 }
                                 else {
                                     that.doSync();
@@ -91,7 +99,7 @@
                             error: function() {
                                 record = record.set("__sync_failed__", true);
                                 collection.push(record);
-                                collection.doSync();
+                                that.doSync();
                             }
                         };
 
@@ -106,12 +114,12 @@
                         // NB: This will cause us to navigate out of the sync screen
                     }
                     else {
-                        app.router.navigate("#", {trigger:true});
+                        app.router.navigateFirst();
                     }
                 },
 
                 doEdit: function() {
-                    app.router.navigate("#edit/accounts/" + this.$.list.selected, {trigger:true});
+                    app.router.navigate("#edit/" + this.$.list.selected, {trigger:true});
                 },
 
                 refresh: function() {
@@ -123,130 +131,89 @@
 
         <polymer-element name="account-detail" attributes="accountid">
             <template>
-                <style>
-                .right {
-                    position: fixed; 
-                    right: 0; 
-                    margin: 20px;
-                }
-                </style>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
-                    <h1 class="title">{{action}} Account</h1>
-                    <a class="button" id="toggleDeleteButton" on-click="{{doToggleDelete}}">Delete</a>
+                    <h1 class="title">{{accountid ? 'Edit' : 'Add'}} Account</h1>
+                    <a class="button" style="display:{{accountid ? 'display' : 'block'}}" id="toggleDeleteButton" on-click="{{doToggleDelete}}">{{model.attributes.__locally_deleted__ ? 'Undelete' : 'Delete'}}</a>
                 </header>
-                <div class="bar-standard bar-header-secondary">
-                  <a class="button" id="saveButton" on-click="{{doSave}}">Save</a>
-                  <a class="button" id="mergeButton" on-click="{{doMerge}}">Merge</a>
-                  <a class="button" id="overwriteButton" on-click="{{doOverwrite}}">Overwrite</a>
-                  <span class="count-main right" id="localChangeSpan"></span>
-              </div>
+                <div class="bar-standard bar-header-secondary">                    
+                    <a class="button" id="saveButton" on-click="{{doSave}}">Save</a>
+                    <template if="{{model.attributes.__sync_failed__}}">
+                        <a class="button" id="mergeButton" on-click="{{doMerge}}">Merge</a>
+                        <a class="button" id="overwriteButton" on-click="{{doOverwrite}}">Overwrite</a>
+                    </template>
+                    <span style="position:absolute; right:10px">
+                        <template if="{{model.attributes.__local__}}">
+                            <span class="count-main">Locally 
+                                <template if="{{model.attributes.__locally_created__}}"> created</template>
+                                <template if="{{model.attributes.__locally_updated__}}"> updated</template>
+                                <template if="{{model.attributes.__locally_deleted__}}"> deleted</template>
+                            </span>
+                        </template>
+                    </span>
+                </div>
                 <div class="content">
                     <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountid}}" foredit="true"></force-ui-detail>
                 </div>
             </template>
             <script type="text/javascript">
             Polymer('account-detail', {
-                observe: {
-                    "accountid": "reset"
-                },
-
-                get force_sobject() {
-                    return this.$.detail.$.force_sobject;
-                },
-
-                reset: function() {
-                    var model = this.$.detail.model;
-                    $(this.$.mergeButton).hide();
-                    $(this.$.overwriteButton).hide();
-                    this.backAction = app.router.getPreviousPage();
-
-                    if (model.get("__local__")) {
-                        $(this.$.localChangeSpan).html("Locally " 
-                                + (model.get("__locally_created__") ? "created " : "") 
-                                + (model.get("__locally_updated__") ? "updated " : "") 
-                                + (model.get("__locally_deleted__") ? "deleted" : ""))
-                        $(this.$.localChangeSpan).show();
-                    }
-                    else {
-                        $(this.$.localChangeSpan).hide();
-                    }
-
-                    if (this.accountid == null) {
-                        this.action = "Add";
-                        // model.set({__local__: false, Name:"", Industry:"", Phone:"", LastModifiedDate:"", attributes : { type: "Account"}});   
-                        $(this.$.toggleDelete).hide();
-                    }
-                    else {
-                        this.action = "Edit";
-                        $(this.$.toggleDeleteButton).html(model.get("__locally_deleted__") ? "Undelete" : "Delete");
-                        $(this.$.toggleDelete).show();
-                    }
+                get model() {
+                    return (this.$ ? this.$.detail.model : null);
                 },
 
                 goBack: function() {
-                    app.router.navigate("#", {trigger:true});
+                    app.router.navigateBack();
                 },
 
                 getSaveOptions: function(mergeMode, cacheMode) {
                     var that = this;
-
+                    console.log("changedfields-->" + _.keys(this.model.changed));
+                    console.log("updateablefields-->" + this.$.detail.updateablefields);
+                    console.log("FIELDS-TO-SAVE:" + (this.model.get("__local__") ? this.$.detail.updateablefields : _.keys(this.model.changed)));
                     return {
                         cacheMode: cacheMode,
                         mergeMode: mergeMode,
-                        success: function() { app.router.navigate(that.backAction, {trigger:true}); },
-                        error: function(data, err, options) { that.handleError(new Force.Error(err)); },
-                        // fieldlist: ["Id", "Name", "Industry", "Phone"]
-                        fieldlist: _.keys(this.$.detail.model.changed) // XXX shouldn't have to do that
+                        success: this.goBack,
+                        error: function(data, err, options) { 
+                            var error = new Force.Error(err); 
+                            if (error.type == "ConflictError") {
+                                $(that.$.mergeButton).show();
+                                $(that.$.overwriteButton).show();
+                            }
+                        },
+                        fieldlist: this.model.get("__local__") ? this.$.detail.updateablefields : _.keys(this.model.changed) // XXX;
                     };
                 },
 
                 handleError: function(error) {
-                    // var that = this;
-                    // if (error.type === "RestError") {
-                    //     _.each(error.details, function(detail) {
-                    //         if (detail.fields == null || detail.fields.length == 0) { alert(detail.message); }
-                    //         else {_.each(detail.fields, function(field) {that.showFieldError(field, detail.message);});}
-                    //     });
-                    // }
-                    // else if (error.type == "ConflictError") {
-                    //     _.each(error.remoteChanges, function(field) {
-                    //         var conflict = error.conflictingChanges.indexOf(field) >=0;
-                    //         that.showFieldError(field, "Server: " +  error.theirs[field], conflict);
-                    //     });
-                    //     $(".merge", this.el).show();
-                    //     $(".overwrite", this.el).show();
-                    // }
                     if (error.type == "ConflictError") {
                         $(this.$.mergeButton).show();
                         $(this.$.overwriteButton).show();
                     }
                 },
 
-
                 doSave: function() {
-                    this.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
+                    this.$.detail.$.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
                 },
 
                 doSaveMerge: function() {
-                    this.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
+                    this.$.detail.$.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
                 },
 
                 doSaveOverwrite: function() {
-                    this.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
+                    this.$.detail.$.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
                 },
 
                 doToggleDelete: function() {
-                    var model = this.$.detail.model;
-                    if (model.get("__locally_deleted__")) {
-                        model.set("__locally_deleted__", false);
-                        this.force_sobject.save(this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
+                    var force_sobject = this.$.detail.$.force_sobject;
+                    if (force_sobject.get("__locally_deleted__")) {
+                        force_sobject.set("__locally_deleted__", false);
+                        force_sobject.save(this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
                     }
                     else {
-                        this.force_sobject.delete({
-                            success: function(data) {
-                                app.router.navigate("#", {trigger:true});
-                            },
+                        force_sobject.delete({
+                            success: this.goBack,
                             error: function(data, err, options) {
                                 var error = new Force.Error(err);
                                 alert("Failed to delete account: " + (error.type === "RestError" ? error.details[0].message : "Remote change detected - delete aborted"));
@@ -269,7 +236,7 @@
             </template>
             <script type="text/javascript">
             Polymer('mobile-app', {
-                accesstoken: '00Di0000000gWVG!ARcAQARIGWPjWqSVsJg0OP.stxh5m8zrPB6IWSOCsJWWgznAzQIWPssPv3yuadxQI3.dZ.3YDGy4mV33bZ_dGj1nD1Xg68tW',
+                accesstoken: '00Di0000000gWVG!ARcAQMdvuhJjG1J0H2tHThoSD103xdnt9C7_G.NyzacgxM8qFmlL2CVVOW8ivjWpXCvn4TO49AJ5TFUuDb0wgtBx0C6_Hu.6',
                 instanceurl: 'https://na15.salesforce.com',
 
                 _onlineStatus: true,
@@ -300,8 +267,16 @@
                             "": "list",
                             "list": "list",
                             "add": "addAccount",
-                            "edit/accounts/:id": "editAccount",
+                            "edit/:id": "editAccount",
                             "sync":"sync"
+                        },
+
+                        navigateFirst: function() {
+                            this.navigate("#", {trigger:true});
+                        },
+
+                        navigateBack: function() {
+                            this.navigate(this.getPreviousPage(), {trigger:true});
                         },
 
                         gotoPage: function(targetId) {
@@ -335,7 +310,7 @@
                         },
 
                         addAccount: function() {
-                            app.$.account_detail.accountid = "";
+                            app.$.account_detail.accountid = null;
                             this.gotoPage('#account_detail');
                         },
 
