@@ -58,20 +58,70 @@
                     <h1 class="title">Sync</h1>
                 </header>
                 <div class="bar-standard bar-header-secondary">
-                    <a class="button button-block sync">Process {{countLocallyModified}} records</a>
+                    <a class="button button-block" on-click="{{doSync}}">Process {{$.list.collection.length}} records</a>
                 </div>
                 <div class="content">
-                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{doEdit}}"/>
+                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{doEdit}}" querytype="cache" query="{{query}}"></force-ui-list>
                 </div>
             </template>
             <script type="text/javascript">
             Polymer('account-sync', {
+                query: {queryType:"exact", indexPath:"__local__", matchKey:true, order:"ascending", pageSize:25},
 
+                doSync: function() {
+                    var that = this;
+                    var collection = this.$.list.collection;
+                    if (collection.length == 0 || collection.at(0).get("__sync_failed__")) {
+                        // we push sync failures back to the end of the list - if we encounter one, it means we are done
+                        return;
+                    }
+                    else {
+                        var record = collection.shift();
+
+                        var options = {
+                            mergeMode: Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED,
+                            success: function() {
+                                if (collection.length == 0) {
+                                    app.router.navigate("#", {trigger:true});
+                                }
+                                else {
+                                    that.doSync();
+                                }
+                            },
+                            error: function() {
+                                record = record.set("__sync_failed__", true);
+                                collection.push(record);
+                                collection.doSync();
+                            }
+                        };
+
+                        return record.get("__locally_deleted__") ? record.destroy(options) : record.save(null, options);
+                    }
+                },
+
+                goBack: function() {
+                    if (this.$.list.collection.length > 0) {
+                        // We are not done - going back offline before leaving screen
+                        app.onlinestatus = false;
+                        // NB: This will cause us to navigate out of the sync screen
+                    }
+                    else {
+                        app.router.navigate("#", {trigger:true});
+                    }
+                },
+
+                doEdit: function() {
+                    app.router.navigate("#edit/accounts/" + this.$.list.selected, {trigger:true});
+                },
+
+                refresh: function() {
+                    this.$.list.fetch();
+                }
             });
             </script>
         </polymer-element>
 
-        <polymer-element name="account-detail" attributes="accountId">
+        <polymer-element name="account-detail" attributes="accountid">
             <template>
                 <style>
                 .right {
@@ -92,13 +142,13 @@
                   <span class="count-main right" id="localChangeSpan"></span>
               </div>
                 <div class="content">
-                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountId}}" foredit="true"/>
+                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountid}}" foredit="true"></force-ui-detail>
                 </div>
             </template>
             <script type="text/javascript">
             Polymer('account-detail', {
                 observe: {
-                    "accountId": "reset"
+                    "accountid": "reset"
                 },
 
                 get force_sobject() {
@@ -122,7 +172,7 @@
                         $(this.$.localChangeSpan).hide();
                     }
 
-                    if (this.accountId == null) {
+                    if (this.accountid == null) {
                         this.action = "Add";
                         // model.set({__local__: false, Name:"", Industry:"", Phone:"", LastModifiedDate:"", attributes : { type: "Account"}});   
                         $(this.$.toggleDelete).hide();
@@ -208,46 +258,37 @@
             </script>
         </polymer-element>
 
-        <polymer-element name="offline-toggler" attributes="onlineStatus">
-            <template>
-                <style>
-                .bottomright {
-                    position: fixed; 
-                    bottom: 0; 
-                    right: 0; 
-                    margin: 20px;
-                }
-                </style>
-                <polymer-ui-toggle-button class="bottomright" value="{{onlineStatus}}" onCaption="Online" offCaption="Offline"></polymer-ui-toggle-button>
-            </template>
-            <script type="text/javascript">
-            Polymer('offline-toggler', {
-                    _onlineStatus: true,
-
-                    get onlineStatus() {
-                        return this._onlineStatus;
-                    },
-                    set onlineStatus(status) {
-                        SFDC.isOnline = function() { return status }; // XXX
-                        this._onlineStatus = status;
-                    }
-            });
-            </script>
-        </polymer-element>
-
         <polymer-element name="mobile-app">
             <template>
-                <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
+                <force-ui-app id="force_ui_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
                     <account-search id="account_search" class="page absolute"></account-search>
                     <account-detail id="account_detail" class="page absolute"></account-detail>
                     <account-sync id="account_sync" class="page absolute"></account-sync>
                 </force-ui-app>
-                <offline-toggler/>
+                <polymer-ui-toggle-button value="{{onlinestatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
             </template>
             <script type="text/javascript">
             Polymer('mobile-app', {
                 accesstoken: '00Di0000000gWVG!ARcAQARIGWPjWqSVsJg0OP.stxh5m8zrPB6IWSOCsJWWgznAzQIWPssPv3yuadxQI3.dZ.3YDGy4mV33bZ_dGj1nD1Xg68tW',
                 instanceurl: 'https://na15.salesforce.com',
+
+                _onlineStatus: true,
+
+                get onlinestatus() {
+                    return this._onlineStatus;
+                },
+
+                set onlinestatus(newStatus) {
+                    if (newStatus && !this._onlineStatus) {
+                        app.router.navigate("#sync", {trigger:true})
+                    }
+                    else if (!newStatus && document.location.hash == "#sync") {
+                        app.router.navigate("#", {trigger:true});
+                    }
+
+                    SFDC.isOnline = function() { return newStatus }; // XXX
+                    this._onlineStatus = newStatus;
+                },
 
                 ready: function() {
                     var app = this;
@@ -275,12 +316,12 @@
                             // New page is the same as the previous page -> back transition
                             else if (this.hashHistory.length > 1 && window.location.hash === this.hashHistory[this.hashHistory.length - 2]) {
                                 this.hashHistory.pop();
-                                app.$.force_app.navigateBack();
+                                app.$.force_ui_app.navigateBack();
                             } 
                             // Otherwise forward transition
                             else {
                                 this.hashHistory.push(window.location.hash);
-                                app.$.force_app.navigateTo(targetId);
+                                app.$.force_ui_app.navigateTo(targetId);
                             }
                         },
 
@@ -294,15 +335,17 @@
                         },
 
                         addAccount: function() {
-                            this.editAccount("");
+                            app.$.account_detail.accountid = "";
+                            this.gotoPage('#account_detail');
                         },
 
-                        editAccount: function(accountId) {
-                            app.$.account_detail.accountId = accountId;
+                        editAccount: function(accountid) {
+                            app.$.account_detail.accountid = accountid;
                             this.gotoPage('#account_detail');
                         },
 
                         sync: function() {
+                            app.$.account_sync.refresh();
                             this.gotoPage('#account_sync');
                         }
 
