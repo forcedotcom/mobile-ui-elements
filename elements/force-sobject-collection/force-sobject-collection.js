@@ -63,6 +63,12 @@
         fetch: function() {
             var collection = this.collection;
             collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
+            // Define the collection model type. Set the idAttribute to 'ExternalId' if sobject is external object.
+            collection.model = Force.SObject.extend({
+                idAttribute: (this.sobject
+                    && this.sobject.toLowerCase().indexOf('__x') > 0)
+                    ? 'ExternalId' : 'Id'
+            });
 
             var onFetch = function() {
                 if ((this.maxsize < 0 || this.maxsize > collection.length)

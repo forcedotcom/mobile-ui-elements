@@ -4,24 +4,46 @@
 
     @extends force-selector-list
 
+    @attributes:
+    labelfield: (Optional) Default: Name. Name of the field to be used as label on each list element.
+    sublabelfield: (Optional) Name of the field to be used as the sublabel on each list element.
+
     @properties:
     selected: Returns the value of "idfield" of the selected records.
+    viewModels: Returns an array of objects with only the fields used for rendering the list.
 -->
 <link rel="import" href="../force-selector-list/force-selector-list.html">
-<polymer-element name="force-ui-list" extends="force-selector-list">
+<polymer-element name="force-ui-list" attributes="labelfield, sublabelfield" extends="force-selector-list" on-sync="{{updateModels}}">
   <template>
       <shadow></shadow>
       <ul id="list" class="list">
-        <template repeat="{{collection.models}}">
-            <li name="{{attributes.Id}}">{{attributes.Name}}</li>
+        <template repeat="{{viewModels}}">
+            <li name="{{id}}">
+              <span>{{label}}</span>
+              <p>{{sublabel}}</p>
+            </li>
         </template>
       </ul>
   </template>
   <script>
     Polymer('force-ui-list', {
+      labelfield: 'Name',
+      viewModels: [],
       ready: function() {
         this.super();
         this.target = this.$.list;
+      },
+      updateModels: function() {
+        var that = this;
+        this.viewModels = [];
+        this.collection.models.forEach(function(model) {
+          var wrappedModel = {
+            id: model.id,
+            label: model.attributes[that.labelfield],
+            sublabel: model.attributes[that.sublabelfield]
+          }
+          that.viewModels.push(wrappedModel);
+        });
       }
     });
   </script>
