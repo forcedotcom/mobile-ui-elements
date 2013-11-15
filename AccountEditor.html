@@ -168,9 +168,6 @@
 
                 getSaveOptions: function(mergeMode, cacheMode) {
                     var that = this;
-                    console.log("changedfields-->" + _.keys(this.model.changed));
-                    console.log("updateablefields-->" + this.$.detail.updateablefields);
-                    console.log("FIELDS-TO-SAVE:" + (this.model.get("__local__") ? this.$.detail.updateablefields : _.keys(this.model.changed)));
                     return {
                         cacheMode: cacheMode,
                         mergeMode: mergeMode,
@@ -182,7 +179,7 @@
                                 $(that.$.overwriteButton).show();
                             }
                         },
-                        fieldlist: this.model.get("__local__") ? this.$.detail.updateablefields : _.keys(this.model.changed) // XXX;
+                        fieldlist: this.model.get("__local__") ? this.$.detail.updateablefields : _.keys(this.model.changed)
                     };
                 },
 
@@ -310,7 +307,7 @@
                         },
 
                         addAccount: function() {
-                            app.$.account_detail.accountid = null;
+                            app.$.account_detail.accountid = "";
                             this.gotoPage('#account_detail');
                         },
 
