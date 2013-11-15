@@ -8,7 +8,7 @@
     selected: Returns the value of "idfield" of the selected records.
 -->
 <link rel="import" href="../force-selector-list/force-selector-list.html">
-<polymer-element name="force-ui-list" extends="force-selector-list" target="{{$.list}}" noscript>
+<polymer-element name="force-ui-list" extends="force-selector-list">
   <template>
       <shadow></shadow>
       <ul id="list" class="list">
@@ -17,4 +17,12 @@
         </template>
       </ul>
   </template>
+  <script type="text/javascript">
+  Polymer('force-ui-list', {
+      ready: function() {
+          this.super();
+          this.target = this.$.list;
+      }
+  })
+  </script>
 </polymer-element>
