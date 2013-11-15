@@ -181,7 +181,7 @@
         model.on('change', function() {
             setupProps(_.difference(_.keys(model.attributes), _.keys(_self)));
         });
-        setupProps(_.keys(model.attributes));
+        setupProps(_.keys(fieldInfos));
     }
 
     //------------------------- INTERNAL METHODS -------------------------
