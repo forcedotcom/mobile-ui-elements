@@ -21,14 +21,14 @@
         <script src="dependencies/backbone/backbone.js"></script>
     </head>
     <body>
-        <polymer-element name="account-search">
+        <polymer-element name="search-screen" attributes="sobject">
             <template>
                 <header class="bar-title">
-                    <h1 class="title">Accounts</h1>
+                    <h1 class="title">{{sobject}}s</h1>
                     <a class="button" href="#add">Create</a>
                 </header>
-                <force-ui-search id="search" sobject="Account" searchfield="Name"></force-ui-search>
-                <force-selector-list id="list" sobject="Account" querytype="{{$.search.querytype}}" query="{{$.search.query}}"></force-selector-list>
+                <force-ui-search id="search" sobject="{{sobject}}" searchfield="Name"></force-ui-search>
+                <force-selector-list id="list" sobject="{{sobject}}" querytype="{{$.search.querytype}}" query="{{$.search.query}}"></force-selector-list>
                 <div style="margin-top:88px /*XXX*/">
                     <ul id="listbody" class="list">
                         <template repeat="{{$.list.collection.models}}">
@@ -51,7 +51,7 @@
                 </div>
             </template>
             <script type="text/javascript">
-            Polymer('account-search', {
+            Polymer('search-screen', {
                 refresh: function() {
                     this.$.list.fetch();
                 }
@@ -59,7 +59,7 @@
             </script>
         </polymer-element>
 
-        <polymer-element name="account-sync">
+        <polymer-element name="sync-screen" attributes="sobject">
             <template>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
@@ -69,11 +69,11 @@
                     <a class="button button-block" on-click="{{doSync}}">Process {{$.list.collection.length}} records</a>
                 </div>
                 <div class="content">
-                    <force-ui-list id="list" sobject="Account" on-polymer-activate="{{doEdit}}" querytype="cache" query="{{query}}"></force-ui-list>
+                    <force-ui-list id="list" sobject="{{sobject}}" on-polymer-activate="{{doEdit}}" querytype="cache" query="{{query}}"></force-ui-list>
                 </div>
             </template>
             <script type="text/javascript">
-            Polymer('account-sync', {
+            Polymer('sync-screen', {
                 query: {queryType:"exact", indexPath:"__local__", matchKey:true, order:"ascending", pageSize:25},
 
                 doSync: function() {
@@ -100,8 +100,17 @@
                                 record = record.set("__sync_failed__", true);
                                 collection.push(record);
                                 that.doSync();
-                            }
+                            },
+                            
                         };
+
+
+                        SFDC.getSObjectType(this.sobject).describe().then(function(describeResult) {
+                            var editablefieldlist = _.filter(describeResult.fields, function(fieldInfo) {
+                                return fieldInfo.updateable;
+                            });
+                            options.fieldlist = _.intersection(_.keys(record.attributes), that.editfieldlist)
+                        });
 
                         return record.get("__locally_deleted__") ? record.destroy(options) : record.save(null, options);
                     }
@@ -129,12 +138,12 @@
             </script>
         </polymer-element>
 
-        <polymer-element name="account-detail" attributes="accountid">
+        <polymer-element name="detail-screen" attributes="sobject recordid">
             <template>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
-                    <h1 class="title">{{accountid ? 'Edit' : 'Add'}} Account</h1>
-                    <a class="button" style="display:{{accountid ? 'display' : 'block'}}" id="toggleDeleteButton" on-click="{{doToggleDelete}}">{{model.attributes.__locally_deleted__ ? 'Undelete' : 'Delete'}}</a>
+                    <h1 class="title">{{recordid ? 'Edit' : 'Add'}} {{sobject}}</h1>
+                    <a class="button" style="display:{{recordid ? 'display' : 'block'}}" id="toggleDeleteButton" on-click="{{doToggleDelete}}">{{model.attributes.__locally_deleted__ ? 'Undelete' : 'Delete'}}</a>
                 </header>
                 <div class="bar-standard bar-header-secondary">                    
                     <a class="button" id="saveButton" on-click="{{doSave}}">Save</a>
@@ -153,11 +162,11 @@
                     </span>
                 </div>
                 <div class="content">
-                    <force-ui-detail flex id="detail" sobject="Account" recordid="{{accountid}}" foredit="true"></force-ui-detail>
+                    <force-ui-detail flex id="detail" sobject="{{sobject}}" recordid="{{recordid}}" foredit="true"></force-ui-detail>
                 </div>
             </template>
             <script type="text/javascript">
-            Polymer('account-detail', {
+            Polymer('detail-screen', {
                 get model() {
                     return (this.$ ? this.$.detail.model : null);
                 },
@@ -203,6 +212,7 @@
                 },
 
                 doToggleDelete: function() {
+                    var that = this;
                     var force_sobject = this.$.detail.$.force_sobject;
                     if (force_sobject.get("__locally_deleted__")) {
                         force_sobject.set("__locally_deleted__", false);
@@ -213,7 +223,7 @@
                             success: this.goBack,
                             error: function(data, err, options) {
                                 var error = new Force.Error(err);
-                                alert("Failed to delete account: " + (error.type === "RestError" ? error.details[0].message : "Remote change detected - delete aborted"));
+                                alert("Failed to delete " + that.sobject + ": " + (error.type === "RestError" ? error.details[0].message : "Remote change detected - delete aborted"));
                             }
                         });
                     }
@@ -222,14 +232,14 @@
             </script>
         </polymer-element>
 
-        <polymer-element name="mobile-app">
+        <polymer-element name="mobile-app" attributes="sobject">
             <template>
                 <force-ui-app id="force_ui_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
-                    <account-search id="account_search" class="page absolute"></account-search>
-                    <account-detail id="account_detail" class="page absolute"></account-detail>
-                    <account-sync id="account_sync" class="page absolute"></account-sync>
+                    <search-screen id="search" class="page absolute" sobject="{{sobject}}"></search-screen>
+                    <detail-screen id="detail" class="page absolute" sobject="{{sobject}}"></detail-screen>
+                    <sync-screen id="sync" class="page absolute" sobject="{{sobject}}"></sync-screen>
                 </force-ui-app>
-                <polymer-ui-toggle-button value="{{onlinestatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
+                <polymer-ui-toggle-button id="onlineToggler" value="{{onlinestatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
             </template>
             <script type="text/javascript">
             Polymer('mobile-app', {
@@ -256,6 +266,7 @@
 
                 ready: function() {
                     var app = this;
+
                     var Router = Backbone.Router.extend({
                         currentPageId: null,
                         hashHistory: [],
@@ -263,8 +274,8 @@
                         routes: {
                             "": "list",
                             "list": "list",
-                            "add": "addAccount",
-                            "edit/:id": "editAccount",
+                            "add": "add",
+                            "edit/:id": "edit",
                             "sync":"sync"
                         },
 
@@ -302,23 +313,23 @@
                         },
 
                         list: function() {
-                            app.$.account_search.refresh();
-                            this.gotoPage('#account_search');
+                            app.$.search.refresh();
+                            this.gotoPage('#search');
                         },
 
-                        addAccount: function() {
-                            app.$.account_detail.accountid = "";
-                            this.gotoPage('#account_detail');
+                        add: function() {
+                            app.$.detail.recordid = "";
+                            this.gotoPage('#detail');
                         },
 
-                        editAccount: function(accountid) {
-                            app.$.account_detail.accountid = accountid;
-                            this.gotoPage('#account_detail');
+                        edit: function(recordid) {
+                            app.$.detail.recordid = recordid;
+                            this.gotoPage('#detail');
                         },
 
                         sync: function() {
-                            app.$.account_sync.refresh();
-                            this.gotoPage('#account_sync');
+                            app.$.sync.refresh();
+                            this.gotoPage('#sync');
                         }
 
                     });
@@ -329,7 +340,7 @@
             </script>
         </polymer-element>
 
-        <mobile-app></mobile-app>
+        <mobile-app sobject="Account"></mobile-app>
         
         <script type="text/javascript">
         var app = $("mobile-app")[0];
