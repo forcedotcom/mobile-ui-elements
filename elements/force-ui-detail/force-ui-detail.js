@@ -101,9 +101,19 @@
         // Check if default layout is overriden. Don't do anything if yes.
         if (!isLayoutOverriden(view) && view.sobject) {
             if (view.fieldlist && view.fieldlist.trim().length) {
-                return fetchFieldInfos(view.sobject, view.fieldlist.split(','))
+                // Parse the labels and generate fieldname to fieldlabel mapping.
+                var fieldLabelMap = {};
+                var fieldsArray = view.fieldlist.split(',');
+                var fieldLabelsArray = view.fieldlabels ? view.fieldlabels.split(',') : [];
+                for (var idx in fieldsArray) {
+                    var label = fieldLabelsArray[idx];
+                    if (label) fieldLabelMap[fieldsArray[idx]] = label.trim();
+                }
+
+                // Fetch field infos and then generate template
+                return fetchFieldInfos(view.sobject, fieldsArray)
                     .then(function(fieldInfos) {
-                        return compileTemplateForFields(fieldInfos, view.foredit);
+                        return compileTemplateForFields(fieldInfos, fieldLabelMap, view.foredit);
                     });
             } else {
                 return fetchLayoutSections(view)
@@ -210,7 +220,7 @@
 
     // Generates layout template for specific fields. Used by the DetailController.
     // TBD: Support the parent look up fields
-    var compileTemplateForFields = function(fieldInfoMap, foredit) {
+    var compileTemplateForFields = function(fieldInfoMap, fieldLabelMap, foredit) {
         var row = {layoutItems: [], columns: 2},
             column = 1, item,
             section = {heading: '', columns: 2, layoutRows:[]};
@@ -219,7 +229,7 @@
             item = {
                 placeholder: false,
                 editable: foredit,
-                label: fieldInfoMap[field].label,
+                label: fieldLabelMap[field] || fieldInfoMap[field].label,
                 layoutComponents: {
                     type: 'Field',
                     value: field,

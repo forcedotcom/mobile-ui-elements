@@ -4,14 +4,14 @@
     b) Provides a simpler DOM based interface to fetch full or partial record.
 
     @attributes:
-    hasrecordtypes: (Optional) Default: false. Mark this as true, if the sobject has multiple record types.
-    recordtypeid: (Optional) Default: None. If provided, the layout associated with this recordtypeid is rendered.
+    fieldlist: (Optional) Default: All fields on the layout. Comma separated list of fields that should be displayed for the record.
+    fieldlabels: (Optional) Default: Actual field labels. Comma separated list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
 
     @extends force-sobject-layout
 -->
 <link rel="import" href="../force-sobject/force-sobject.html">
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
-<polymer-element name="force-ui-detail" attributes="foredit fieldlist" extends="force-sobject-layout">
+<polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" idfield="{{idfield}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
     <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
