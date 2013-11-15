@@ -23,7 +23,7 @@
                 fieldlist: this.fieldlist,
                 idAttribute: this.idfield
             }));
-            this.model.set(this.idfield, this.recordid);
+            this.model.set(this.idfield, this.recordid == "" ? null : this.recordid);
 
             $.when(this.$.store.cacheReady, SFDC.launcher)
             .done(function(cache) {
