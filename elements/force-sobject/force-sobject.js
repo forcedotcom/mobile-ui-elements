@@ -24,6 +24,7 @@
                 idAttribute: this.idfield
             }));
             this.model.set(this.idfield, this.recordid == "" ? null : this.recordid);
+            this.model.set({attributes: {type: this.sobject}});
 
             $.when(this.$.store.cacheReady, SFDC.launcher)
             .done(function(cache) {
