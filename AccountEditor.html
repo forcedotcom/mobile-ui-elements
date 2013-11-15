@@ -68,8 +68,18 @@
                 <div class="bar-standard bar-header-secondary">
                     <a class="button button-block" on-click="{{doSync}}">Process {{$.list.collection.length}} records</a>
                 </div>
-                <div class="content">
-                    <force-ui-list id="list" sobject="{{sobject}}" on-polymer-activate="{{doEdit}}" querytype="cache" query="{{query}}"></force-ui-list>
+                <force-selector-list id="list" sobject="{{sobject}}" querytype="cache" query="{{query}}"></force-selector-list>
+                <div style="margin-top:88px /*XXX*/">
+                    <ul id="listbody" class="list">
+                        <template repeat="{{$.list.collection.models}}">
+                            <li name="{{id}}">
+                                <a href="#edit/{{id}}">
+                                    {{attributes.Name}}                                
+                                    <template if="{{attributes.__sync_failed__}}"><span class="count-negative">Failed to sync</span></template>
+                                </a>
+                            </li>
+                        </template>
+                    </ul>
                 </div>
             </template>
             <script type="text/javascript">
@@ -101,16 +111,10 @@
                                 collection.push(record);
                                 that.doSync();
                             },
-                            
+                            fieldlist: _.intersection(_.keys(record.attributes), app.editablefieldlist),
+                            cache: collection.cache,
+                            cacheForOriginals: collection.cacheForOriginals
                         };
-
-
-                        SFDC.getSObjectType(this.sobject).describe().then(function(describeResult) {
-                            var editablefieldlist = _.filter(describeResult.fields, function(fieldInfo) {
-                                return fieldInfo.updateable;
-                            });
-                            options.fieldlist = _.intersection(_.keys(record.attributes), that.editfieldlist)
-                        });
 
                         return record.get("__locally_deleted__") ? record.destroy(options) : record.save(null, options);
                     }
@@ -125,10 +129,6 @@
                     else {
                         app.router.navigateFirst();
                     }
-                },
-
-                doEdit: function() {
-                    app.router.navigate("#edit/" + this.$.list.selected, {trigger:true});
                 },
 
                 refresh: function() {
@@ -177,6 +177,8 @@
 
                 getSaveOptions: function(mergeMode, cacheMode) {
                     var that = this;
+
+
                     return {
                         cacheMode: cacheMode,
                         mergeMode: mergeMode,
@@ -188,7 +190,9 @@
                                 $(that.$.overwriteButton).show();
                             }
                         },
-                        fieldlist: this.model.get("__local__") ? this.$.detail.updateablefields : _.keys(this.model.changed)
+                        fieldlist: this.model.get("__local__") 
+                            ? _.intersection(_.keys(this.model.attributes), app.editablefieldlist) 
+                            : _.keys(this.model.changed)
                     };
                 },
 
@@ -243,7 +247,10 @@
             </template>
             <script type="text/javascript">
             Polymer('mobile-app', {
-                accesstoken: '00Di0000000gWVG!ARcAQMdvuhJjG1J0H2tHThoSD103xdnt9C7_G.NyzacgxM8qFmlL2CVVOW8ivjWpXCvn4TO49AJ5TFUuDb0wgtBx0C6_Hu.6',
+                observe: {
+                    "sobject": "reset",
+                },
+                accesstoken: '00Di0000000gWVG!ARcAQDQXjXrrztp9Qb5sJyrjzmZedlCWgJaDTnB9.__z3EIfkRUYd5.0CbAGt8dhqkujQQMUWdXlVflWmPNI8g0LU4Tv.1I8',
                 instanceurl: 'https://na15.salesforce.com',
 
                 _onlineStatus: true,
@@ -262,6 +269,17 @@
 
                     SFDC.isOnline = function() { return newStatus }; // XXX
                     this._onlineStatus = newStatus;
+                },
+
+                reset: function() {
+                    var that = this;
+                    $.when(SFDC.launcher).then(function() {
+                        SFDC.getSObjectType(that.sobject).describe().then(function(describeResult) {
+                            app.editablefieldlist = _.pluck(_.filter(describeResult.fields, function(fieldInfo) {
+                                return fieldInfo.updateable;
+                            }), "name");
+                        });
+                    });
                 },
 
                 ready: function() {

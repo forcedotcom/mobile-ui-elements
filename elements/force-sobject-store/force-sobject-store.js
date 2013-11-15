@@ -35,6 +35,9 @@
         get cacheReady() {
             return SFDC.launcher.then(this.init.bind(this));
         },
+        get cache() {
+            return sobjectStores[this.sobject];
+        },
         get cacheForOriginals() {
             return originalSObjectStores[this.sobject];
         },

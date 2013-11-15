@@ -1,4 +1,3 @@
-var instances  =[];
 (function(SFDC) {
 
     "use strict";
@@ -45,7 +44,6 @@ var instances  =[];
             this.asyncFire('sync');
         },
         ready: function() {
-            instances.push(this);
             this.collection = new (Force.SObjectCollection.extend({
                 config: generateConfig(_.pick(this, _.keys(viewProps)))
             }));
@@ -74,8 +72,8 @@ var instances  =[];
 
             var store = this.$.store;
             $.when(store.cacheReady, SFDC.launcher)
-            .done(function(cache) {
-                collection.cache = cache;
+            .done(function() {
+                collection.cache = store.cache;
                 collection.cacheForOriginals = store.cacheForOriginals;
                 collection.fetch({ reset: true, success: onFetch });
             });

@@ -26,9 +26,11 @@
             this.model.set(this.idfield, this.recordid == "" ? null : this.recordid);
             this.model.set({attributes: {type: this.sobject}});
 
-            $.when(this.$.store.cacheReady, SFDC.launcher)
-            .done(function(cache) {
-                that.model.cache = cache;
+            var store = this.$.store;
+            $.when(store.cacheReady, SFDC.launcher)
+            .done(function() {
+                that.model.cacheForOriginals = store.cacheForOriginals;
+                that.model.cache = store.cache;
             });
 
             return this;
@@ -55,8 +57,7 @@
             //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
             if (model.sobjectType && model.id) {
                 $.when(this.$.store.cacheReady, SFDC.launcher)
-                .done(function(cache) {
-                    model.cache = cache;
+                .done(function() {
                     model.fetch();
                 });
             } else console.warn('sobject Type and recordid required for fetch.');
