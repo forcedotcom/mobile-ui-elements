@@ -22,6 +22,26 @@
         attributeChanged: function(attrName, oldVal, newVal) {
             this.super(arguments);
             this.async(this.render);
+        },
+        save: function(options) {
+            var that = this;
+            var originalErrorCB = options.error;
+            var onError = function(model, xhr) {
+                var viewErrors = {messages: []};
+                _.each(new Force.Error(xhr).details, function(detail) {
+                    if (detail.fields == null || detail.fields.length == 0) {
+                        viewErrors.messages.push(detail.message);
+                    } else {
+                        _.each(detail.fields, function(field) {
+                            viewErrors[field] = detail.message;
+                        });
+                    }
+                });
+                that.viewModel["__errors__"] = viewErrors;
+                if (typeof originalErrorCB == 'function') originalErrorCB.apply(null, arguments);
+            }
+            options.error = onError;
+            that.$.force_sobject.save(options);
         }
     });
 
@@ -125,8 +145,8 @@
 
                 // Attach the template instance to the view
                 var template = templateInfo.template;
-                var templateModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
-                $(view.$.viewContainer).empty().append(template.createInstance(templateModel));
+                view.viewModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
+                $(view.$.viewContainer).empty().append(template.createInstance(view.viewModel));
             }
         };
 

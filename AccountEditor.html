@@ -14,11 +14,6 @@
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
         <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
-
-        <!-- XXX following will go away once routing is moved inside force-ui-app -->
-        <script src="dependencies/jquery/jquery.js"></script>
-        <script src="dependencies/underscore/underscore.js"></script>
-        <script src="dependencies/backbone/backbone.js"></script>
     </head>
     <body>
         <polymer-element name="search-screen" attributes="sobject">
@@ -34,10 +29,10 @@
                         <template repeat="{{$.list.collection.models}}">
                             <li name="{{id}}">
                                 <a href="#edit/{{id}}">
-                                    {{attributes.Name}}                                
+                                    {{attributes.Name}}
                                     <template if="{{attributes.__sync_failed__}}"><span class="count-negative">Failed to sync</span></template>
                                     <template if="{{attributes.__local__}}">
-                                        <span class="count-main">Locally 
+                                        <span class="count-main">Locally
                                             <template if="{{attributes.__locally_created__}}"> created</template>
                                             <template if="{{attributes.__locally_updated__}}"> updated</template>
                                             <template if="{{attributes.__locally_deleted__}}"> deleted</template>
@@ -74,7 +69,7 @@
                         <template repeat="{{$.list.collection.models}}">
                             <li name="{{id}}">
                                 <a href="#edit/{{id}}">
-                                    {{attributes.Name}}                                
+                                    {{attributes.Name}}
                                     <template if="{{attributes.__sync_failed__}}"><span class="count-negative">Failed to sync</span></template>
                                 </a>
                             </li>
@@ -145,7 +140,7 @@
                     <h1 class="title">{{recordid ? 'Edit' : 'Add'}} {{sobject}}</h1>
                     <a class="button" style="display:{{recordid ? 'display' : 'block'}}" id="toggleDeleteButton" on-click="{{doToggleDelete}}">{{model.attributes.__locally_deleted__ ? 'Undelete' : 'Delete'}}</a>
                 </header>
-                <div class="bar-standard bar-header-secondary">                    
+                <div class="bar-standard bar-header-secondary">
                     <a class="button" id="saveButton" on-click="{{doSave}}">Save</a>
                     <template if="{{model.attributes.__sync_failed__}}">
                         <a class="button" id="mergeButton" on-click="{{doMerge}}">Merge</a>
@@ -153,7 +148,7 @@
                     </template>
                     <span style="position:absolute; right:10px">
                         <template if="{{model.attributes.__local__}}">
-                            <span class="count-main">Locally 
+                            <span class="count-main">Locally
                                 <template if="{{model.attributes.__locally_created__}}"> created</template>
                                 <template if="{{model.attributes.__locally_updated__}}"> updated</template>
                                 <template if="{{model.attributes.__locally_deleted__}}"> deleted</template>
@@ -183,15 +178,15 @@
                         cacheMode: cacheMode,
                         mergeMode: mergeMode,
                         success: this.goBack,
-                        error: function(data, err, options) { 
-                            var error = new Force.Error(err); 
+                        error: function(data, err, options) {
+                            var error = new Force.Error(err);
                             if (error.type == "ConflictError") {
                                 $(that.$.mergeButton).show();
                                 $(that.$.overwriteButton).show();
                             }
                         },
-                        fieldlist: this.model.get("__local__") 
-                            ? _.intersection(_.keys(this.model.attributes), app.editablefieldlist) 
+                        fieldlist: this.model.get("__local__")
+                            ? _.intersection(_.keys(this.model.attributes), app.editablefieldlist)
                             : _.keys(this.model.changed)
                     };
                 },
@@ -204,15 +199,15 @@
                 },
 
                 doSave: function() {
-                    this.$.detail.$.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
                 },
 
                 doSaveMerge: function() {
-                    this.$.detail.$.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
                 },
 
                 doSaveOverwrite: function() {
-                    this.$.detail.$.force_sobject.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
                 },
 
                 doToggleDelete: function() {
@@ -250,7 +245,7 @@
                 observe: {
                     "sobject": "reset",
                 },
-                accesstoken: '00Di0000000gWVG!ARcAQDQXjXrrztp9Qb5sJyrjzmZedlCWgJaDTnB9.__z3EIfkRUYd5.0CbAGt8dhqkujQQMUWdXlVflWmPNI8g0LU4Tv.1I8',
+                accesstoken: '',
                 instanceurl: 'https://na15.salesforce.com',
 
                 _onlineStatus: true,
@@ -320,9 +315,12 @@
         </polymer-element>
 
         <mobile-app sobject="Account"></mobile-app>
-        
+
         <script type="text/javascript">
-        var app = $("mobile-app")[0];
+        var app;
+        window.addEventListener('WebComponentsReady', function() {
+          app = $("mobile-app")[0];
+        });
         </script>
     </body>
 </html>
