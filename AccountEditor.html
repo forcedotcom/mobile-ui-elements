@@ -68,7 +68,7 @@
                     <ul id="listbody" class="list">
                         <template repeat="{{$.list.collection.models}}">
                             <li name="{{id}}">
-                                <a href="#edit/{{id}}">
+                                <a href="#editFromCache/{{id}}">
                                     {{attributes.Name}}
                                     <template if="{{attributes.__sync_failed__}}"><span class="count-negative">Failed to sync</span></template>
                                 </a>
@@ -142,9 +142,9 @@
                 </header>
                 <div class="bar-standard bar-header-secondary">
                     <a class="button" id="saveButton" on-click="{{doSave}}">Save</a>
-                    <template if="{{model.attributes.__sync_failed__}}">
-                        <a class="button" id="mergeButton" on-click="{{doMerge}}">Merge</a>
-                        <a class="button" id="overwriteButton" on-click="{{doOverwrite}}">Overwrite</a>
+                    <template if="{{forcingCacheFetch}}">
+                        <a class="button" id="mergeButton" on-click="{{doSaveMerge}}">Merge</a>
+                        <a class="button" id="overwriteButton" on-click="{{doSaveOverwrite}}">Overwrite</a>
                     </template>
                     <span style="position:absolute; right:10px">
                         <template if="{{model.attributes.__local__}}">
@@ -164,6 +164,15 @@
             Polymer('detail-screen', {
                 get model() {
                     return (this.$ ? this.$.detail.model : null);
+                },
+
+                forceCacheFetch: function(b) {
+                    this.forcingCacheFetch = b;
+                    this.$.detail.fetchCacheMode = b ? Force.CACHE_MODE.CACHE_ONLY : null;
+                },
+
+                refresh: function() {
+                    this.$.detail.$.force_sobject.reset(true);
                 },
 
                 goBack: function() {
@@ -245,7 +254,7 @@
                 observe: {
                     "sobject": "reset",
                 },
-                accesstoken: '',
+                accesstoken: '00Di0000000gWVG!ARcAQJZOrH9JIypVY.1SSMjDYEee6c74f3IVxZv_7kw4YfAoxGc8zAgN0wPCZOfE34BMHHzkZEzeuqghZ9r_zFuOx6OiY0dh',
                 instanceurl: 'https://na15.salesforce.com',
 
                 _onlineStatus: true,
@@ -285,6 +294,7 @@
                             "list": "list",
                             "add": "add",
                             "edit/:id": "edit",
+                            "editFromCache/:id" : "editFromCache",
                             "sync":"sync"
                         },
 
@@ -294,11 +304,23 @@
                         },
 
                         add: function() {
-                            app.$.detail.recordid = "";
-                            app.router.gotoPageId('#detail');
+                            this.edit("");
+                        },
+
+                        editFromCache: function(recordid) {
+                            this.showDetail(recordid, true);
                         },
 
                         edit: function(recordid) {
+                            this.showDetail(recordid);
+                        },
+
+                        showDetail: function(recordid, fetchFromCache) {
+                            app.$.detail.forceCacheFetch(fetchFromCache);
+
+                            if (app.$.detail.recordid == recordid) {
+                                app.$.detail.refresh();
+                            }
                             app.$.detail.recordid = recordid;
                             app.router.gotoPageId('#detail');
                         },

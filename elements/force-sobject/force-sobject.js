@@ -39,9 +39,9 @@
             this.init();
             if (this.autosync) this.fetch();
         },
-        reset: function() {
-            if (!this.model ||
-                !this.model.id ||
+        reset: function(forceReset) {
+            if (forceReset ||
+                !this.model ||
                 this.model.sobjectType != this.sobject ||
                 this.model.id != this.recordid ||
                 this.model.idAttribute != this.idfield ||
