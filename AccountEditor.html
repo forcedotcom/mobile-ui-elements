@@ -284,11 +284,7 @@
 
                 ready: function() {
                     var app = this;
-
-                    var Router = Backbone.Router.extend({
-                        currentPageId: null,
-                        hashHistory: [],
-
+                    this.router = app.$.force_ui_app.setupRouter({
                         routes: {
                             "": "list",
                             "list": "list",
@@ -297,61 +293,26 @@
                             "sync":"sync"
                         },
 
-                        navigateFirst: function() {
-                            this.navigate("#", {trigger:true});
-                        },
-
-                        navigateBack: function() {
-                            this.navigate(this.getPreviousPage(), {trigger:true});
-                        },
-
-                        gotoPage: function(targetId) {
-                            console.log("+ Navigating to [" + window.location.hash + "]");
-
-                            // First page loaded
-                            if (!this.currentPageId) {
-                                this.hashHistory = [window.location.hash];
-                                this.currentPageId = targetId;
-                                // first page is automatically loaded, we don't need to "navigate" to it
-                            }
-                            // New page is the same as the previous page -> back transition
-                            else if (this.hashHistory.length > 1 && window.location.hash === this.hashHistory[this.hashHistory.length - 2]) {
-                                this.hashHistory.pop();
-                                app.$.force_ui_app.navigateBack();
-                            } 
-                            // Otherwise forward transition
-                            else {
-                                this.hashHistory.push(window.location.hash);
-                                app.$.force_ui_app.navigateTo(targetId);
-                            }
-                        },
-
-                        getPreviousPage: function() {
-                            return (this.hashHistory != null && this.hashHistory.length > 1 ? this.hashHistory[this.hashHistory.length - 2] : "#");
-                        },
-
                         list: function() {
                             app.$.search.refresh();
-                            this.gotoPage('#search');
+                            app.router.gotoPageId('#search');
                         },
 
                         add: function() {
                             app.$.detail.recordid = "";
-                            this.gotoPage('#detail');
+                            app.router.gotoPageId('#detail');
                         },
 
                         edit: function(recordid) {
                             app.$.detail.recordid = recordid;
-                            this.gotoPage('#detail');
+                            app.router.gotoPageId('#detail');
                         },
 
                         sync: function() {
                             app.$.sync.refresh();
-                            this.gotoPage('#sync');
+                            app.router.gotoPageId('#sync');
                         }
-
                     });
-                    this.router = new Router();
                     Backbone.history.start();
                 }
             });
