@@ -7,11 +7,11 @@
 
     @attributes:
     sobject: (Required) Type of sobject that you would like to store in this cache.
-    keyField: (Optional) Default: ID or ExternalId(for external objects). Name of the ID field, especially for the cases of External Object.
+    fieldstoindex: (Optional) Addition fields (given by their name) that you want to have indexes on.
 
     @properties:
     get cacheReady: Returns a promise that on completion returns an instance of storecache if smartstore is available.
 -->
-<polymer-element name="force-sobject-store" attributes="sobject keyField">
+<polymer-element name="force-sobject-store" attributes="sobject fieldstoindex">
   <script src="force-sobject-store.js"></script>
 </polymer-element>

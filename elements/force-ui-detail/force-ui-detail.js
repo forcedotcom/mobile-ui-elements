@@ -127,9 +127,11 @@
 
         var renderTemplate = function(templateInfo) {
             // Template info is null when there's no template generated
-            if (templateInfo && view.model.id) {
-                // Perform data fetch for the fieldlist used in template
-                view.model.fetch({ fieldlist: templateInfo.fields });
+            if (templateInfo) {
+                if (view.model.id) {
+                    // Perform data fetch for the fieldlist used in template
+                    view.model.fetch({ fieldlist: templateInfo.fields });
+                }
 
                 // Attach the template instance to the view
                 var template = templateInfo.template;
@@ -184,7 +186,12 @@
         model.on('change', function() {
             setupProps(_.difference(_.keys(model.attributes), _.keys(_self)));
         });
-        setupProps(_.keys(model.attributes));
+        // review all fields to pick the first part of the reference fields. eg. for "Owner.Name" pick "Owner"
+        var attributes = _.map(_.keys(fieldInfos),
+            function(prop) {
+                return prop.split('.')[0];
+            });
+        setupProps(attributes);
     }
 
     //------------------------- INTERNAL METHODS -------------------------

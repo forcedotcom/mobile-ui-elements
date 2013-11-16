@@ -5,67 +5,98 @@
         recordid: null,
         fieldlist: null,
         idfield: "Id",
-        autosync: true
+        autosync: true,
+        mergemode: Force.MERGE_MODE.OVERWRITE
     };
+
+    var createModel = function(sobject) {
+        return new (Force.SObject.extend({
+            cacheMode: SFDC.cacheMode,
+            sobjectType: sobject,
+        }));
+    }
 
     Polymer('force-sobject', _.extend({}, viewProps, {
         observe: {
-            sobject: "reset",
-            recordid: "reset",
-            fieldlist: "reset",
-            idfield: "reset"
+            sobject: "init",
+            recordid: "init",
+            fieldlist: "init",
+            idfield: "init"
         },
+        // Resets all the properties on the model.
+        // Recreates model if sobject type or id of model has changed.
         init: function() {
-            var that = this;
-            this.model = new (Force.SObject.extend({
-                cacheMode: SFDC.cacheMode,
-                sobjectType: this.sobject,
-                fieldlist: this.fieldlist,
-                idAttribute: this.idfield
-            }));
-            this.model.set(this.idfield, this.recordid);
+            var model = this.model;
+            if (typeof model == "undefined" ||
+                model.sobjectType != this.sobject ||
+                (model.id && model.id != this.recordid)) {
+                model = this.model = createModel(this.sobject);
+            }
+            model.fieldlist = this.fieldlist;
+            model.idAttribute = this.idfield;
+            model.set(this.idfield, this.recordid);
+            model.set({attributes: {type: this.sobject}});
+        },
+        // All CRUD operations should ensure that the model is ready by checking this promise.
+        whenModelReady: function() {
+            var model = this.model;
+            var store = this.$.store;
 
-            $.when(this.$.store.cacheReady, SFDC.launcher)
-            .done(function(cache) {
-                that.model.cache = cache;
-            });
-
-            return this;
+            this.init();
+            return $.when(store.cacheReady, SFDC.launcher)
+                .then(function() {
+                    model.cache = store.cache;
+                    model.cacheForOriginals = store.cacheForOriginals;
+                });
         },
         ready: function() {
             this.init();
             if (this.autosync) this.fetch();
         },
+        // Re-create model instance
         reset: function() {
-            if (!this.model ||
-                this.model.sobjectType != this.sobject ||
-                this.model.id != this.recordid ||
-                this.model.idAttribute != this.idfield ||
-                this.model.fieldlist != this.fieldlist) {
-
-                this.init();
-                if (this.autosync) this.fetch();
-            }
-            return this;
+            var that = this;
+            this.model = createModel(this.sobject);
+            this.init();
+            this.whenModelReady().then(function() {
+                if (that.autosync) that.fetch();
+            });
         },
         fetch: function() {
             var model = this.model;
-            //TBD: May be listen for the event when app is ready to do the fetch. Or fetch can be triggered by the consumer.
             if (model.sobjectType && model.id) {
-                $.when(this.$.store.cacheReady, SFDC.launcher)
-                .done(function(cache) {
-                    model.cache = cache;
+                this.whenModelReady().then(function() {
                     model.fetch();
                 });
             } else console.warn('sobject Type and recordid required for fetch.');
 
             return this;
         },
-        save: function() {
-            // Perform save (upsert) against the server
+        save: function(options) {
+            var model = this.model;
+            options.mergeMode = options.mergeMode || this.mergemode;
+            if (model.sobjectType) {
+                this.whenModelReady().then(function() {
+                    // Perform save (upsert) against the server
+                    model.save(null, options);
+                });
+            } else console.warn('sobject Type required for save.');
         },
-        delete: function() {
-            // Perform delete of record against the server
+        delete: function(options) {
+            var model = this.model;
+            options.mergeMode = options.mergeMode || this.mergemode;
+            if (model.sobjectType && model.id) {
+                this.whenModelReady().then(function() {
+                    // Perform delete of record against the server
+                    this.model.destroy(options);
+                });
+            } else console.warn('sobject Type and recordid required for delete.');
+        },
+        set: function(key, val) {
+            this.model.set(key, val);
+        },
+        get: function(key) {
+            return this.model.get(key);
         }
     }));
 

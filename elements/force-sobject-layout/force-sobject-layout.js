@@ -6,7 +6,6 @@
     // Returns a promise which is resolved when the record type id is fetched from the server.
     var fetchRecordTypeId = function(view) {
         var fetchStatus = $.Deferred();
-        var model = view.$.force_sobject.model;
 
         var resolveStatus = function(recordTypeId) {
             fetchStatus.resolve(view.sobject, recordTypeId);
@@ -16,6 +15,7 @@
         if (!view.hasrecordtypes) resolveStatus('012000000000000AAA');
         // If record types are present, then get the recordtypeid
         else {
+            var model = view.$.force_sobject.model;
             // If record type id is provided then use that.
             if (view.recordtypeid) resolveStatus(view.recordtypeid);
             // If not but the recordid is available, then get the recordtype info from sfdc
