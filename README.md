@@ -8,6 +8,7 @@ This document is intended to introduce you to the app's architecture and design 
 - Setup
 - Available UI Elements
 - Third-party Code
+- FAQ
 - Mobile UI Elements License
 
 ## What is it? ##
@@ -240,7 +241,7 @@ To run the sample app in Safari:
     - All attributes of force-selector-relatedlist
 
     Properties:
-    selected: Returns the value of "idfield" of the selected records.
+    - `selected`: Returns the value of "idfield" of the selected records.
 
     Example:
 
@@ -257,6 +258,29 @@ This library makes use of a number of third-party components:
 - [Backbonejs](http://backbonejs.org), a JavaScript library providing the model–view–presenter (MVP) application design paradigm.
 - [Underscorejs](http://underscorejs.org/), a utility-belt library for JavaScript.
 - [Ratchet](http://maker.github.io/ratchet), Prototype iPhone apps with simple HTML, CSS, and JS components.
+
+
+## FAQ ##
+
+__Polymer is still "pre-alpha" project. How should I use it?__
+
+Polymer as an overall project is still a work in progress. We feel that the underlying platform code leveraged for UI Elements is stable enough to start creating new apps for learning and prototyping purposes. Polymer will continue to be tweaked as the Web Components standard reaches its final stage. In the near future, a lot of Polymer features will be natively available in Chrome.
+
+__Polymer doesn't work inside the WebView on Android below 4.4__
+
+This is limitation of the older version of WebKit used for the WebView on pre 4.4 devices. Polymer does work in the Android Mobile browsers along with all of the popular evergreen browsers. If Android WebView is a real limitation, please let us know.
+
+__Does it work with other devices?__
+
+We got our samples to work on IE10 running on Windows Mobile, Safari on iOS6/7, Chrome, Safari, and Firefox
+
+__What's the level of support for this project?__
+
+Mobile UI Elements is an unsupported project. It's a way for us to share our code with the community that might be beneficial for certain use cases. We'd love to build a vibrant community for this project. A lot depends on the level of interest.
+
+__I don't see any data show up in my components__
+
+Please check the JavaScript console to be sure of the error. You might not be getting the data because your session has expired. If that's the case get a new session id. Or you might have enabled cross-domain scripting in Chrome or your other browser.
 
 
 ## Mobile UI Elements License ##
