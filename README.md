@@ -46,8 +46,8 @@ To run the sample app in Safari:
 
 ```
 1. Open index.html in an editor
-2. At line 25, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
-3. At line 26, plug in the instance url of the org. Eg. https://na1.salesforce.com
+2. At line 35, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
+3. At line 36, plug in the instance url of the org. Eg. https://na1.salesforce.com
 4. Open index.html in Safari and you should be able to browse a simple list and detail of an account.
 ```
 
