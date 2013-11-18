@@ -53,7 +53,7 @@ To run the sample app in Safari:
 
 ### Salesforce Unmanaged Package
 
-Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-elements](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tU00000009eeb). This package contains all the UI Elements along with a sample app and the Polymer Sandbox tool.
+Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-package](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tU00000009eeb). This package contains all the UI Elements along with a sample app and the Polymer Sandbox tool.
 
 
 ## Available UI Elements ##
