@@ -51,6 +51,14 @@ To run the sample app in Safari:
 4. Open index.html in Safari and you should be able to browse a simple list and detail of an account.
 ```
 
+Obtaining salesforce session Id for running the sample app:
+
+```
+1. Login into salesforce using your web browser.
+2. Open the salesforce API debugshell by going to https://<your org instance url>/soap/ajax/29.0/debugshell.html
+3. In debugshell, run the following command to obtain the session ID: sforce.connection.sessionId
+```
+
 ### Salesforce Unmanaged Package
 
 Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-package](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tU00000009eeb). This package contains all the UI Elements along with a sample app and the Polymer Sandbox tool.
