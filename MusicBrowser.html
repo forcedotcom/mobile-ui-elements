@@ -32,7 +32,7 @@
                     </ul>                    
                 </header>
                 <div class="bar-standard bar-header-secondary">
-                    <input type="search" class="search-key" value={{collection.config.query}} on-keyup={{runSearch}}/>
+                    <input type="search" class="search-key" value={{criteria}} on-keyup={{runSearch}}/>
                 </div>
                 <div style="margin-top:88px /*XXX*/">
                     <ul id="listbody" class="list">
@@ -59,22 +59,33 @@
 
                 searchAlbums: function() {
                     if (this.switchTab('#tabAlbums')) {
-                        this.collection.config.type = 'album';
+                        this.setupCollection('album')
                         this.runSearch();
                     }
                 },
 
                 searchArtists: function() {
                     if (this.switchTab('#tabArtists')) {
-                        this.collection.config.type = 'artist';
+                        this.setupCollection('artist')
                         this.runSearch();
                     }
                 },
 
                 searchTracks: function() {
                     if (this.switchTab('#tabTracks')) {
-                        this.collection.config.type = 'track';
+                        this.setupCollection('track')
                         this.runSearch();
+                    }
+                },
+
+                setupCollection: function(itemType) {
+                    this.collection = new app.models.MusicItemsCollection();
+                    // this.collection.cache = app.caches[itemType];
+                    if (SFDC.isOnline()) {
+                        this.collection.config = {itemType: itemType, type: 'search', query:this.criteria};
+                    }
+                    else {
+                        this.collection.config = {itemType: itemType, type: 'cache', cacheQuery: {queryType:"like", indexPath:"name", likeKey: this.criteria + '%', order:"ascending", pageSize:100}};
                     }
                 },
 
@@ -83,29 +94,28 @@
                 },
 
                 ready: function() {
-                    this.collection = new app.models.MusicItemsCollection();
-                    this.collection.config = {type: 'album', query:''};
+                    this.setupCollection('album');
                 }
             });
             </script>
         </polymer-element>
 
 
-        <polymer-element name="detail-screen" attributes="itemId">
+        <polymer-element name="detail-screen" attributes="itemId itemType">
             <template>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
-                    <h1 class="title">{{model.attributes.info.type}}</h1>
+                    <h1 class="title">{{itemType}}</h1>
                 </header>
                 <div class="content">
-                    <template if={{model.attributes.info.type == 'album'}}>
-                        {{model.attributes.album.name}}
+                    <template if={{itemType == 'album'}}>
+                        {{model.attributes.name}}
                     </template>
-                    <template if={{model.attributes.info.type == 'artist'}}>
-                        {{model.attributes.artist.name}}
+                    <template if={{itemType == 'artist'}}>
+                        {{model.attributes.name}}
                     </template>
-                    <template if={{model.attributes.info.type == 'track'}}>
-                        {{model.attributes.track.name}}
+                    <template if={{itemType == 'track'}}>
+                        {{model.attributes.name}}
                     </template>
                 </div>
             </template>
@@ -113,6 +123,7 @@
             Polymer('detail-screen', {
                 observe: {
                     itemId: 'fetch',
+                    itemType: 'fetch'
                 },
 
                 goBack: function() {
@@ -121,6 +132,8 @@
 
                 fetch: function() {
                     this.model = new app.models.MusicItem();
+                    // this.model.cache = app.caches[this.itemType];
+                    this.model.cacheMode = app.onlinestatus ? Force.CACHE_MODE.SERVER_FIRST : Force.CACHE_MODE.CACHE_ONLY;
                     this.model.id = this.itemId;
                     this.model.fetch();
                 }
@@ -140,8 +153,8 @@
             var app = {models: {}};
 
             Polymer('mobile-app', {
-                accesstoken: '',
-                instanceurl: '',
+                accesstoken: '--', 
+                instanceurl: '--', // XXX not empty so that Force.init gets invoked
 
                 _onlineStatus: true,
 
@@ -161,15 +174,16 @@
                         routes: {
                             "": "search",
                             "search": "search",
-                            "detail/:id": "detail",
+                            "detail/:itemId": "detail",
                         },
 
                         search: function() {
                             app.router.gotoPageId('#search');
                         },
 
-                        detail: function(id) {
-                            app.$.detail.itemId = id;
+                        detail: function(itemId) {
+                            app.$.detail.itemType = itemId.split(":")[1];
+                            app.$.detail.itemId = itemId;
                             app.router.gotoPageId('#detail');
                         }
                     });
@@ -182,13 +196,22 @@
         <mobile-app></mobile-app>
 
         <script type="text/javascript">
-        var app = {models: {}};
+        var app = {models:{}, caches:{}};
 
-        app.models.MusicItem = Force.RemoteObject.extend({
+        app.caches.album = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
+        app.caches.artist = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
+        app.caches.track = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
+
+        // XXX not waiting for async initialization
+        _.each(_.values(app.caches), function(cache) { cache.init(); });
+
+        app.models.MusicItem = Force.RemoteObject.extend({            
             syncRemoteObjectWithServer: function(method, id) {
                 if (method != "read") throw "Method not supported " + method;
                 var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id;
-                return $.ajax({url: url});
+                return $.ajax({url: url}).then(function(data) {
+                    return data[data.info.type];
+                });
             }
         });
 
@@ -196,16 +219,16 @@
             model: app.models.MusicItem,
 
             fetchRemoteObjectsFromServer: function(config) {
-                var url = 'http://ws.spotify.com/search/1/' + config.type +'.json?q=' + encodeURI(config.query);
+                var url = 'http://ws.spotify.com/search/1/' + config.itemType +'.json?q=' + encodeURI(config.query);
                 return $.ajax({url: url})
                 .then(function(data) {
                     return {
                         totalSize: data.info.num_results,
-                        records: data[config.type + 's'],
+                        records: data[config.itemType + 's'],
                         hasMore: data.info.limit < data.info.num_results,
-                    getMore: function() { /* FIXME */}
-                }
-            });
+                        getMore: function() { /* FIXME */}
+                    }
+                });
             }
         });
 
