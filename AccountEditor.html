@@ -23,8 +23,8 @@
                     <a class="button" href="#add">Create</a>
                 </header>
                 <force-ui-search id="search" sobject="{{sobject}}" searchfield="Name"></force-ui-search>
-                <force-selector-list id="list" sobject="{{sobject}}" querytype="{{$.search.querytype}}" query="{{$.search.query}}"></force-selector-list>
-                <div style="margin-top:88px /*XXX*/">
+                <div class="content" style="margin-top:44px /* XXX */">
+                    <force-selector-list id="list" sobject="{{sobject}}" querytype="{{$.search.querytype}}" query="{{$.search.query}}"></force-selector-list>
                     <ul id="listbody" class="list">
                         <template repeat="{{$.list.collection.models}}">
                             <li name="{{id}}">
@@ -254,7 +254,7 @@
                 observe: {
                     "sobject": "reset",
                 },
-                accesstoken: '00Di0000000gWVG!ARcAQJZOrH9JIypVY.1SSMjDYEee6c74f3IVxZv_7kw4YfAoxGc8zAgN0wPCZOfE34BMHHzkZEzeuqghZ9r_zFuOx6OiY0dh',
+                accesstoken: '00Di0000000gWVG!ARcAQF7GWB5OXTOA7vsLxBiTlkeKN5zX0g5pgjDEyUOs1BVg2masmn1eNp5SWkut9Mt_1XHZ9SLyYEoedQ2VF6xmCMuQMkNm',
                 instanceurl: 'https://na15.salesforce.com',
 
                 _onlineStatus: true,
