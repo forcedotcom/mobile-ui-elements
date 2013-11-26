@@ -20,6 +20,7 @@
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
         <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
+        <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-menu-button/polymer-ui-menu-button.html">        
     </head>
     <body>
         <polymer-element name="search-screen">
@@ -105,18 +106,40 @@
             <template>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
-                    <h1 class="title">{{itemType}}</h1>
+                    <h1 class="title">{{model.attributes.name}}</h1>
+                    <polymer-ui-menu-button selected="0" style="position: fixed; right: 0; margin: 20px;">
+                        <polymer-ui-menu-item label="Settings"></polymer-ui-menu-item>
+                        <polymer-ui-menu-item label="Dialog"></polymer-ui-menu-item>
+                        <polymer-ui-menu-item label="Search"></polymer-ui-menu-item>
+                    </polymer-ui-menu-button>                    
                 </header>
                 <div class="content">
-                    <template if={{itemType == 'album'}}>
-                        {{model.attributes.name}}
+                    <template if="{{itemType == 'album'}}">
+                        <ul class="list">
+                            <template repeat="{{model.attributes.tracks}}">
+                                <li><a href="#detail/{{href}}">{{name}}</a></li>
+                            </template>
+                        </ul>
                     </template>
-                    <template if={{itemType == 'artist'}}>
-                        {{model.attributes.name}}
+
+                    <template if="{{itemType == 'artist'}}">
+                        <ul class="list">
+                            <template repeat="{{model.attributes.albums}}">
+                                <li><a href="#detail/{{href}}">{{name}}</a></li>
+                            </template>
+                        </ul>
                     </template>
-                    <template if={{itemType == 'track'}}>
-                        {{model.attributes.name}}
+
+                    <template if="{{itemType == 'track'}}">
+                        <ul class="list">
+                            <template repeat="{{model.attributes.artists}}">
+                                <li><a href="#detail/{{href}}">{{name}}</a></li>
+                            </template>
+                        </ul>
+
                     </template>
+
+
                 </div>
             </template>
             <script type="text/javascript">
@@ -208,7 +231,9 @@
         app.models.MusicItem = Force.RemoteObject.extend({            
             syncRemoteObjectWithServer: function(method, id) {
                 if (method != "read") throw "Method not supported " + method;
-                var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id;
+                var itemType = id.split(":")[1];
+                var extras = (itemType == 'artist' ? 'album' : (itemType == 'album' ? 'track' : ''));
+                var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id  + '&extras=' + extras;
                 return $.ajax({url: url}).then(function(data) {
                     return data[data.info.type];
                 });
