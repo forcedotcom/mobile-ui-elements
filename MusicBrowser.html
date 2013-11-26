@@ -7,15 +7,9 @@
 
         <!-- Importing Google Polymer framework -->
         <script src="dependencies/polymer/polymer.min.js"></script>
-        <script src="dependencies/jquery/jquery.min.js"></script>
-        <script src="dependencies/underscore/underscore-min.js"></script>
-        <script src="dependencies/backbone/backbone-min.js"></script>
         <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
-        <script src="dependencies/mobilesdk-shared/forcetk.mobilesdk.js"></script>
         <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
         <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
-        <script src="dependencies/mobilesdk-shared/smartsync.js"></script>
-
 
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
@@ -87,7 +81,7 @@
 
                 setupCollection: function() {
                     this.collection = new app.models.MusicItemsCollection();
-                    // this.collection.cache = app.caches[itemType];
+                    this.collection.cache = app.caches[this.itemType];
                     if (SFDC.isOnline()) {
                         this.collection.config = {itemType: this.itemType, type: 'search', query:this.criteria};
                     }
@@ -162,8 +156,8 @@
 
                 fetch: function() {
                     this.model = new app.models.MusicItem();
-                    // this.model.cache = app.caches[this.itemType];
-                    this.model.cacheMode = app.onlinestatus ? Force.CACHE_MODE.SERVER_FIRST : Force.CACHE_MODE.CACHE_ONLY;
+                    this.model.cache = app.caches[this.itemType];
+                    this.model.cacheMode = SFDC.isOnline() ? Force.CACHE_MODE.SERVER_FIRST : Force.CACHE_MODE.CACHE_ONLY;
                     this.model.id = this.itemId;
                     this.model.fetch();
                 }
@@ -198,8 +192,69 @@
                     this._onlineStatus = newStatus;
                 },
 
+                setupModels: function() {
+                    var app = this;
+
+                    app.models = {};
+
+                    app.models.MusicItem = Force.RemoteObject.extend({            
+                        syncRemoteObjectWithServer: function(method, id) {
+                            if (method != "read") throw "Method not supported " + method;
+                            var itemType = id.split(":")[1];
+                            var extras = (itemType == 'artist' ? 'album' : (itemType == 'album' ? 'track' : ''));
+                            var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id  + '&extras=' + extras;
+                            var embedUrl = 'https://embed.spotify.com/oembed/?url=' + id;
+
+                            return $.when($.ajax({url: url}), $.ajax({url:embedUrl})).then(function(response, embedResponse) {
+                                var record = _.extend({thumbnail_url: embedResponse[0].thumbnail_url}, response[0][itemType]);
+                                record.artistId = record['artist-id']; // XXX template binding fails because of '-'
+                                return record;
+                            });
+                        }
+                    });
+
+                    app.models.MusicItemsCollection = Force.RemoteObjectCollection.extend({
+                        model: app.models.MusicItem,
+
+                        fetchRemoteObjectsFromServer: function(config) {
+                            var url = 'http://ws.spotify.com/search/1/' + config.itemType +'.json?q=' + encodeURI(config.query);
+                            return $.ajax({url: url})
+                            .then(function(data) {
+                                return  {
+                                    totalSize: data.info.num_results,
+                                    records: data[config.itemType + 's'],
+                                    hasMore: data.info.limit < data.info.num_results,
+                                    getMore: function() { /* FIXME */}
+                                };
+                            });
+                        }
+                    });                    
+                },
+
+                setupCaches: function() {
+                    var app = this;
+                    app.caches = {};
+
+                    if (navigator.smartstore) {
+                        SFDC.launcher.then(function() {
+                            var albumCache = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
+                            var artistCache = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
+                            var trackCache = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
+
+                            $.when(albumCache.init(), artistCache.init(), trackCache.init()).then(function() {
+                                app.caches.album = albumCache;
+                                app.caches.artist = artistCache;
+                                app.caches.track = trackCache;
+                            });
+                        });
+                    }
+                },  
+
                 ready: function() {
                     var app = this;
+
+                    this.setupModels();
+                    this.setupCaches();
 
                     app.router = app.$.force_ui_app.setupRouter({
                         routes: {
@@ -230,50 +285,8 @@
         <mobile-app></mobile-app>
 
         <script type="text/javascript">
-        var app = {models:{}, caches:{}};
-
-        app.caches.album = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
-        app.caches.artist = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
-        app.caches.track = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
-
-        // XXX not waiting for async initialization
-        _.each(_.values(app.caches), function(cache) { cache.init(); });
-
-        app.models.MusicItem = Force.RemoteObject.extend({            
-            syncRemoteObjectWithServer: function(method, id) {
-                if (method != "read") throw "Method not supported " + method;
-                var itemType = id.split(":")[1];
-                var extras = (itemType == 'artist' ? 'album' : (itemType == 'album' ? 'track' : ''));
-                var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id  + '&extras=' + extras;
-                var embedUrl = 'https://embed.spotify.com/oembed/?url=' + id;
-
-                return $.when($.ajax({url: url}), $.ajax({url:embedUrl})).then(function(response, embedResponse) {
-                    var record = _.extend({thumbnail_url: embedResponse[0].thumbnail_url}, response[0][itemType]);
-                    record.artistId = record['artist-id']; // XXX template binding fails because of '-'
-                    return record;
-                });
-            }
-        });
-
-        app.models.MusicItemsCollection = Force.RemoteObjectCollection.extend({
-            model: app.models.MusicItem,
-
-            fetchRemoteObjectsFromServer: function(config) {
-                var url = 'http://ws.spotify.com/search/1/' + config.itemType +'.json?q=' + encodeURI(config.query);
-                return $.ajax({url: url})
-                .then(function(data) {
-                    return  {
-                        totalSize: data.info.num_results,
-                        records: data[config.itemType + 's'],
-                        hasMore: data.info.limit < data.info.num_results,
-                        getMore: function() { /* FIXME */}
-                    };
-                });
-            }
-        });
-
         window.addEventListener('WebComponentsReady', function() {
-            app = _.extend(app, $("mobile-app")[0]);
+            app = $("mobile-app")[0];
         });
 
         </script>
