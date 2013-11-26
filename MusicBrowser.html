@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Importing Google Polymer framework -->
+        <script src="dependencies/polymer/polymer.min.js"></script>
+        <script src="dependencies/jquery/jquery.min.js"></script>
+        <script src="dependencies/underscore/underscore-min.js"></script>
+        <script src="dependencies/backbone/backbone-min.js"></script>
+        <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
+        <script src="dependencies/mobilesdk-shared/forcetk.mobilesdk.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
+        <script src="dependencies/mobilesdk-shared/smartsync.js"></script>
+
+
+        <!-- Place your HTML imports here -->
+        <link rel="import" href="elements/mobile-ui-elements.html">
+        <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
+    </head>
+    <body>
+        <polymer-element name="search-screen">
+            <template>
+                <header class="bar-title">
+                    <ul class="segmented-controller">
+                        <li class="active" id="tabAlbums"><a on-click="{{searchAlbums}}">Albums</a></li>
+                        <li id="tabArtists"><a on-click="{{searchArtists}}">Artists</a></li>
+                        <li id="tabTracks"><a on-click="{{searchTracks}}">Tracks</a></li>
+                    </ul>                    
+                </header>
+                <div class="bar-standard bar-header-secondary">
+                    <input type="search" class="search-key" value={{collection.config.query}} on-keyup={{runSearch}}/>
+                </div>
+                <div style="margin-top:88px /*XXX*/">
+                    <ul id="listbody" class="list">
+                        <template repeat="{{collection.models}}">
+                            <li><a href="#detail/{{attributes.href}}">{{attributes.name}}</a></li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('search-screen', {
+                activeTab: '#tabAlbums',
+
+                switchTab: function(selectedTab) {
+                    if (this.activeTab === selectedTab) {
+                        return false;
+                    }
+
+                    $(this.activeTab).removeClass('active');
+                    this.activeTab = selectedTab;
+                    $(this.activeTab).addClass('active');
+                    return true;
+                },
+
+                searchAlbums: function() {
+                    if (this.switchTab('#tabAlbums')) {
+                        this.collection.config.type = 'album';
+                        this.runSearch();
+                    }
+                },
+
+                searchArtists: function() {
+                    if (this.switchTab('#tabArtists')) {
+                        this.collection.config.type = 'artist';
+                        this.runSearch();
+                    }
+                },
+
+                searchTracks: function() {
+                    if (this.switchTab('#tabTracks')) {
+                        this.collection.config.type = 'track';
+                        this.runSearch();
+                    }
+                },
+
+                runSearch: function() {
+                    this.collection.fetch();
+                },
+
+                ready: function() {
+                    this.collection = new app.models.MusicItemsCollection();
+                    this.collection.config = {type: 'album', query:''};
+                }
+            });
+            </script>
+        </polymer-element>
+
+
+        <polymer-element name="detail-screen" attributes="itemId">
+            <template>
+                <header class="bar-title">
+                    <a class="button-prev" on-click="{{goBack}}">Back</a>
+                    <h1 class="title">{{model.attributes.info.type}}</h1>
+                </header>
+                <div class="content">
+                    <template if={{model.attributes.info.type == 'album'}}>
+                        {{model.attributes.album.name}}
+                    </template>
+                    <template if={{model.attributes.info.type == 'artist'}}>
+                        {{model.attributes.artist.name}}
+                    </template>
+                    <template if={{model.attributes.info.type == 'track'}}>
+                        {{model.attributes.track.name}}
+                    </template>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('detail-screen', {
+                observe: {
+                    itemId: 'fetch',
+                },
+
+                goBack: function() {
+                    app.router.navigateBack();
+                },
+
+                fetch: function() {
+                    this.model = new app.models.MusicItem();
+                    this.model.id = this.itemId;
+                    this.model.fetch();
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <polymer-element name="mobile-app">
+            <template>
+                <force-ui-app id="force_ui_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
+                    <search-screen id="search" class="page absolute"></search-screen>
+                    <detail-screen id="detail" class="page absolute"></track-screen>
+                </force-ui-app>
+                <polymer-ui-toggle-button id="onlineToggler" value="{{onlinestatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
+            </template>
+            <script type="text/javascript">
+            var app = {models: {}};
+
+            Polymer('mobile-app', {
+                accesstoken: '',
+                instanceurl: '',
+
+                _onlineStatus: true,
+
+                get onlinestatus() {
+                    return this._onlineStatus;
+                },
+
+                set onlinestatus(newStatus) {
+                    SFDC.isOnline = function() { return newStatus }; // XXX
+                    this._onlineStatus = newStatus;
+                },
+
+                ready: function() {
+                    var app = this;
+
+                    app.router = app.$.force_ui_app.setupRouter({
+                        routes: {
+                            "": "search",
+                            "search": "search",
+                            "detail/:id": "detail",
+                        },
+
+                        search: function() {
+                            app.router.gotoPageId('#search');
+                        },
+
+                        detail: function(id) {
+                            app.$.detail.itemId = id;
+                            app.router.gotoPageId('#detail');
+                        }
+                    });
+                    Backbone.history.start();
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <mobile-app></mobile-app>
+
+        <script type="text/javascript">
+        var app = {models: {}};
+
+        app.models.MusicItem = Force.RemoteObject.extend({
+            syncRemoteObjectWithServer: function(method, id) {
+                if (method != "read") throw "Method not supported " + method;
+                var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id;
+                return $.ajax({url: url});
+            }
+        });
+
+        app.models.MusicItemsCollection = Force.RemoteObjectCollection.extend({
+            model: app.models.MusicItem,
+
+            fetchRemoteObjectsFromServer: function(config) {
+                var url = 'http://ws.spotify.com/search/1/' + config.type +'.json?q=' + encodeURI(config.query);
+                return $.ajax({url: url})
+                .then(function(data) {
+                    return {
+                        totalSize: data.info.num_results,
+                        records: data[config.type + 's'],
+                        hasMore: data.info.limit < data.info.num_results,
+                    getMore: function() { /* FIXME */}
+                }
+            });
+            }
+        });
+
+        window.addEventListener('WebComponentsReady', function() {
+            app = _.extend(app, $("mobile-app")[0]);
+        });
+
+        </script>
+    </body>
+</html>
