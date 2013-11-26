@@ -128,7 +128,6 @@
       });
   
       var HashRouter = Backbone.Router.extend({
-        currentPageId: null,
         hashHistory: [],
 
         navigateFirst: function() {
@@ -141,10 +140,9 @@
 
         gotoPageId: function(targetId) {
           // First page loaded
-          if (!this.currentPageId) {
+          if (this.hashHistory.length == 0) {
             this.hashHistory = [window.location.hash];
-            this.currentPageId = targetId;
-            // first page is automatically loaded, we don't need to "navigate" to it
+          // first page is automatically loaded, we don't need to "navigate" to it
           }
           // New page is the same as the previous page -> back transition
           else if (this.hashHistory.length > 1 && window.location.hash === this.hashHistory[this.hashHistory.length - 2]) {
