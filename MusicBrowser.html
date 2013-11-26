@@ -20,7 +20,8 @@
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
         <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
-        <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-menu-button/polymer-ui-menu-button.html">        
+        <link rel="import" href="bower_components/polymer-elements/polymer-flex-layout/polymer-flex-layout.html">
+
     </head>
     <body>
         <polymer-element name="search-screen">
@@ -45,7 +46,15 @@
             </template>
             <script type="text/javascript">
             Polymer('search-screen', {
+                itemType: 'album',
                 activeTab: '#tabAlbums',
+                criteria: '',
+
+                observe: {
+                    itemType: 'setupCollection',
+                    criteria: 'setupCollection',
+                    'collection.config': 'runSearch'
+                },
 
                 switchTab: function(selectedTab) {
                     if (this.activeTab === selectedTab) {
@@ -60,42 +69,35 @@
 
                 searchAlbums: function() {
                     if (this.switchTab('#tabAlbums')) {
-                        this.setupCollection('album')
-                        this.runSearch();
+                        this.itemType = 'album';
                     }
                 },
 
                 searchArtists: function() {
                     if (this.switchTab('#tabArtists')) {
-                        this.setupCollection('artist')
-                        this.runSearch();
-                    }
+                        this.itemType = 'artist';
+                    }   
                 },
 
                 searchTracks: function() {
                     if (this.switchTab('#tabTracks')) {
-                        this.setupCollection('track')
-                        this.runSearch();
+                        this.itemType = 'track';
                     }
                 },
 
-                setupCollection: function(itemType) {
+                setupCollection: function() {
                     this.collection = new app.models.MusicItemsCollection();
                     // this.collection.cache = app.caches[itemType];
                     if (SFDC.isOnline()) {
-                        this.collection.config = {itemType: itemType, type: 'search', query:this.criteria};
+                        this.collection.config = {itemType: this.itemType, type: 'search', query:this.criteria};
                     }
                     else {
-                        this.collection.config = {itemType: itemType, type: 'cache', cacheQuery: {queryType:"like", indexPath:"name", likeKey: this.criteria + '%', order:"ascending", pageSize:100}};
+                        this.collection.config = {itemType: this.itemType, type: 'cache', cacheQuery: {queryType:"like", indexPath:"name", likeKey: this.criteria + '%', order:"ascending", pageSize:100}};
                     }
                 },
 
                 runSearch: function() {
                     this.collection.fetch();
-                },
-
-                ready: function() {
-                    this.setupCollection('album');
                 }
             });
             </script>
@@ -107,39 +109,44 @@
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
                     <h1 class="title">{{model.attributes.name}}</h1>
-                    <polymer-ui-menu-button selected="0" style="position: fixed; right: 0; margin: 20px;">
-                        <polymer-ui-menu-item label="Settings"></polymer-ui-menu-item>
-                        <polymer-ui-menu-item label="Dialog"></polymer-ui-menu-item>
-                        <polymer-ui-menu-item label="Search"></polymer-ui-menu-item>
-                    </polymer-ui-menu-button>                    
                 </header>
                 <div class="content">
-                    <template if="{{itemType == 'album'}}">
-                        <ul class="list">
-                            <template repeat="{{model.attributes.tracks}}">
-                                <li><a href="#detail/{{href}}">{{name}}</a></li>
-                            </template>
-                        </ul>
-                    </template>
+                    <polymer-flex-layout></polymer-flex-layout>
+                    <div>
+                        <img src="{{model.attributes.thumbnail_url}}"></img>
+                    </div>
+                    <div flex>
+                        <template if="{{itemType == 'album'}}">
+                            <ul class="list">
+                                <li class="list-divider">Artist</li>
+                                <li><a href="#detail/{{model.attributes.artistId}}">{{model.attributes.artist}}</a></li>
+                                <li class="list-divider">Tracks</li>
+                                <template repeat="{{model.attributes.tracks}}">
+                                    <li><a href="#detail/{{href}}">{{name}}</a></li>
+                                </template>
+                            </ul>
+                        </template>
 
-                    <template if="{{itemType == 'artist'}}">
-                        <ul class="list">
-                            <template repeat="{{model.attributes.albums}}">
-                                <li><a href="#detail/{{href}}">{{name}}</a></li>
-                            </template>
-                        </ul>
-                    </template>
+                        <template if="{{itemType == 'artist'}}">
+                            <ul class="list">
+                                <li class="list-divider">Albums</li>
+                                <template repeat="{{model.attributes.albums}}">
+                                    <li><a href="#detail/{{album.href}}">{{album.name}}</a></li>
+                                </template>
+                            </ul>
+                        </template>
 
-                    <template if="{{itemType == 'track'}}">
-                        <ul class="list">
-                            <template repeat="{{model.attributes.artists}}">
-                                <li><a href="#detail/{{href}}">{{name}}</a></li>
-                            </template>
-                        </ul>
-
-                    </template>
-
-
+                        <template if="{{itemType == 'track'}}">
+                            <ul class="list">
+                                <li class="list-divider">Album</li>
+                                <li><a href="#detail/{{model.attributes.album.href}}">{{model.attributes.album.name}}</a></li>
+                                <li class="list-divider">Artists</li>
+                                <template repeat="{{model.attributes.artists}}">
+                                    <li><a href="#detail/{{href}}">{{name}}</a></li>
+                                </template>
+                            </ul>
+                        </template>
+                    </div>
                 </div>
             </template>
             <script type="text/javascript">
@@ -168,7 +175,8 @@
             <template>
                 <force-ui-app id="force_ui_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
                     <search-screen id="search" class="page absolute"></search-screen>
-                    <detail-screen id="detail" class="page absolute"></track-screen>
+                    <detail-screen id="detail" class="page absolute"></detail-screen>
+                    <detail-screen id="detail2" class="page absolute"></detail-screen>
                 </force-ui-app>
                 <polymer-ui-toggle-button id="onlineToggler" value="{{onlinestatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
             </template>
@@ -205,9 +213,12 @@
                         },
 
                         detail: function(itemId) {
-                            app.$.detail.itemType = itemId.split(":")[1];
-                            app.$.detail.itemId = itemId;
-                            app.router.gotoPageId('#detail');
+                            var onDetailAlready = app.$.force_ui_app.activepage && app.$.force_ui_app.activepage.id === 'detail';
+                            var target = onDetailAlready ? app.$.detail2 : app.$.detail;
+                            var targetId = onDetailAlready ? '#detail2' : '#detail';
+                            target.itemType = itemId.split(":")[1];
+                            target.itemId = itemId;
+                            app.router.gotoPageId(targetId);
                         }
                     });
                     Backbone.history.start();
@@ -234,8 +245,12 @@
                 var itemType = id.split(":")[1];
                 var extras = (itemType == 'artist' ? 'album' : (itemType == 'album' ? 'track' : ''));
                 var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id  + '&extras=' + extras;
-                return $.ajax({url: url}).then(function(data) {
-                    return data[data.info.type];
+                var embedUrl = 'https://embed.spotify.com/oembed/?url=' + id;
+
+                return $.when($.ajax({url: url}), $.ajax({url:embedUrl})).then(function(response, embedResponse) {
+                    var record = _.extend({thumbnail_url: embedResponse[0].thumbnail_url}, response[0][itemType]);
+                    record.artistId = record['artist-id']; // XXX template binding fails because of '-'
+                    return record;
                 });
             }
         });
@@ -247,12 +262,12 @@
                 var url = 'http://ws.spotify.com/search/1/' + config.itemType +'.json?q=' + encodeURI(config.query);
                 return $.ajax({url: url})
                 .then(function(data) {
-                    return {
+                    return  {
                         totalSize: data.info.num_results,
                         records: data[config.itemType + 's'],
                         hasMore: data.info.limit < data.info.num_results,
                         getMore: function() { /* FIXME */}
-                    }
+                    };
                 });
             }
         });
