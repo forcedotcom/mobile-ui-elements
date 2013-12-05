@@ -130,7 +130,7 @@
             if (templateInfo) {
                 if (view.model.id) {
                     // Perform data fetch for the fieldlist used in template
-                    view.model.fetch({ fieldlist: templateInfo.fields });
+                    view.$.force_sobject.fetch({ fieldlist: templateInfo.fields });
                 }
 
                 // Attach the template instance to the view

@@ -62,11 +62,11 @@
                 if (that.autosync) that.fetch();
             });
         },
-        fetch: function() {
+        fetch: function(opts) {
             var model = this.model;
             if (model.sobjectType && model.id) {
                 this.whenModelReady().then(function() {
-                    model.fetch();
+                    model.fetch(opts);
                 });
             } else console.warn('sobject Type and recordid required for fetch.');
 
