@@ -230,27 +230,12 @@
                     });                    
                 },
 
-                cordovaReady: function() {
-                    var d = $.Deferred();
-                    if (cordova.interceptExec) {
-                        console.log("mock cordova ready");
-                        d.resolve();
-                    }
-                    else {
-                        document.addEventListener("deviceready", function() {
-                            console.log("cordova ready");
-                            d.resolve();
-                        }, false);
-                    }
-                    return d.promise();
-                },
-
                 setupCaches: function() {
                     var app = this;
                     app.caches = {};
 
                     if (navigator.smartstore) {
-                        SFDC.launcher.then(app.cordovaReady()).then(function() {
+                        SFDC.launcher.then(cordova.loaded()).then(function() {
                             var albumCache = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
                             var artistCache = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
                             var trackCache = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
