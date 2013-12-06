@@ -1,0 +1,14 @@
+<script src="dependencies/jquery/jquery.min.js"></script>
+<script src="cordova-2.3.0.js"></script>
+<script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+
+<script type="text/javascript">
+cordova.loaded = (function() {
+	var d = $.Deferred();
+	document.addEventListener("deviceready", function() {
+		console.log("Cordova loaded!");
+		d.resolve();
+	}, false);
+	return d.promise();
+})();
+</script>

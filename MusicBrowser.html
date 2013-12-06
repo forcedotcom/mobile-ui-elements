@@ -7,11 +7,9 @@
 
         <!-- Importing Google Polymer framework -->
         <script src="dependencies/platform/platform.js"></script>
-        <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
-        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
-        <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
 
         <!-- Place your HTML imports here -->
+        <link rel="import" href="mock-cordova.html">
         <link rel="import" href="elements/mobile-ui-elements.html">
         <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
 
@@ -101,12 +99,11 @@
             <template>
                 <header class="bar-title">
                     <a class="button-prev" on-click="{{goBack}}">Back</a>
-                    <h1 class="title">{{model.attributes.name}}</h1>
+                    <h1 style="font-size:14px" class="title">{{model.attributes.name}}</h1>
                 </header>
                 <div class="content">
-                    <polymer-flex-layout></polymer-flex-layout>
                     <div>
-                        <img src="{{model.attributes.thumbnail_url}}"></img>
+                        <img height=320 width=320 src="{{model.attributes.thumbnail_url}}"></img>
                     </div>
                     <div flex>
                         <template if="{{itemType == 'album'}}">
@@ -154,11 +151,14 @@
                 },
 
                 fetch: function() {
-                    this.model = new app.models.MusicItem();
-                    this.model.cache = app.caches[this.itemType];
-                    this.model.cacheMode = SFDC.isOnline() ? Force.CACHE_MODE.SERVER_FIRST : Force.CACHE_MODE.CACHE_ONLY;
-                    this.model.id = this.itemId;
-                    this.model.fetch();
+                    if (!this.model || this.model.id != this.itemId) {
+                        this.model = new app.models.MusicItem();
+                        this.model.cache = app.caches[this.itemType];
+                        this.model.cacheMode = SFDC.isOnline() ? Force.CACHE_MODE.SERVER_FIRST : Force.CACHE_MODE.CACHE_ONLY;
+                        this.model.id = this.itemId;
+                        this.model.set('thumbnail_url', 'large_loading.gif');
+                        this.model.fetch();
+                    }
                 }
             });
             </script>
@@ -235,7 +235,7 @@
                     app.caches = {};
 
                     if (navigator.smartstore) {
-                        SFDC.launcher.then(function() {
+                        SFDC.launcher.then(cordova.loaded).then(function() {
                             var albumCache = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
                             var artistCache = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
                             var trackCache = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
