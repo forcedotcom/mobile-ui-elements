@@ -1,15 +1,3 @@
-<script src="dependencies/jquery/jquery.min.js"></script>
 <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
 <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
 <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
-
-<script type="text/javascript">
-cordova.loaded = (function() {
-	console.log("Using mock cordova");
-	var d = $.Deferred();
-	setTimeout(function() {
-		d.resolve();
-	}, 0);
-	return d.promise();
-})();
-</script>
