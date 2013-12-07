@@ -177,9 +177,6 @@
             var app = {models: {}};
 
             Polymer('mobile-app', {
-                accesstoken: '--', 
-                instanceurl: '--', // XXX not empty so that Force.init gets invoked
-
                 _onlineStatus: true,
 
                 get onlinestatus() {
@@ -236,16 +233,16 @@
 
                     if (navigator.smartstore) {
                         SFDC.launcher.then(cordova.loaded()).then(function() {
-                            var albumCache = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
-                            var artistCache = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
-                            var trackCache = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
+                        var albumCache = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
+                        var artistCache = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
+                        var trackCache = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
 
-                            $.when(albumCache.init(), artistCache.init(), trackCache.init()).then(function() {
-                                app.caches.album = albumCache;
-                                app.caches.artist = artistCache;
-                                app.caches.track = trackCache;
-                            });
+                        $.when(albumCache.init(), artistCache.init(), trackCache.init()).then(function() {
+                            app.caches.album = albumCache;
+                            app.caches.artist = artistCache;
+                            app.caches.track = trackCache;
                         });
+                    });
                     }
                 },  
 
@@ -286,6 +283,7 @@
         <script type="text/javascript">
         window.addEventListener('WebComponentsReady', function() {
             app = $("mobile-app")[0];
+            SFDC.launch({});
         });
 
         </script>
