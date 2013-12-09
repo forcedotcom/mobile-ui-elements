@@ -8,8 +8,19 @@
         <!-- Importing Google Polymer framework -->
         <script src="dependencies/platform/platform.js"></script>
 
+
+        <!-- Container --/>
+        <script src="cordova-2.3.0.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <!-- End Container -->
+
+        <!-- Local Testing -->
+        <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
+        <!-- End Local Testing -->
+
         <!-- Place your HTML imports here -->
-        <link rel="import" href="mock-cordova.html">
         <link rel="import" href="elements/mobile-ui-elements.html">
         <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
 
@@ -232,7 +243,7 @@
                     app.caches = {};
 
                     if (navigator.smartstore) {
-                        SFDC.launcher.then(cordova.loaded()).then(function() {
+                        SFDC.launcher.then(function() {
                         var albumCache = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
                         var artistCache = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
                         var trackCache = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
@@ -283,7 +294,10 @@
         <script type="text/javascript">
         window.addEventListener('WebComponentsReady', function() {
             app = $("mobile-app")[0];
-            SFDC.launch({});
+            // Container
+            if (cordova.callbackId) document.addEventListener("deviceready", SFDC.launch, false) 
+            // Local Testing
+            else SFDC.launch();
         });
 
         </script>
