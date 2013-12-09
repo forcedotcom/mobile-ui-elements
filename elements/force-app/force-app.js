@@ -7,13 +7,13 @@
     var initialized = false;
     var readyDeferred = $.Deferred();
 
-    var authenticator = function(client, callback, error) {
-        if (readyDeferred.state() != 'pending') {
-            readyDeferred = $.Deferred();
-            SFDC.launcher = readyDeferred.promise();
-        }
-        SFDC.launcher.done(callback).fail(error);
-    }
+    // var authenticator = function(client, callback, error) {
+    //     if (readyDeferred.state() != 'pending') {
+    //         readyDeferred = $.Deferred();
+    //         SFDC.launcher = readyDeferred.promise();
+    //     }
+    //     SFDC.launcher.done(callback).fail(error);
+    // }
 
     // Global Events Dispatcher to loosely couple all the views
     SFDC.eventDispatcher = _.extend({}, Backbone.Events);
@@ -27,13 +27,13 @@
     }
 
     //SFDC.launch
-    SFDC.launch = function(options) {
+    SFDC.launch = function(options, reauth) {
         var opts = {apiVersion: 'v29.0', userAgent: 'SalesforceMobileUI/alpha'};
         options = _.extend(opts, options);
         if (!initialized) {
 
             initialized = true;
-            Force.init(options, options.apiVersion, null, authenticator);
+            Force.init(options, options.apiVersion, null, reauth);
 
             if (navigator.smartstore) {
                 SFDC.metadataStore = new Force.StoreCache('sobjectTypes', [], 'type');

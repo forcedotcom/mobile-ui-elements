@@ -7,9 +7,17 @@
 
         <!-- Importing Google Polymer framework -->
         <script src="dependencies/platform/platform.js"></script>
+
+        <!-- Container --/>
+        <script src="cordova-2.3.0.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <!-- End Container -->
+
+        <!-- Local Testing -->
         <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
         <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
         <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
+        <!-- End Local Testing -->
 
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
@@ -254,9 +262,6 @@
                 observe: {
                     "sobject": "reset",
                 },
-                accesstoken: '00Di0000000gWVG!ARcAQF7GWB5OXTOA7vsLxBiTlkeKN5zX0g5pgjDEyUOs1BVg2masmn1eNp5SWkut9Mt_1XHZ9SLyYEoedQ2VF6xmCMuQMkNm',
-                instanceurl: 'https://na15.salesforce.com',
-
                 _onlineStatus: true,
 
                 get onlinestatus() {
@@ -341,7 +346,31 @@
         <script type="text/javascript">
         var app;
         window.addEventListener('WebComponentsReady', function() {
-          app = $("mobile-app")[0];
+            app = $("mobile-app")[0];
+
+            // Container
+            if (cordova.callbackId) {
+                document.addEventListener("deviceready", function() {
+                    cordova.require("salesforce/plugin/oauth").getAuthCredentials(
+                        function(creds) {
+                            SFDC.launch(creds, cordova.require("salesforce/plugin/oauth").forcetkRefresh);
+                        }, 
+                        function(error) { 
+                            console.log("Auth failed: " + error); 
+                        });
+                }, false);
+            }
+            // Local testing
+            else {
+                var creds = {
+                    accessToken: "--will-be-obtained-by-refresh--",
+                    refreshToken: "5Aep861KIwKdekr90KsESmRP6soKuBrQlSV5iTuNdX6UHGbZnb31zYgnDjrJ4RxEG_0bnGxJhfM9g.CafZ6Dje3",
+                    clientId: "3MVG9Iu66FKeHhINkB1l7xt7kR8czFcCTUhgoA8Ol2Ltf1eYHOU4SqQRSEitYFDUpqRWcoQ2.dBv_a1Dyu5xa",
+                    loginUrl: "https://test.salesforce.com",
+                    instanceUrl: "https://cs1.salesforce.com",
+                };
+                SFDC.launch(creds);
+            }
         });
         </script>
     </body>
