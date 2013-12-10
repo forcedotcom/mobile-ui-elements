@@ -1,6 +1,9 @@
 (function($, SFDC, Path) {
 
     Polymer('force-ui-detail', {
+        observe: {
+            model: "render"
+        },
         foredit: false,
         fieldlist: null,
         //applyAuthorStyles: true,
@@ -17,11 +20,37 @@
             }
         },
         get model() {
-            return this.$.force_sobject.model;
+            return this.$ ? this.$.force_sobject.model : null;
         },
-        attributeChanged: function(attrName, oldVal, newVal) {
-            this.super(arguments);
-            this.async(this.render);
+        save: function(options) {
+            var that = this;
+            var originalErrorCB = options.error;
+            var onError = function(model, xhr) {
+                var viewErrors = {messages: []};
+                var error = new Force.Error(xhr);
+                if (error.type === "RestError") {
+                    _.each(error.details, function(detail) {
+                        if (detail.fields == null || detail.fields.length == 0) {
+                            viewErrors.messages.push(detail.message);
+                        } else {
+                            _.each(detail.fields, function(field) {
+                                viewErrors[field] = detail.message;
+                            });
+                        }
+                    });
+                }
+                else if (error.type === "ConflictError") {
+                    _.each(error.remoteChanges, function(field) {
+                        var conflict = error.conflictingChanges.indexOf(field) >=0;
+                        viewErrors[field] = "Conflicting with server value: " +  error.theirs[field];
+                    });
+                }
+
+                that.viewModel["__errors__"] = viewErrors;
+                if (typeof originalErrorCB == 'function') originalErrorCB.apply(null, arguments);
+            }
+            options.error = onError;
+            that.$.force_sobject.save(options);
         }
     });
 
@@ -130,13 +159,13 @@
             if (templateInfo) {
                 if (view.model.id) {
                     // Perform data fetch for the fieldlist used in template
-                    view.$.force_sobject.fetch({ fieldlist: templateInfo.fields });
+                    view.model.fetch({ fieldlist: templateInfo.fields, cacheMode: view.fetchCacheMode });
                 }
 
                 // Attach the template instance to the view
                 var template = templateInfo.template;
-                var templateModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
-                $(view.$.viewContainer).empty().append(template.createInstance(templateModel));
+                view.viewModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
+                $(view.$.viewContainer).empty().append(template.createInstance(view.viewModel));
             }
         };
 

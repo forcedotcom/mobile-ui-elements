@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Importing Google Polymer framework -->
+        <script src="dependencies/platform/platform.js"></script>
+
+
+        <!-- Container --/>
+        <script src="cordova-2.3.0.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <!-- End Container -->
+
+        <!-- Local Testing -->
+        <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
+        <!-- End Local Testing -->
+
+        <!-- Place your HTML imports here -->
+        <link rel="import" href="elements/mobile-ui-elements.html">
+        <link rel="import" href="dependencies/polymer-ui-elements/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
+
+    </head>
+    <body>
+        <polymer-element name="search-screen">
+            <template>
+                <header class="bar-title">
+                    <ul class="segmented-controller">
+                        <li class="active" id="tabAlbums"><a on-click="{{searchAlbums}}">Albums</a></li>
+                        <li id="tabArtists"><a on-click="{{searchArtists}}">Artists</a></li>
+                        <li id="tabTracks"><a on-click="{{searchTracks}}">Tracks</a></li>
+                    </ul>                    
+                </header>
+                <div class="bar-standard bar-header-secondary">
+                    <input type="search" class="search-key" value={{criteria}} on-keyup={{runSearch}}/>
+                </div>
+                <div class="content">
+                    <ul id="listbody" class="list">
+                        <template repeat="{{collection.models}}">
+                            <li><a href="#detail/{{attributes.href}}">{{attributes.name}}</a></li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('search-screen', {
+                itemType: 'album',
+                activeTab: '#tabAlbums',
+                criteria: '',
+
+                observe: {
+                    itemType: 'setupCollection',
+                    criteria: 'setupCollection',
+                    'collection.config': 'runSearch'
+                },
+
+                switchTab: function(selectedTab) {
+                    if (this.activeTab === selectedTab) {
+                        return false;
+                    }
+
+                    $(this.activeTab).removeClass('active');
+                    this.activeTab = selectedTab;
+                    $(this.activeTab).addClass('active');
+                    return true;
+                },
+
+                searchAlbums: function() {
+                    if (this.switchTab('#tabAlbums')) {
+                        this.itemType = 'album';
+                    }
+                },
+
+                searchArtists: function() {
+                    if (this.switchTab('#tabArtists')) {
+                        this.itemType = 'artist';
+                    }   
+                },
+
+                searchTracks: function() {
+                    if (this.switchTab('#tabTracks')) {
+                        this.itemType = 'track';
+                    }
+                },
+
+                setupCollection: function() {
+                    this.collection = new app.models.MusicItemsCollection();
+                    this.collection.cache = app.caches[this.itemType];
+                    if (SFDC.isOnline()) {
+                        this.collection.config = {itemType: this.itemType, type: 'search', query:this.criteria};
+                    }
+                    else {
+                        this.collection.config = {itemType: this.itemType, type: 'cache', cacheQuery: {queryType:"like", indexPath:"name", likeKey: this.criteria + '%', order:"ascending", pageSize:100}};
+                    }
+                },
+
+                runSearch: function() {
+                    this.collection.fetch();
+                }
+            });
+            </script>
+        </polymer-element>
+
+
+        <polymer-element name="detail-screen" attributes="itemId itemType">
+            <template>
+                <header class="bar-title">
+                    <a class="button-prev" on-click="{{goBack}}">Back</a>
+                    <h1 style="font-size:14px" class="title">{{model.attributes.name}}</h1>
+                </header>
+                <div class="content">
+                    <div>
+                        <img height=320 width=320 src="{{model.attributes.thumbnail_url}}"></img>
+                    </div>
+                    <div flex>
+                        <template if="{{itemType == 'album'}}">
+                            <ul class="list">
+                                <li class="list-divider">Artist</li>
+                                <li><a href="#detail/{{model.attributes.artistId}}">{{model.attributes.artist}}</a></li>
+                                <li class="list-divider">Tracks</li>
+                                <template repeat="{{model.attributes.tracks}}">
+                                    <li><a href="#detail/{{href}}">{{name}}</a></li>
+                                </template>
+                            </ul>
+                        </template>
+
+                        <template if="{{itemType == 'artist'}}">
+                            <ul class="list">
+                                <li class="list-divider">Albums</li>
+                                <template repeat="{{model.attributes.albums}}">
+                                    <li><a href="#detail/{{album.href}}">{{album.name}}</a></li>
+                                </template>
+                            </ul>
+                        </template>
+
+                        <template if="{{itemType == 'track'}}">
+                            <ul class="list">
+                                <li class="list-divider">Album</li>
+                                <li><a href="#detail/{{model.attributes.album.href}}">{{model.attributes.album.name}}</a></li>
+                                <li class="list-divider">Artists</li>
+                                <template repeat="{{model.attributes.artists}}">
+                                    <li><a href="#detail/{{href}}">{{name}}</a></li>
+                                </template>
+                            </ul>
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('detail-screen', {
+                observe: {
+                    itemId: 'fetch',
+                    itemType: 'fetch'
+                },
+
+                goBack: function() {
+                    app.router.navigateBack();
+                },
+
+                fetch: function() {
+                    if (!this.model || this.model.id != this.itemId) {
+                        this.model = new app.models.MusicItem();
+                        this.model.cache = app.caches[this.itemType];
+                        this.model.cacheMode = SFDC.isOnline() ? Force.CACHE_MODE.SERVER_FIRST : Force.CACHE_MODE.CACHE_ONLY;
+                        this.model.id = this.itemId;
+                        this.model.set('thumbnail_url', 'large_loading.gif');
+                        this.model.fetch();
+                    }
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <polymer-element name="mobile-app">
+            <template>
+                <force-ui-app id="force_ui_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
+                    <search-screen id="search" class="page absolute"></search-screen>
+                    <detail-screen id="detail" class="page absolute"></detail-screen>
+                    <detail-screen id="detail2" class="page absolute"></detail-screen>
+                </force-ui-app>
+                <polymer-ui-toggle-button id="onlineToggler" value="{{onlinestatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
+            </template>
+            <script type="text/javascript">
+            var app = {models: {}};
+
+            Polymer('mobile-app', {
+                _onlineStatus: true,
+
+                get onlinestatus() {
+                    return this._onlineStatus;
+                },
+
+                set onlinestatus(newStatus) {
+                    SFDC.isOnline = function() { return newStatus }; // XXX
+                    this._onlineStatus = newStatus;
+                },
+
+                setupModels: function() {
+                    var app = this;
+
+                    app.models = {};
+
+                    app.models.MusicItem = Force.RemoteObject.extend({            
+                        syncRemoteObjectWithServer: function(method, id) {
+                            if (method != "read") throw "Method not supported " + method;
+                            var itemType = id.split(":")[1];
+                            var extras = (itemType == 'artist' ? 'album' : (itemType == 'album' ? 'track' : ''));
+                            var url = 'http://ws.spotify.com/lookup/1/.json?uri=' + id  + '&extras=' + extras;
+                            var embedUrl = 'https://embed.spotify.com/oembed/?url=' + id;
+
+                            return $.when($.ajax({url: url}), $.ajax({url:embedUrl})).then(function(response, embedResponse) {
+                                var record = _.extend({thumbnail_url: embedResponse[0].thumbnail_url}, response[0][itemType]);
+                                record.artistId = record['artist-id']; // XXX template binding fails because of '-'
+                                return record;
+                            });
+                        }
+                    });
+
+                    app.models.MusicItemsCollection = Force.RemoteObjectCollection.extend({
+                        model: app.models.MusicItem,
+
+                        fetchRemoteObjectsFromServer: function(config) {
+                            var url = 'http://ws.spotify.com/search/1/' + config.itemType +'.json?q=' + encodeURI(config.query);
+                            return $.ajax({url: url})
+                            .then(function(data) {
+                                return  {
+                                    totalSize: data.info.num_results,
+                                    records: data[config.itemType + 's'],
+                                    hasMore: data.info.limit < data.info.num_results,
+                                    getMore: function() { /* FIXME */}
+                                };
+                            });
+                        }
+                    });                    
+                },
+
+                setupCaches: function() {
+                    var app = this;
+                    app.caches = {};
+
+                    if (navigator.smartstore) {
+                        SFDC.launcher.then(function() {
+                        var albumCache = new Force.StoreCache("albums", [{path:"name", type:"string"}], "href");
+                        var artistCache = new Force.StoreCache("artists", [{path:"name", type:"string"}], "href");
+                        var trackCache = new Force.StoreCache("tracks", [{path:"name", type:"string"}], "href");
+
+                        $.when(albumCache.init(), artistCache.init(), trackCache.init()).then(function() {
+                            app.caches.album = albumCache;
+                            app.caches.artist = artistCache;
+                            app.caches.track = trackCache;
+                        });
+                    });
+                    }
+                },  
+
+                ready: function() {
+                    var app = this;
+
+                    this.setupModels();
+                    this.setupCaches();
+
+                    app.router = app.$.force_ui_app.setupRouter({
+                        routes: {
+                            "": "search",
+                            "search": "search",
+                            "detail/:itemId": "detail",
+                        },
+
+                        search: function() {
+                            app.router.gotoPageId('#search');
+                        },
+
+                        detail: function(itemId) {
+                            var onDetailAlready = app.$.force_ui_app.activepage && app.$.force_ui_app.activepage.id === 'detail';
+                            var target = onDetailAlready ? app.$.detail2 : app.$.detail;
+                            var targetId = onDetailAlready ? '#detail2' : '#detail';
+                            target.itemType = itemId.split(":")[1];
+                            target.itemId = itemId;
+                            app.router.gotoPageId(targetId);
+                        }
+                    });
+                    Backbone.history.start();
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <mobile-app></mobile-app>
+
+        <script type="text/javascript">
+        window.addEventListener('WebComponentsReady', function() {
+            app = $("mobile-app")[0];
+            // Container
+            if (cordova.callbackId) document.addEventListener("deviceready", SFDC.launch, false) 
+            // Local Testing
+            else SFDC.launch();
+        });
+
+        </script>
+    </body>
+</html>

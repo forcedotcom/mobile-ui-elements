@@ -10,7 +10,7 @@
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
-    "mobilesdk-shared": "git+https://github.com/akhileshgupta/SalesforceMobileSDK-Shared.git#bc1ad83f75b1b4465fc0365a308bd946873032d3",
+    "mobilesdk-shared": "git+https://github.com/forcedotcom/SalesforceMobileSDK-Shared.git#11aecf1b6e3b487c049b19d7f0265b20e605a967",
     "ratchet": "latest"
   },
   "devDependencies": {},
