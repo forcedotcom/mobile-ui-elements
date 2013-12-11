@@ -88,7 +88,7 @@
             if (model.sobjectType && model.id) {
                 this.whenModelReady().then(function() {
                     // Perform delete of record against the server
-                    this.model.destroy(options);
+                    model.destroy(options);
                 });
             } else console.warn('sobject Type and recordid required for delete.');
         },
