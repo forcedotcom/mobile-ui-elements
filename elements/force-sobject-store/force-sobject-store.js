@@ -55,6 +55,10 @@
     }
 
     Polymer('force-sobject-store', {
+        observe: {
+            "sobject": "init",
+            "fieldstoindex": "init"
+        },
         sobject: null,
         get cacheReady() {
             return this.init();

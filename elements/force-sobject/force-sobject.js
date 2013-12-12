@@ -29,12 +29,12 @@
             var model = this.model;
             if (typeof model == "undefined" ||
                 model.sobjectType != this.sobject ||
-                (model.id && model.id != this.recordid)) {
+                model.id != this.recordid) {
                 model = this.model = createModel(this.sobject);
             }
             model.fieldlist = this.fieldlist;
             model.idAttribute = this.idfield;
-            model.set(this.idfield, this.recordid);
+            model.set(this.idfield, this.recordid == "" ? null : this.recordid);
             model.set({attributes: {type: this.sobject}});
         },
         // All CRUD operations should ensure that the model is ready by checking this promise.
@@ -88,7 +88,7 @@
             if (model.sobjectType && model.id) {
                 this.whenModelReady().then(function() {
                     // Perform delete of record against the server
-                    this.model.destroy(options);
+                    model.destroy(options);
                 });
             } else console.warn('sobject Type and recordid required for delete.');
         },
