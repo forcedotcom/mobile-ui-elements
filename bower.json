@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "dependencies": {
     "modernizr": "~2.6.2",
-    "polymer": "latest",
-    "web-animations-js": "git+https://github.com/web-animations/web-animations-js.git",
-    "polymer-elements": "latest",
-    "polymer-ui-elements": "latest",
+    "platform": "Polymer/platform#0.1.1",
+    "polymer": "Polymer/polymer#0.1.1",
+    "polymer-elements": "Polymer/polymer-elements#0.1.1",
+    "polymer-ui-elements":  "Polymer/polymer-ui-elements#0.1.1",
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
-    "mobilesdk-shared": "git+https://github.com/akhileshgupta/SalesforceMobileSDK-Shared.git#bc1ad83f75b1b4465fc0365a308bd946873032d3",
+    "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared#master",
     "ratchet": "latest"
   },
   "devDependencies": {},
@@ -19,7 +19,10 @@
       ".": "modernizr*.js"
     },
     "jquery": {
-      ".": ["jquery.js", "jquery.min.js"]
+      ".": [
+        "jquery.js",
+        "jquery.min.js"
+      ]
     },
     "backbone": {
       ".": "backbone*.js"
@@ -28,13 +31,19 @@
       ".": "underscore*.js"
     },
     "mobilesdk-shared": {
-      ".": ["libs/*js", "test/Mock*.js"]
-    },
-    "web-animations-js": {
-      ".": "*.js"
+      ".": [
+        "libs/*js",
+        "test/Mock*.js"
+      ]
     },
     "polymer": {
-      ".": ["polymer.js", "polymer.html"]
+      "Polymer/.": [
+        "polymer.js",
+        "polymer.html"
+      ]
+    },
+    "polymer-*": {
+      "Polymer/.": ["."]
     }
   }
 }
