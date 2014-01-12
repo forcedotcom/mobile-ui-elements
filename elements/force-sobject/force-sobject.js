@@ -18,16 +18,21 @@
 
     Polymer('force-sobject', _.extend({}, viewProps, {
         observe: {
-            sobject: "init",
-            recordid: "init",
-            fieldlist: "init",
-            idfield: "init"
+            sobject: "propertyChanged",
+            recordid: "propertyChanged",
+            fieldlist: "propertyChanged",
+            idfield: "propertyChanged",
+            autosync: "propertyChanged"
+        },
+        propertyChanged: function() {
+            this.init();
+            if (this.autosync) this.fetch();
         },
         // Resets all the properties on the model.
         // Recreates model if sobject type or id of model has changed.
-        init: function() {
+        init: function(reset) {
             var model = this.model;
-            if (typeof model == "undefined" ||
+            if (reset || typeof model == "undefined" ||
                 model.sobjectType != this.sobject ||
                 (model.id && model.id != this.recordid)) {
                 model = this.model = createModel(this.sobject);
@@ -52,15 +57,6 @@
         ready: function() {
             this.init();
             if (this.autosync) this.fetch();
-        },
-        // Re-create model instance
-        reset: function() {
-            var that = this;
-            this.model = createModel(this.sobject);
-            this.init();
-            this.whenModelReady().then(function() {
-                if (that.autosync) that.fetch();
-            });
         },
         fetch: function(opts) {
             var model = this.model;
