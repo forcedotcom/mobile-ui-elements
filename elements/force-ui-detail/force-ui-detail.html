@@ -19,3 +19,20 @@
   </template>
   <script src="force-ui-detail.js"></script>
 </polymer-element>
+
+<polymer-element name="force-html-output" attributes="value">
+  <template>
+    <style>
+      [hide] { display: none; }
+    </style>
+    <span hide?="{{!value}}" id="output"></span>
+  </template>
+  <script>
+    Polymer('force-html-output', {
+      value: null,
+      valueChanged: function() {
+        this.$.output.innerHTML = this.value;
+      }
+    })
+  </script>
+</polymer-element>

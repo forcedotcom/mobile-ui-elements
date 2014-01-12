@@ -326,7 +326,7 @@
                 if (fieldType == 'boolean')
                     html += ('<input type="checkbox" checked="{{' + displayField + '}}" disabled="true"/>');
                 else if (fieldInfo.htmlFormatted) //TBD: See if we need to do anything for HTML type fields in polymer.
-                    html += '{{' + displayField + '}}';
+                    html += '<force-html-output value="{{' + displayField + '}}"></force-html-output>';
                 else html += ('{{' + displayField + '}}');
             }
             return html + '</span>';
