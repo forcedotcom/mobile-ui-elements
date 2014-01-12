@@ -44,6 +44,9 @@
     },
     "polymer-*": {
       "Polymer/.": ["."]
+    },
+    "web-animations-js": {
+      "Polymer/.": "web-animations.js"
     }
   }
 }
