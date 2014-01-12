@@ -17,6 +17,9 @@ module.exports = function (grunt) {
         },
         uglify: {
             dist: {
+                options: {
+                    sourceMap: 'dist/mobile-ui-elements.min.js.map'
+                },
                 files: {
                     'dist/mobile-ui-elements.min.js': ['dist/mobile-ui-elements.js']
                 }
