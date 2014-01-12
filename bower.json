@@ -1,9 +1,11 @@
 {
   "name": "mobile-ui-elements",
   "version": "0.0.0",
+  "dependencies": {
+    "platform": "Polymer/platform#0.1.1"
+  },
   "devDependencies": {
     "modernizr": "~2.6.2",
-    "platform": "Polymer/platform#0.1.1",
     "polymer": "Polymer/polymer#0.1.1",
     "polymer-elements": "Polymer/polymer-elements#0.1.1",
     "polymer-ui-elements":  "Polymer/polymer-ui-elements#0.1.1",
