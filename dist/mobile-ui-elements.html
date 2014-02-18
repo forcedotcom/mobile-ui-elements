@@ -1,10 +1,5 @@
-<!--
- Copyright 2013 The Polymer Authors. All rights reserved.
- Use of this source code is governed by a BSD-style
- license that can be found in the LICENSE file.
--->
+<link rel="import" href="../dependencies/Polymer/polymer/polymer.html">
 
-<!-- <link rel="import" href="../polymer-dev/polymer.html"> -->
 <!--
     force-app element is a top level element that builds the base for consuming all other force.com Mobile UI Elements.
     Why: a) Manages all the Javascript dependencies for the elements.
@@ -17,15 +12,16 @@
     @methods:
     launch: Initiate the launch to start rendering all the other child elements. Cannot be done until the accesstoken and instanceurl are provided.
 -->
-<polymer-element name="force-app" attributes="accesstoken, instanceurl">
-  
-  
-  
-  
-  
-  
 
-  
+<polymer-element name="force-app" attributes="accesstoken, instanceurl">
+
+
+
+
+
+
+
+
 </polymer-element>
 <!--
 Copyright 2013 The Polymer Authors. All rights reserved.
@@ -89,7 +85,7 @@ license that can be found in the LICENSE file.
  * @default false
  */
 /**
- * Defines the default for how flex items are laid out along the cross axis on 
+ * Defines the default for how flex items are laid out along the cross axis on
  * the current line.  Possible values are 'start', 'center' and 'end'.
  *
  * @attribute align
@@ -167,7 +163,7 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-::-webkit-distributed(.flex), 
+::-webkit-distributed(.flex),
 ::-webkit-distributed([flex]),
 ::-webkit-distributed([fit]) {
   -webkit-box-flex: 1;
@@ -240,7 +236,7 @@ license that can be found in the LICENSE file.
   display: -webkit-flex !important;
   display: flex !important;
 }
-  
+
 :host(.flexbox.row:host, [flexbox]:host, [h-flexbox]:host) {
   -webkit-box-orient: horizontal;
   -ms-flex-direction: row;
@@ -248,7 +244,7 @@ license that can be found in the LICENSE file.
   -webkit-flex-direction: row;
   flex-direction: row;
 }
-  
+
 :host(.flexbox.column:host, [v-flexbox]:host) {
   -webkit-box-orient: vertical;
   -ms-flex-direction: column;
@@ -256,7 +252,7 @@ license that can be found in the LICENSE file.
   -webkit-flex-direction: column;
   flex-direction: column;
 }
-  
+
 :host(.flexbox.align-start:host) {
   -webkit-box-align: start;
   -ms-flex-align: start;
@@ -264,7 +260,7 @@ license that can be found in the LICENSE file.
   -webkit-align-items: flex-start;
   align-items: flex-start;
 }
-  
+
 :host(.flexbox.align-end:host) {
   -webkit-box-align: end;
   -ms-flex-align: end;
@@ -350,7 +346,7 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-::-webkit-distributed(.flex), 
+::-webkit-distributed(.flex),
 ::-webkit-distributed([flex]),
 ::-webkit-distributed([fit]) {
   -webkit-box-flex: 1;
@@ -423,7 +419,7 @@ license that can be found in the LICENSE file.
   display: -webkit-flex !important;
   display: flex !important;
 }
-  
+
 :host(.flexbox.row:host, [flexbox]:host, [h-flexbox]:host) {
   -webkit-box-orient: horizontal;
   -ms-flex-direction: row;
@@ -431,7 +427,7 @@ license that can be found in the LICENSE file.
   -webkit-flex-direction: row;
   flex-direction: row;
 }
-  
+
 :host(.flexbox.column:host, [v-flexbox]:host) {
   -webkit-box-orient: vertical;
   -ms-flex-direction: column;
@@ -439,7 +435,7 @@ license that can be found in the LICENSE file.
   -webkit-flex-direction: column;
   flex-direction: column;
 }
-  
+
 :host(.flexbox.align-start:host) {
   -webkit-box-align: start;
   -ms-flex-align: start;
@@ -447,7 +443,7 @@ license that can be found in the LICENSE file.
   -webkit-align-items: flex-start;
   align-items: flex-start;
 }
-  
+
 :host(.flexbox.align-end:host) {
   -webkit-box-align: end;
   -ms-flex-align: end;
@@ -498,21 +494,21 @@ license that can be found in the LICENSE file.
 </style>
     <content></content>
   </template>
-  
+
 </polymer-element>
 
 
 
 
 <polymer-element name="polymer-animation-keyframe" attributes="offset value easing">
-	
+
 </polymer-element>
 
 
 
 
 <polymer-element name="polymer-animation-prop" attributes="name value">
-  
+
 </polymer-element>
 
 
@@ -521,14 +517,14 @@ license that can be found in the LICENSE file.
 
 
 <polymer-element name="polymer-animation" attributes="target keyframes sample composite duration fill easing iterationStart iterationCount delay direction autoplay targetSelector">
-  
+
 </polymer-element>
 
 
 <polymer-element name="polymer-translate" extends="polymer-animation" attributes="fromX fromY toX toY">
   <template>
   </template>
-  
+
 </polymer-element>
 
 <!--
@@ -563,8 +559,9 @@ license that can be found in the LICENSE file.
 
 
 
+
 <polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" extends="force-app">
-  
+
   <template>
     <style>/**
  * ==================================
@@ -1705,14 +1702,14 @@ button.button-block {
 }/* Modals
 -------------------------------------------------- */
 .modal {
-  position: fixed; 
+  position: fixed;
   top: 0;
   opacity: 0;
-  z-index: 11; 
+  z-index: 11;
   width: 100%;
   min-height: 100%;
   overflow: hidden;
-  background-color: #fff;  
+  background-color: #fff;
   -webkit-transform: translate3d(0, 100%, 0);
           transform: translate3d(0, 100%, 0);
   -webkit-transition: -webkit-transform .25s ease-in-out, opacity 1ms .25s;
@@ -1757,7 +1754,7 @@ button.button-block {
 .slider > ul > li {
   display: inline-block;
   vertical-align: top; /* Ensure that li always aligns to top */
-  width: 100%; 
+  width: 100%;
   height: 100%;
 }
 
@@ -1862,22 +1859,22 @@ button.button-block {
 .ui-responsive .ui-block:first { clear: left; }
 .ui-block {
 	width: 50%;
-	margin: 0; 
-	padding: 0; 
-	border: 0; 
-	float: left; 
-	min-height: 1px; 
-	-webkit-box-sizing: border-box; 
-	-moz-box-sizing: border-box; 
-	-ms-box-sizing: border-box; 
-	box-sizing: border-box; 
+	margin: 0;
+	padding: 0;
+	border: 0;
+	float: left;
+	min-height: 1px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 /* preset breakpoint to switch to stacked grid styles below 35em (560px) */
 @media all and (max-width: 35em) {
-	.ui-responsive .ui-block { 
-		width: 100%; 
-		float:none; 
+	.ui-responsive .ui-block {
+		width: 100%;
+		float:none;
 	}
 }</style>
     <style>html, body, div, span, applet, object, iframe,
@@ -2271,7 +2268,7 @@ input[type="radio"] {
     <polymer-flex-layout></polymer-flex-layout>
   </template>
 
-  
+
 </polymer-element>
 <!--
     force-sobject-store element wraps the SmartSync Force.StoreCache into a polymer element.
@@ -2287,8 +2284,9 @@ input[type="radio"] {
     @properties:
     get cacheReady: Returns a promise that on completion returns an instance of storecache if smartstore is available.
 -->
+
 <polymer-element name="force-sobject-store" attributes="sobject fieldstoindex">
-  
+
 </polymer-element>
 
 <!--
@@ -2308,11 +2306,12 @@ input[type="radio"] {
     fetch: Initiates the fetching of records from the relevant data store (server/offline store).
 -->
 
+
 <polymer-element name="force-sobject-collection" attributes="sobject query querytype autosync maxsize">
     <template>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
     </template>
-    
+
 </polymer-element>
 <!--
 Copyright 2013 The Polymer Authors. All rights reserved.
@@ -2331,12 +2330,12 @@ license that can be found in the LICENSE file.
  * For example, <a href="polymer-selector.html">polymer-selector</a>
  * use a polymer-selection to manage selection.
  *
- * To mark an item as selected, call the select(item) method on 
+ * To mark an item as selected, call the select(item) method on
  * polymer-selection. Notice that the item itself is an argument to this method.
  * The polymer-selection element manages selection state for any given set of
  * items. When an item is selected, the `polymer-select` event is fired.
  * The attribute "multi" indicates if multiple items can be selected at once.
- * 
+ *
  * Example:
  *
  *     <polymer-element name="selection-example">
@@ -2376,7 +2375,7 @@ license that can be found in the LICENSE file.
  * Fired when an item's selection state is changed. This event is fired both
  * when an item is selected or deselected. The `isSelected` detail property
  * contains the selection state.
- * 
+ *
  * @event polymer-select
  * @param {Object} detail
  *   @param {boolean} detail.isSelected true for selection and false for deselection
@@ -2393,7 +2392,7 @@ license that can be found in the LICENSE file.
       }
     </style>
   </template>
-  
+
 </polymer-element>
 
 <!--
@@ -2422,7 +2421,7 @@ license that can be found in the LICENSE file.
  *
  * polymer-selector is not styled.  So one needs to use "polymer-selected" CSS
  * class to style the selected element.
- * 
+ *
  *     <style>
  *       .item.polymer-selected {
  *         background: #eee;
@@ -2441,7 +2440,7 @@ license that can be found in the LICENSE file.
  * Fired when an item's selection state is changed. This event is fired both
  * when an item is selected or deselected. The `isSelected` detail property
  * contains the selection state.
- * 
+ *
  * @event polymer-select
  * @param {Object} detail
  *   @param {boolean} detail.isSelected true for selection and false for deselection
@@ -2449,7 +2448,7 @@ license that can be found in the LICENSE file.
  */
 /**
  * Fired when an item element is tapped.
- * 
+ *
  * @event polymer-activate
  * @param {Object} detail
  *   @param {Object} detail.item the item element
@@ -2463,7 +2462,7 @@ license that can be found in the LICENSE file.
     <polymer-selection id="selection" multi="{{multi}}" on-polymer-select="{{selectionSelect}}"></polymer-selection>
     <content id="items" select="*"></content>
   </template>
-  
+
 </polymer-element>
 
 <!--
@@ -2485,12 +2484,13 @@ license that can be found in the LICENSE file.
 -->
 
 
+
 <polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector">
   <template>
     <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}" autosync="false"></force-sobject-collection>
     <shadow></shadow>
   </template>
-  
+
 </polymer-element>
 <!--
     force-ui-list element enables the rendering of simple list of salesforce records driven by a force-sobject-collection. It extends the force-selector-list element to allow all the fetching of records and to detect record selection based on user's tap actions.
@@ -2507,6 +2507,7 @@ license that can be found in the LICENSE file.
     viewModels: Returns an array of objects with only the fields used for rendering the list.
 -->
 
+
 <polymer-element name="force-ui-list" attributes="labelfield, sublabelfield" extends="force-selector-list" on-sync="{{updateModels}}">
   <template>
       <shadow></shadow>
@@ -2519,7 +2520,7 @@ license that can be found in the LICENSE file.
         </template>
       </ul>
   </template>
-  
+
 </polymer-element>
 <!--
     force-sobject element wraps the SmartSync Force.SObject into a polymer element.
@@ -2541,11 +2542,12 @@ license that can be found in the LICENSE file.
     delete: Initiate the deleting of record data from the relevant data store (server/offline store).
 -->
 
+
 <polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield autosync mergemode">
     <template>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
     </template>
-    
+
 </polymer-element>
 <!--
     force-sobject-layout element provides the layout information for a particular sobject record.
@@ -2566,11 +2568,12 @@ license that can be found in the LICENSE file.
     whenRelatedLists: Initiate the fetching of layout's related lists data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all related list infos.
 -->
 
+
 <polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" idfield="{{idfield}}" recordid="{{recordid}}" autosync="false"></force-sobject>
   </template>
-  
+
 </polymer-element>
 <!--
     force-ui-detail element enables the rendering of full view of a salesforce record. It extends the force-sobject-layout to fetch the page layout for the record. This element also embeds a force-sobject element to allow all the CRUD operations on an SObject.
@@ -2585,24 +2588,20 @@ license that can be found in the LICENSE file.
 -->
 
 
+
 <polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" idfield="{{idfield}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
     <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
     <content select="*"></content>
   </template>
-  
+
 </polymer-element>
 
 <polymer-element name="force-html-output" attributes="value">
-  <template>
-    <style>
-      [hide] { display: none; }
-    </style>
-    <span hide?="{{!value}}" id="output"></span>
-  </template>
-  
+
 </polymer-element>
+
 
 
 
@@ -2626,7 +2625,7 @@ license that can be found in the LICENSE file.
     <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}">
     </force-sobject-collection>
   </template>
-  
+
 </polymer-element>
 
 <!--
@@ -2656,7 +2655,7 @@ license that can be found in the LICENSE file.
     </ul>
     </template>
   </template>
-  
+
 </polymer-element>
 
 <!--
@@ -2671,11 +2670,10 @@ license that can be found in the LICENSE file.
     relatedLists: An array of all the related list information.
 -->
 <polymer-element name="force-sobject-relatedlists" attributes="relationships" extends="force-sobject-layout">
-  
+
 </polymer-element>
 
 
 
-
-<script src="mobile-ui-elements.js"></script>
+<script src="mobile-ui-elements.min.js"></script>
 

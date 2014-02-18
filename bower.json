@@ -40,7 +40,8 @@
     "polymer": {
       "Polymer/.": [
         "polymer.js",
-        "polymer.html"
+        "polymer.html",
+        "polymer-body.html"
       ]
     },
     "polymer-*": {
