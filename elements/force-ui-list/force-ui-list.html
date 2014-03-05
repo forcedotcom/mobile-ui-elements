@@ -17,9 +17,9 @@
 <polymer-element name="force-ui-list" attributes="labelfield, sublabelfield" extends="force-selector-list" on-sync="{{updateModels}}">
   <template>
       <shadow></shadow>
-      <ul id="list" class="list">
+      <ul id="list" class="table-view">
         <template repeat="{{viewModels}}">
-            <li name="{{id}}">
+            <li name="{{id}}" class="table-view-cell">
               <span>{{label}}</span>
               <p>{{sublabel}}</p>
             </li>

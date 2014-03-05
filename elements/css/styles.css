@@ -129,7 +129,7 @@ a {
 
 .sf-layout-item-label,
 .input-label {
-  font-family: "ProximaNovaSoft-Regular";
+  /*font-family: "ProximaNovaSoft-Regular";*/
   margin-bottom: 0.25em; }
 
 .sf-layout-item-label,
@@ -158,7 +158,7 @@ label {
   border: 1px solid #ced0d2;
   border-radius: 5px;
   padding: .7em .7em .5em;
-  font-family: "ProximaNovaSoft-Regular";
+  /*font-family: "ProximaNovaSoft-Regular";*/
   color: #525354;
   font-size: 1rem;
   background-color: #e9e9eb; }

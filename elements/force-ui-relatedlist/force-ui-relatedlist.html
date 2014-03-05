@@ -64,14 +64,14 @@
   <template>
     <shadow></shadow>
     <template if="{{models.length}}">
-    <ul id="listview" class="list">
-      <li class="list-divider">{{related.label}}</li>
+    <ul id="listview" class="table-view">
+      <li class="table-view-divider">{{related.label}}</li>
       <template id="item">
         <template if="{{!idx}}">{{value}}</template>
         <template if="{{idx}}"><p style="font-size: 0.9em; color: #696e71;">{{value}}</p></template>
       </template>
       <template repeat="{{models}}">
-          <li name="{{id}}">
+          <li name="{{id}}" class="table-view-cell">
             <template repeat="{{value, idx in fieldValues}}" ref="item">
             </template>
           </li>

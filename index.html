@@ -19,6 +19,7 @@
         <polymer-element name="mobile-app">
             <template>
                 <force-ui-app id="force_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}">
+                    <h1 class="title">Accounts</h1>
                     <force-ui-list id="force_ui_list" sobject="Account" class="page content" on-polymer-activate="{{showDetail}}"></force-ui-list>
                     <force-ui-detail flex id="force_ui_detail" sobject="Account" recordid="{{$.force_ui_list.selected}}" class="page content">
                         <force-sobject-relatedlists id="force_relatedlists" sobject="Account" recordid="{{$.force_ui_list.selected}}"></force-sobject-relatedlists>
@@ -32,8 +33,8 @@
             <script type="text/javascript">
               Polymer('mobile-app', {
                 _onlineStatus: true,
-                accesstoken: '',
-                instanceurl: '',
+                accesstoken: '00DU0000000Hb57!AR0AQEzQyqOtB97I3yfX4pWQtxZcMHXE9UuOGCxYidsyPgvothFmvF88pY5geVxy5vhhdun1Ycidd4jbsczxfl5R7zQ87F61',
+                instanceurl: 'https://na12.salesforce.com',
                 showDetail: function(e) {
                     this.$.force_app.navigateTo('#force_ui_detail');
                 },

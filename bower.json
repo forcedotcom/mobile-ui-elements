@@ -21,8 +21,8 @@
     },
     "jquery": {
       ".": [
-        "jquery.js",
-        "jquery.min.js"
+        "dist/jquery.js",
+        "dist/jquery.min.js"
       ]
     },
     "backbone": {
@@ -46,6 +46,9 @@
     },
     "polymer-*": {
       "Polymer/.": ["."]
+    },
+    "ratchet": {
+      ".": "dist/."
     },
     "web-animations-js": {
       "Polymer/.": "web-animations.js"

@@ -26,6 +26,13 @@ module.exports = function (grunt) {
             }
         },
         exec: {
+            shim_styles: {
+              command: 'node node_modules/polymer-shim-styles/shim-styles.js dependencies/ratchet/ratchet.css dependencies/ratchet/ratchet.shim.css\n' +
+                        'node node_modules/polymer-shim-styles/shim-styles.js elements/css/styles.css elements/css/styles.shim.css\n' +
+                        'node node_modules/polymer-shim-styles/shim-styles.js elements/css/responsive.css elements/css/responsive.shim.css\n',
+              stdout: true,
+              stderr: true
+            },
             vulcan: {
               command: 'node tools/vulcanize/vulcanize --csp elements/mobile-ui-elements.html -o dist/mobile-ui-elements.html',
               stdout: true,
@@ -36,12 +43,13 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean',
-        'bower'
+        'bower',
+        'exec:shim_styles'
     ]);
 
     grunt.registerTask('dist', [
         'build',
-        'exec',
+        'exec:vulcan',
         'uglify:dist'
     ]);
 
