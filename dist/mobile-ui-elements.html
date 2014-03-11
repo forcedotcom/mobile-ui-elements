@@ -1,4 +1,4 @@
-<polymer-element name="polymer-body" extends="body">
+<polymer-element name="polymer-body" extends="body" assetpath="../dependencies/Polymer/polymer/">
 
   
 
@@ -24,7 +24,7 @@
     launch: Initiate the launch to start rendering all the other child elements. Cannot be done until the accesstoken and instanceurl are provided.
 -->
 
-<polymer-element name="force-app" attributes="accesstoken, instanceurl">
+<polymer-element name="force-app" attributes="accesstoken, instanceurl" assetpath="../elements/force-app/">
   
   
   
@@ -135,7 +135,7 @@ license that can be found in the LICENSE file.
 -->
 
 
-<polymer-element name="polymer-flex-layout" attributes="vertical align justify isContainer">
+<polymer-element name="polymer-flex-layout" attributes="vertical align justify isContainer" assetpath="../dependencies/Polymer/polymer-flex-layout/">
   <template>
     <style polymer-scope="controller">/*
 Copyright 2013 The Polymer Authors. All rights reserved.
@@ -174,9 +174,9 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-::-webkit-distributed(.flex), 
-::-webkit-distributed([flex]),
-::-webkit-distributed([fit]) {
+::content(.flex), 
+::content([flex]),
+::content([fit]) {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -moz-flex: 1;
@@ -357,9 +357,9 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-::-webkit-distributed(.flex), 
-::-webkit-distributed([flex]),
-::-webkit-distributed([fit]) {
+::content(.flex), 
+::content([flex]),
+::content([fit]) {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -moz-flex: 1;
@@ -511,14 +511,14 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="polymer-animation-keyframe" attributes="offset value easing">
+<polymer-element name="polymer-animation-keyframe" attributes="offset value easing" assetpath="../dependencies/Polymer/polymer-animation/">
 	
 </polymer-element>
 
 
 
 
-<polymer-element name="polymer-animation-prop" attributes="name value">
+<polymer-element name="polymer-animation-prop" attributes="name value" assetpath="../dependencies/Polymer/polymer-animation/">
   
 </polymer-element>
 
@@ -527,12 +527,12 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="polymer-animation" attributes="target keyframes sample composite duration fill easing iterationStart iterationCount delay direction autoplay targetSelector">
+<polymer-element name="polymer-animation" attributes="target keyframes sample composite duration fill easing iterationStart iterationCount delay direction autoplay targetSelector" assetpath="../dependencies/Polymer/polymer-animation/">
   
 </polymer-element>
 
 
-<polymer-element name="polymer-translate" extends="polymer-animation" attributes="fromX fromY toX toY">
+<polymer-element name="polymer-translate" extends="polymer-animation" attributes="fromX fromY toX toY" assetpath="../dependencies/Polymer/polymer-animation/">
   <template>
   </template>
   
@@ -571,16 +571,16 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" extends="force-app">
+<polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" extends="force-app" assetpath="../elements/force-ui-app/">
   
   <template>
-    <style>/*
+    <style>/*!
  * =====================================================
- * Ratchet v2.0.0
+ * Ratchet v2.0.1 (http://goratchet.com)
  * Copyright 2014 Connor Sears
- * Licensed under http://www.opensource.org/licenses/MIT
+ * Licensed under MIT.
  *
- * V2.0.0 designed by @connors.
+ * v2.0.1 designed by @connors.
  * =====================================================
  */
 
@@ -1090,6 +1090,7 @@ license that can be found in the LICENSE file.
   color: #333;
   text-align: center;
   vertical-align: top;
+  white-space: nowrap;
   cursor: pointer;
   background-color: white;
   border: 1px solid #ccc;
@@ -1216,6 +1217,7 @@ license that can be found in the LICENSE file.
 
 :scope ^^ .btn-block {
   display: block;
+  width: 100%;
   padding: 15px 0;
   margin-bottom: 10px;
   font-size: 18px;
@@ -1705,14 +1707,26 @@ license that can be found in the LICENSE file.
   transform: translateY(-50%);
 }
 
-/* @polyfill :host ^^ .table-view-cell .push-left > .btn, :host ^^ .table-view-cell .push-left > .badge, :host ^^ .table-view-cell .push-left > .toggle, :host ^^ .table-view-cell .push-right > .btn, :host ^^ .table-view-cell .push-right > .badge, :host ^^ .table-view-cell .push-right > .toggle, :host ^^ .table-view-cell > a .push-left > .btn, :host ^^ .table-view-cell > a .push-left > .badge, :host ^^ .table-view-cell > a .push-left > .toggle, :host ^^ .table-view-cell > a .push-right > .btn, :host ^^ .table-view-cell > a .push-right > .badge, :host ^^ .table-view-cell > a .push-right > .toggle */
+/* @polyfill :host ^^ .table-view-cell .navigate-left > .btn, :host ^^ .table-view-cell .navigate-left > .badge, :host ^^ .table-view-cell .navigate-left > .toggle, :host ^^ .table-view-cell .navigate-right > .btn, :host ^^ .table-view-cell .navigate-right > .badge, :host ^^ .table-view-cell .navigate-right > .toggle, :host ^^ .table-view-cell .push-left > .btn, :host ^^ .table-view-cell .push-left > .badge, :host ^^ .table-view-cell .push-left > .toggle, :host ^^ .table-view-cell .push-right > .btn, :host ^^ .table-view-cell .push-right > .badge, :host ^^ .table-view-cell .push-right > .toggle, :host ^^ .table-view-cell > a .navigate-left > .btn, :host ^^ .table-view-cell > a .navigate-left > .badge, :host ^^ .table-view-cell > a .navigate-left > .toggle, :host ^^ .table-view-cell > a .navigate-right > .btn, :host ^^ .table-view-cell > a .navigate-right > .badge, :host ^^ .table-view-cell > a .navigate-right > .toggle, :host ^^ .table-view-cell > a .push-left > .btn, :host ^^ .table-view-cell > a .push-left > .badge, :host ^^ .table-view-cell > a .push-left > .toggle, :host ^^ .table-view-cell > a .push-right > .btn, :host ^^ .table-view-cell > a .push-right > .badge, :host ^^ .table-view-cell > a .push-right > .toggle */
 
+:scope ^^ .table-view-cell .navigate-left > .btn,
+:scope ^^ .table-view-cell .navigate-left > .badge,
+:scope ^^ .table-view-cell .navigate-left > .toggle,
+:scope ^^ .table-view-cell .navigate-right > .btn,
+:scope ^^ .table-view-cell .navigate-right > .badge,
+:scope ^^ .table-view-cell .navigate-right > .toggle,
 :scope ^^ .table-view-cell .push-left > .btn,
 :scope ^^ .table-view-cell .push-left > .badge,
 :scope ^^ .table-view-cell .push-left > .toggle,
 :scope ^^ .table-view-cell .push-right > .btn,
 :scope ^^ .table-view-cell .push-right > .badge,
 :scope ^^ .table-view-cell .push-right > .toggle,
+:scope ^^ .table-view-cell > a .navigate-left > .btn,
+:scope ^^ .table-view-cell > a .navigate-left > .badge,
+:scope ^^ .table-view-cell > a .navigate-left > .toggle,
+:scope ^^ .table-view-cell > a .navigate-right > .btn,
+:scope ^^ .table-view-cell > a .navigate-right > .badge,
+:scope ^^ .table-view-cell > a .navigate-right > .toggle,
 :scope ^^ .table-view-cell > a .push-left > .btn,
 :scope ^^ .table-view-cell > a .push-left > .badge,
 :scope ^^ .table-view-cell > a .push-left > .toggle,
@@ -2273,8 +2287,10 @@ license that can be found in the LICENSE file.
   transform: translate3d(100%, 0, 0);
 }
 
-/* @polyfill :host ^^ .push-left:after, :host ^^ .push-right:after */
+/* @polyfill :host ^^ .navigate-left:after, :host ^^ .navigate-right:after, :host ^^ .push-left:after, :host ^^ .push-right:after */
 
+:scope ^^ .navigate-left:after,
+:scope ^^ .navigate-right:after,
 :scope ^^ .push-left:after,
 :scope ^^ .push-right:after {
   position: absolute;
@@ -2285,22 +2301,23 @@ license that can be found in the LICENSE file.
   font-size: inherit;
   text-decoration: none;
   line-height: 1;
-  cursor: default;
   -webkit-font-smoothing: antialiased;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
 
-/* @polyfill :host ^^ .push-left:after */
+/* @polyfill :host ^^ .navigate-left:after, :host ^^ .push-left:after */
 
+:scope ^^ .navigate-left:after,
 :scope ^^ .push-left:after {
   left: 15px;
   content: '\e822';
 }
 
-/* @polyfill :host ^^ .push-right:after */
+/* @polyfill :host ^^ .navigate-right:after, :host ^^ .push-right:after */
 
+:scope ^^ .navigate-right:after,
 :scope ^^ .push-right:after {
   right: 15px;
   content: '\e826';
@@ -2308,8 +2325,8 @@ license that can be found in the LICENSE file.
 
 @font-face {
   font-family: Ratchicons;
-  src: url(../dependencies/ratchet/ratchicons/ratchicons.eot);
-  src: url(../dependencies/ratchet/ratchicons/ratchicons.eot?#iefix) format("embedded-opentype"), url(../dependencies/ratchet/ratchicons/ratchicons.woff) format("woff"), url(../dependencies/ratchet/ratchicons/ratchicons.ttf) format("truetype"), url(../dependencies/ratchet/ratchicons/ratchicons.svg#svgFontName) format("svg");
+  src: url(../dependencies/ratchet/fonts/ratchicons.eot);
+  src: url(../dependencies/ratchet/fonts/ratchicons.eot?#iefix) format("embedded-opentype"), url(../dependencies/ratchet/fonts/ratchicons.woff) format("woff"), url(../dependencies/ratchet/fonts/ratchicons.ttf) format("truetype"), url(../dependencies/ratchet/fonts/ratchicons.svg#svgFontName) format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -2322,7 +2339,6 @@ license that can be found in the LICENSE file.
   font-size: 24px;
   text-decoration: none;
   line-height: 1;
-  cursor: default;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -3276,7 +3292,7 @@ license that can be found in the LICENSE file.
     </style>
     <template if="{{!hideheader}}">
       <header class="bar bar-nav">
-        <template if="{{multipage && pageStack.length}}">
+        <template if="{{multipage &amp;&amp; pageStack.length}}">
           <a class="icon icon-left-nav pull-left" on-click="{{navigateBack}}"></a>
         </template>
         <content select="a.icon, a.btn, div.segmented-control, h1"></content>
@@ -3303,7 +3319,7 @@ license that can be found in the LICENSE file.
     get cacheReady: Returns a promise that on completion returns an instance of storecache if smartstore is available.
 -->
 
-<polymer-element name="force-sobject-store" attributes="sobject fieldstoindex">
+<polymer-element name="force-sobject-store" attributes="sobject fieldstoindex" assetpath="../elements/force-sobject-store/">
   
 </polymer-element>
 
@@ -3325,7 +3341,7 @@ license that can be found in the LICENSE file.
 -->
 
 
-<polymer-element name="force-sobject-collection" attributes="sobject query querytype autosync maxsize">
+<polymer-element name="force-sobject-collection" attributes="sobject query querytype autosync maxsize" assetpath="../elements/force-sobject-collection/">
     <template>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
     </template>
@@ -3402,7 +3418,7 @@ license that can be found in the LICENSE file.
 -->
 
 
-<polymer-element name="polymer-selection" attributes="multi">
+<polymer-element name="polymer-selection" attributes="multi" assetpath="../dependencies/Polymer/polymer-selection/">
   <template>
     <style>
       :host {
@@ -3453,6 +3469,7 @@ license that can be found in the LICENSE file.
  *     </polymer-selector>
  *
  * @class polymer-selector
+ * @status stable
  */
 /**
  * Fired when an item's selection state is changed. This event is fired both
@@ -3475,7 +3492,7 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="polymer-selector" attributes="selected multi valueattr selectedClass selectedProperty selectedItem selectedModel selectedIndex notap target itemsSelector activateEvent">
+<polymer-element name="polymer-selector" attributes="selected multi valueattr selectedClass selectedProperty selectedAttribute selectedItem selectedModel selectedIndex notap target itemsSelector activateEvent" assetpath="../dependencies/Polymer/polymer-selector/">
   <template>
     <polymer-selection id="selection" multi="{{multi}}" on-polymer-select="{{selectionSelect}}"></polymer-selection>
     <content id="items" select="*"></content>
@@ -3503,7 +3520,7 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector">
+<polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector" assetpath="../elements/force-selector-list/">
   <template>
     <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}" autosync="false"></force-sobject-collection>
     <shadow></shadow>
@@ -3526,7 +3543,7 @@ license that can be found in the LICENSE file.
 -->
 
 
-<polymer-element name="force-ui-list" attributes="labelfield, sublabelfield" extends="force-selector-list" on-sync="{{updateModels}}">
+<polymer-element name="force-ui-list" attributes="labelfield, sublabelfield" extends="force-selector-list" on-sync="{{updateModels}}" assetpath="../elements/force-ui-list/">
   <template>
       <shadow></shadow>
       <ul id="list" class="table-view">
@@ -3561,7 +3578,7 @@ license that can be found in the LICENSE file.
 -->
 
 
-<polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield autosync mergemode">
+<polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield autosync mergemode" assetpath="../elements/force-sobject/">
     <template>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
     </template>
@@ -3587,7 +3604,7 @@ license that can be found in the LICENSE file.
 -->
 
 
-<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield">
+<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield" assetpath="../elements/force-sobject-layout/">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" idfield="{{idfield}}" recordid="{{recordid}}" autosync="false"></force-sobject>
   </template>
@@ -3607,16 +3624,16 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout">
+<polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout" assetpath="../elements/force-ui-detail/">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" idfield="{{idfield}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
-    <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
+    <div id="viewContainer" class="{{foredit ? &apos;edit&apos; :&apos;&apos;}}"></div>
     <content select="*"></content>
   </template>
   
 </polymer-element>
 
-<polymer-element name="force-html-output" attributes="value">
+<polymer-element name="force-html-output" attributes="value" assetpath="../elements/force-ui-detail/">
   
 </polymer-element>
 
@@ -3637,7 +3654,7 @@ license that can be found in the LICENSE file.
     @methods:
     updateModels: Updates the "models" property on the element based on the current set of models in the collection.
 -->
-<polymer-element name="force-selector-relatedlist" attributes="related" extends="polymer-selector">
+<polymer-element name="force-selector-relatedlist" attributes="related" extends="polymer-selector" assetpath="../elements/force-ui-relatedlist/">
   <template>
     <shadow></shadow>
     <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}">
@@ -3654,7 +3671,7 @@ license that can be found in the LICENSE file.
     @properties:
     selected: Returns the value of "idfield" of the selected records.
 -->
-<polymer-element name="force-ui-relatedlist" extends="force-selector-relatedlist">
+<polymer-element name="force-ui-relatedlist" extends="force-selector-relatedlist" assetpath="../elements/force-ui-relatedlist/">
   <template>
     <shadow></shadow>
     <template if="{{models.length}}">
@@ -3687,11 +3704,11 @@ license that can be found in the LICENSE file.
     @properties:
     relatedLists: An array of all the related list information.
 -->
-<polymer-element name="force-sobject-relatedlists" attributes="relationships" extends="force-sobject-layout">
+<polymer-element name="force-sobject-relatedlists" attributes="relationships" extends="force-sobject-layout" assetpath="../elements/force-ui-relatedlist/">
   
 </polymer-element>
 
 
 
-<script src="mobile-ui-elements.js"></script>
 
+<script src="mobile-ui-elements.js"></script>

@@ -27,18 +27,23 @@ module.exports = function (grunt) {
         },
         exec: {
             shim_styles: {
-              command: 'node node_modules/polymer-shim-styles/shim-styles.js dependencies/ratchet/ratchet.css dependencies/ratchet/ratchet.shim.css\n' +
+              command: 'node node_modules/polymer-shim-styles/shim-styles.js dependencies/ratchet/css/ratchet.css dependencies/ratchet/css/ratchet.shim.css\n' +
                         'node node_modules/polymer-shim-styles/shim-styles.js elements/css/styles.css elements/css/styles.shim.css\n' +
                         'node node_modules/polymer-shim-styles/shim-styles.js elements/css/responsive.css elements/css/responsive.shim.css\n',
               stdout: true,
               stderr: true
-            },
-            vulcan: {
-              command: 'node tools/vulcanize/vulcanize --csp elements/mobile-ui-elements.html -o dist/mobile-ui-elements.html',
-              stdout: true,
-              stderr: true
             }
         },
+        vulcanize: {
+            default: {
+                options: {
+                    csp: true
+                },
+                files: {
+                  'dist/mobile-ui-elements.html': 'elements/mobile-ui-elements.html'
+                }
+            }
+        }
     });
 
     grunt.registerTask('build', [
@@ -49,7 +54,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dist', [
         'build',
-        'exec:vulcan',
+        'vulcanize',
         'uglify:dist'
     ]);
 

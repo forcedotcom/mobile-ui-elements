@@ -12,7 +12,7 @@
         <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
 
         <!-- Place your HTML imports here -->
-        <link rel="import" href="elements/mobile-ui-elements.html">
+        <link rel="import" href="dist/mobile-ui-elements.html">
         <link rel="import" href="dependencies/Polymer/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
     </head>
     <body>
@@ -33,8 +33,8 @@
             <script type="text/javascript">
               Polymer('mobile-app', {
                 _onlineStatus: true,
-                accesstoken: '',
-                instanceurl: '',
+                accesstoken: '00DU0000000Hb57!AR0AQP94WdleCatqTZy4QskZc5rjB52LB2sOicc04UU54TSnakNg02rLbaVNcAP8V_VxNhJcMZbZoKTYDQo01fCo7RHbxDmf',
+                instanceurl: 'https://na12.salesforce.com',
                 showDetail: function(e) {
                     this.$.force_app.navigateTo('#force_ui_detail');
                 },
