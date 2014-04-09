@@ -10,38 +10,9 @@
     @methods:
     launch: Initiate the launch to start rendering all the other child elements. Cannot be done until the accesstoken and instanceurl are provided.
 -->
-<link rel="import" href="../../dependencies/Polymer/polymer/polymer.html">
-<polymer-element name="force-app" attributes="accesstoken, instanceurl">
-  <script src="../../dependencies/jquery/jquery.min.js"></script>
-  <script src="../../dependencies/underscore/underscore.js"></script>
-  <script src="../../dependencies/backbone/backbone.js"></script>
-  <script src="../../dependencies/mobilesdk-shared/forcetk.mobilesdk.js"></script>
-  <script src="../../dependencies/mobilesdk-shared/smartsync.js"></script>
-  <script src="force-app.js"></script>
-
-  <script>
-    (function() {
-      Polymer('force-app', {
-        accesstoken: '',
-        instanceurl: 'https://' + window.location.hostname,
-        //applyAuthorStyles: true,
-        //resetStyleInheritance: true,
-        ready: function() {
-          this.launch();
-        },
-        observe: {
-          accesstoken: 'launch',
-          instanceurl: 'launch'
-        },
-        launch: function() {
-          if (this.accesstoken.length > 0 && this.instanceurl.length > 0) {
-            SFDC.launch({
-                accessToken: this.accesstoken,
-                instanceUrl: this.instanceurl
-            });
-          }
-        }
-      });
-    })();
-  </script>
-</polymer-element>
+<script src="../../dependencies/jquery/jquery.min.js"></script>
+<script src="../../dependencies/underscore/underscore.js"></script>
+<script src="../../dependencies/backbone/backbone.js"></script>
+<script src="../../dependencies/mobilesdk-shared/forcetk.mobilesdk.js"></script>
+<script src="../../dependencies/mobilesdk-shared/smartsync.js"></script>
+<script src="force-app.js"></script>

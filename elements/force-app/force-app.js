@@ -27,6 +27,7 @@
     }
 
     //SFDC.launch
+    //TODO: Provide an auth provider as an argument so that the consumer can initiate fetch for new session tokens
     SFDC.launch = function(options) {
         var opts = {apiVersion: 'v29.0', userAgent: 'SalesforceMobileUI/alpha'};
         options = _.extend(opts, options);

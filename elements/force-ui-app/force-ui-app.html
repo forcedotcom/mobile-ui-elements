@@ -31,7 +31,7 @@
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../../dependencies/Polymer/polymer-flex-layout/polymer-flex-layout.html">
 <link rel="import" href="../../dependencies/Polymer/polymer-animation/polymer-translate.html">
-<polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" extends="force-app">
+<polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader">
   <script src="../js/jq-slide.js"></script>
   <template>
     <link rel="stylesheet" href="../../dependencies/ratchet/css/ratchet.shim.css"/>
@@ -87,7 +87,6 @@
         hideheader: false,
         disablestyles: false,
         ready: function() {
-          this.super();
           this.async(this.arrangePages);
         },
         observe: {
