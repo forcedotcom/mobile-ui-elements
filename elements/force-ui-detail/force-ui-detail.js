@@ -17,7 +17,7 @@
             }
         },
         get model() {
-            return this.$.force_sobject.model;
+            return this.$.force_sobject._model;
         },
         attributeChanged: function(attrName, oldVal, newVal) {
             this.super(arguments);

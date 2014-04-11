@@ -15,13 +15,13 @@
         if (!view.hasrecordtypes) resolveStatus('012000000000000AAA');
         // If record types are present, then get the recordtypeid
         else {
-            var model = view.$.force_sobject.model;
+            var sobjectElem = view.$.force_sobject;
             // If record type id is provided then use that.
             if (view.recordtypeid) resolveStatus(view.recordtypeid);
             // If not but the recordid is available, then get the recordtype info from sfdc
-            else if (model.id && model.id.length) {
+            else if (sobjectElem.fields.Id && sobjectElem.fields.Id.length) {
                 // Fetch the record's recordtypeid
-                model.fetch({
+                sobjectElem.fetch({
                     success: function() {
                         // Once we get the recordtypeid, fetch the layout
                         resolveStatus(this.get('recordTypeId'));
