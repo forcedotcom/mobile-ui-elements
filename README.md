@@ -160,6 +160,9 @@ Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-pack
 	- `save`: Initiate the saving of record data to the relevant data store (server/offline store).
 	- `delete`: Initiate the deleting of record data from the relevant data store (server/offline store).
 
+	Properties:
+	- `fields`: Returns an object with map of all the sobject fields and corresponding values. Use this object to get/set the sobject field values.
+
 	Example:
 
 	```
