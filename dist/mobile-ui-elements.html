@@ -24,16 +24,12 @@
     launch: Initiate the launch to start rendering all the other child elements. Cannot be done until the accesstoken and instanceurl are provided.
 -->
 
-<polymer-element name="force-app" attributes="accesstoken, instanceurl" assetpath="../elements/force-app/">
-  
-  
-  
-  
-  
-  
 
-  
-</polymer-element>
+
+
+
+
+
 <!--
 Copyright 2013 The Polymer Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
@@ -174,9 +170,9 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-::content(.flex), 
-::content([flex]),
-::content([fit]) {
+::content > .flex, 
+::content > [flex],
+::content > [fit] {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -moz-flex: 1;
@@ -357,9 +353,9 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-::content(.flex), 
-::content([flex]),
-::content([fit]) {
+::content > .flex, 
+::content > [flex],
+::content > [fit] {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -moz-flex: 1;
@@ -571,27 +567,27 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" extends="force-app" assetpath="../elements/force-ui-app/">
+<polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" assetpath="../elements/force-ui-app/">
   
   <template>
     <style>/*!
  * =====================================================
- * Ratchet v2.0.1 (http://goratchet.com)
+ * Ratchet v2.0.2 (http://goratchet.com)
  * Copyright 2014 Connor Sears
- * Licensed under MIT.
+ * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
  *
- * v2.0.1 designed by @connors.
+ * v2.0.2 designed by @connors.
  * =====================================================
  */
 
-/*! normalize.css v3.0.0 | MIT License | git.io/normalize */
+/*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 
 /* @polyfill :host */
 
 :scope {
   font-family: sans-serif;
-  -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 /* @polyfill :host */
@@ -676,15 +672,15 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ h1 */
 
 :scope /shadow-deep/ h1 {
+  margin: .67em 0;
   font-size: 2em;
-  margin: 0.67em 0;
 }
 
 /* @polyfill :host /shadow-deep/ mark */
 
 :scope /shadow-deep/ mark {
-  background: #ff0;
   color: #000;
+  background: #ff0;
 }
 
 /* @polyfill :host /shadow-deep/ small */
@@ -697,22 +693,22 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ sub,
 :scope /shadow-deep/ sup {
+  position: relative;
   font-size: 75%;
   line-height: 0;
-  position: relative;
   vertical-align: baseline;
 }
 
 /* @polyfill :host /shadow-deep/ sup */
 
 :scope /shadow-deep/ sup {
-  top: -0.5em;
+  top: -.5em;
 }
 
 /* @polyfill :host /shadow-deep/ sub */
 
 :scope /shadow-deep/ sub {
-  bottom: -0.25em;
+  bottom: -.25em;
 }
 
 /* @polyfill :host /shadow-deep/ img */
@@ -736,9 +732,9 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ hr */
 
 :scope /shadow-deep/ hr {
+  height: 0;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
-  height: 0;
 }
 
 /* @polyfill :host /shadow-deep/ pre */
@@ -764,9 +760,9 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ optgroup,
 :scope /shadow-deep/ select,
 :scope /shadow-deep/ textarea {
-  color: inherit;
-  font: inherit;
   margin: 0;
+  font: inherit;
+  color: inherit;
 }
 
 /* @polyfill :host /shadow-deep/ button */
@@ -803,8 +799,8 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ button::-moz-focus-inner,
 :scope /shadow-deep/ input::-moz-focus-inner {
-  border: 0;
   padding: 0;
+  border: 0;
 }
 
 /* @polyfill :host /shadow-deep/ input */
@@ -831,10 +827,10 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ input[type="search"] */
 
 :scope /shadow-deep/ input[type="search"] {
-  -webkit-appearance: textfield;
-  -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
   box-sizing: content-box;
+  -webkit-appearance: textfield;
 }
 
 /* @polyfill :host /shadow-deep/ input[type="search"]::-webkit-search-cancel-button, :host /shadow-deep/ input[type="search"]::-webkit-search-decoration */
@@ -847,16 +843,16 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ fieldset */
 
 :scope /shadow-deep/ fieldset {
-  border: 1px solid #c0c0c0;
+  padding: .35em .625em .75em;
   margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em;
+  border: 1px solid #c0c0c0;
 }
 
 /* @polyfill :host /shadow-deep/ legend */
 
 :scope /shadow-deep/ legend {
-  border: 0;
   padding: 0;
+  border: 0;
 }
 
 /* @polyfill :host /shadow-deep/ textarea */
@@ -874,8 +870,8 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ table */
 
 :scope /shadow-deep/ table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 
 /* @polyfill :host /shadow-deep/ td, :host /shadow-deep/ th */
@@ -913,7 +909,7 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ a {
   color: #428bca;
   text-decoration: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* @polyfill :host /shadow-deep/ a:active */
@@ -925,14 +921,14 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .content */
 
 :scope /shadow-deep/ .content {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   overflow: auto;
-  background-color: #fff;
   -webkit-overflow-scrolling: touch;
+  background-color: #fff;
 }
 
 /* @polyfill :host /shadow-deep/ .content > * */
@@ -1001,8 +997,8 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .clearfix:before,
 :scope /shadow-deep/ .clearfix:after {
-  content: " ";
   display: table;
+  content: " ";
 }
 
 /* @polyfill :host /shadow-deep/ .clearfix:after */
@@ -1056,16 +1052,16 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ h5,
 :scope /shadow-deep/ .h5 {
-  font-size: 14px;
   margin-top: 20px;
+  font-size: 14px;
 }
 
 /* @polyfill :host /shadow-deep/ h6, :host /shadow-deep/ .h6 */
 
 :scope /shadow-deep/ h6,
 :scope /shadow-deep/ .h6 {
-  font-size: 12px;
   margin-top: 20px;
+  font-size: 12px;
 }
 
 /* @polyfill :host /shadow-deep/ p */
@@ -1089,8 +1085,8 @@ license that can be found in the LICENSE file.
   line-height: 1;
   color: #333;
   text-align: center;
-  vertical-align: top;
   white-space: nowrap;
+  vertical-align: top;
   cursor: pointer;
   background-color: white;
   border: 1px solid #ccc;
@@ -1116,8 +1112,8 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .btn-primary {
   color: #fff;
-  border: 1px solid #428bca;
   background-color: #428bca;
+  border: 1px solid #428bca;
 }
 
 /* @polyfill :host /shadow-deep/ .btn-primary:active, :host /shadow-deep/ .btn-primary.active */
@@ -1125,16 +1121,16 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .btn-primary:active,
 :scope /shadow-deep/ .btn-primary.active {
   color: #fff;
-  border: 1px solid #3071a9;
   background-color: #3071a9;
+  border: 1px solid #3071a9;
 }
 
 /* @polyfill :host /shadow-deep/ .btn-positive */
 
 :scope /shadow-deep/ .btn-positive {
   color: #fff;
-  border: 1px solid #5cb85c;
   background-color: #5cb85c;
+  border: 1px solid #5cb85c;
 }
 
 /* @polyfill :host /shadow-deep/ .btn-positive:active, :host /shadow-deep/ .btn-positive.active */
@@ -1142,16 +1138,16 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .btn-positive:active,
 :scope /shadow-deep/ .btn-positive.active {
   color: #fff;
-  border: 1px solid #449d44;
   background-color: #449d44;
+  border: 1px solid #449d44;
 }
 
 /* @polyfill :host /shadow-deep/ .btn-negative */
 
 :scope /shadow-deep/ .btn-negative {
   color: #fff;
-  border: 1px solid #d9534f;
   background-color: #d9534f;
+  border: 1px solid #d9534f;
 }
 
 /* @polyfill :host /shadow-deep/ .btn-negative:active, :host /shadow-deep/ .btn-negative.active */
@@ -1159,8 +1155,8 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .btn-negative:active,
 :scope /shadow-deep/ .btn-negative.active {
   color: #fff;
-  border: 1px solid #c9302c;
   background-color: #c9302c;
+  border: 1px solid #c9302c;
 }
 
 /* @polyfill :host /shadow-deep/ .btn-outlined */
@@ -1234,9 +1230,9 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .btn .badge */
 
 :scope /shadow-deep/ .btn .badge {
-  font-size: 12px;
   margin: -2px -4px -2px 4px;
-  background-color: rgba(0, 0, 0, 0.15);
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, .15);
 }
 
 /* @polyfill :host /shadow-deep/ .btn .badge-inverted, :host /shadow-deep/ .btn:active .badge-inverted */
@@ -1278,8 +1274,10 @@ license that can be found in the LICENSE file.
   height: 44px;
   padding-right: 10px;
   padding-left: 10px;
-  border-bottom: 1px solid #dddddd;
   background-color: white;
+  border-bottom: 1px solid #ddd;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* @polyfill :host /shadow-deep/ .bar-header-secondary */
@@ -1311,8 +1309,8 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .bar-footer,
 :scope /shadow-deep/ .bar-footer-secondary,
 :scope /shadow-deep/ .bar-footer-secondary-tab {
+  border-top: 1px solid #ddd;
   border-bottom: 0;
-  border-top: 1px solid #dddddd;
 }
 
 /* @polyfill :host /shadow-deep/ .bar-nav */
@@ -1346,14 +1344,14 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .bar-tab */
 
 :scope /shadow-deep/ .bar-tab {
-  display: table;
   bottom: 0;
+  display: table;
   width: 100%;
   height: 50px;
   padding: 0;
-  border-top: 1px solid #dddddd;
-  border-bottom: 0;
   table-layout: fixed;
+  border-top: 1px solid #ddd;
+  border-bottom: 0;
 }
 
 /* @polyfill :host /shadow-deep/ .bar-tab .tab-item */
@@ -1362,9 +1360,9 @@ license that can be found in the LICENSE file.
   display: table-cell;
   width: 1%;
   height: 50px;
-  vertical-align: middle;
   color: #929292;
   text-align: center;
+  vertical-align: middle;
 }
 
 /* @polyfill :host /shadow-deep/ .bar-tab .tab-item.active, :host /shadow-deep/ .bar-tab .tab-item:active */
@@ -1420,8 +1418,8 @@ license that can be found in the LICENSE file.
   top: 0;
   padding: 0;
   font-size: 16px;
-  color: #428bca;
   line-height: 44px;
+  color: #428bca;
   border: 0;
 }
 
@@ -1517,7 +1515,7 @@ license that can be found in the LICENSE file.
   font-size: 12px;
   line-height: 1;
   color: #333;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, .15);
   border-radius: 100px;
 }
 
@@ -1570,10 +1568,10 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .card */
 
 :scope /shadow-deep/ .card {
-  overflow: hidden;
   margin: 10px;
+  overflow: hidden;
   background-color: white;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   border-radius: 6px;
 }
 
@@ -1589,8 +1587,8 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .card .table-view .table-view-divider:first-child {
   top: 0;
-  border-top-right-radius: 6px;
   border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 
 /* @polyfill :host /shadow-deep/ .card .table-view .table-view-divider:last-child */
@@ -1614,17 +1612,17 @@ license that can be found in the LICENSE file.
   margin-bottom: 15px;
   list-style: none;
   background-color: #fff;
-  border-top: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 /* @polyfill :host /shadow-deep/ .table-view-cell */
 
 :scope /shadow-deep/ .table-view-cell {
   position: relative;
-  overflow: hidden;
   padding: 11px 65px 11px 15px;
-  border-bottom: 1px solid #dddddd;
+  overflow: hidden;
+  border-bottom: 1px solid #ddd;
 }
 
 /* @polyfill :host /shadow-deep/ .table-view-cell:last-child */
@@ -1638,9 +1636,9 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .table-view-cell > a:not(.btn) {
   position: relative;
   display: block;
-  overflow: hidden;
   padding: inherit;
   margin: -11px -65px -11px -15px;
+  overflow: hidden;
   color: inherit;
 }
 
@@ -1664,11 +1662,11 @@ license that can be found in the LICENSE file.
   padding-left: 15px;
   margin-top: -1px;
   margin-left: 0;
-  color: #999;
   font-weight: 500;
-  border-top: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd;
+  color: #999;
   background-color: #fafafa;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 /* @polyfill :host /shadow-deep/ .table-view .media, :host /shadow-deep/ .table-view .media-body */
@@ -1676,7 +1674,6 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .table-view .media,
 :scope /shadow-deep/ .table-view .media-body {
   overflow: hidden;
-  zoom: 1;
 }
 
 /* @polyfill :host /shadow-deep/ .table-view .media-object.pull-left */
@@ -1772,23 +1769,25 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ input[type="color"] {
   width: 100%;
   height: 35px;
+  -webkit-appearance: none;
   padding: 0 15px;
   margin-bottom: 15px;
   line-height: 21px;
   background-color: #fff;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   border-radius: 3px;
   outline: none;
-  -webkit-appearance: none;
 }
 
 /* @polyfill :host /shadow-deep/ input[type="search"] */
 
 :scope /shadow-deep/ input[type="search"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   padding: 0 10px;
   font-size: 16px;
   border-radius: 20px;
-  box-sizing: border-box;
 }
 
 /* @polyfill :host /shadow-deep/ input[type="search"]:focus */
@@ -1809,8 +1808,8 @@ license that can be found in the LICENSE file.
   height: auto;
   font-size: 14px;
   background-color: #f8f8f8;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
 }
 
 /* @polyfill :host /shadow-deep/ .input-group */
@@ -1826,8 +1825,8 @@ license that can be found in the LICENSE file.
   margin-bottom: 0;
   background-color: transparent;
   border-top: 0;
-  border-left: 0;
   border-right: 0;
+  border-left: 0;
   border-radius: 0;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -1836,8 +1835,9 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .input-row */
 
 :scope /shadow-deep/ .input-row {
+  height: 35px;
   overflow: hidden;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
 }
 
 /* @polyfill :host /shadow-deep/ .input-row label */
@@ -1845,7 +1845,7 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .input-row label {
   float: left;
   width: 35%;
-  padding: 10px 15px;
+  padding: 8px 15px;
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   line-height: 1.1;
 }
@@ -1877,15 +1877,15 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .segmented-control .control-item {
   display: table-cell;
-  overflow: hidden;
   width: 1%;
   padding-top: 6px;
   padding-bottom: 7px;
+  overflow: hidden;
   line-height: 1;
   color: #333;
   text-align: center;
-  white-space: nowrap;
   text-overflow: ellipsis;
+  white-space: nowrap;
   border-left: 1px solid #ccc;
 }
 
@@ -2009,15 +2009,15 @@ license that can be found in the LICENSE file.
   margin-left: -140px;
   background-color: white;
   border-radius: 6px;
+  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, .1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, .1);
   opacity: 0;
-  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  -webkit-transition: all .25s linear;
+  -moz-transition: all .25s linear;
+  transition: all .25s linear;
   -webkit-transform: translate3d(0, -15px, 0);
   -ms-transform: translate3d(0, -15px, 0);
   transform: translate3d(0, -15px, 0);
-  -webkit-transition: all 0.25s linear;
-  -moz-transition: all 0.25s linear;
-  transition: all 0.25s linear;
 }
 
 /* @polyfill :host /shadow-deep/ .popover:before */
@@ -2029,10 +2029,10 @@ license that can be found in the LICENSE file.
   width: 0;
   height: 0;
   margin-left: -15px;
+  content: '';
   border-right: 15px solid transparent;
   border-bottom: 15px solid white;
   border-left: 15px solid transparent;
-  content: '';
 }
 
 /* @polyfill :host /shadow-deep/ .popover.visible */
@@ -2059,7 +2059,7 @@ license that can be found in the LICENSE file.
   bottom: 0;
   left: 0;
   z-index: 15;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, .3);
 }
 
 /* @polyfill :host /shadow-deep/ .popover .btn-block */
@@ -2077,9 +2077,9 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .popover .bar-nav */
 
 :scope /shadow-deep/ .popover .bar-nav {
-  border-bottom: 1px solid #dddddd;
-  border-top-right-radius: 12px;
+  border-bottom: 1px solid #ddd;
   border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -2090,11 +2090,11 @@ license that can be found in the LICENSE file.
   max-height: 300px;
   margin-bottom: 0;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   background-color: #fff;
   border-top: 0;
   border-bottom: 0;
   border-radius: 6px;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* @polyfill :host /shadow-deep/ .modal */
@@ -2102,12 +2102,12 @@ license that can be found in the LICENSE file.
 :scope /shadow-deep/ .modal {
   position: fixed;
   top: 0;
-  opacity: 0;
   z-index: 11;
   width: 100%;
   min-height: 100%;
   overflow: hidden;
   background-color: #fff;
+  opacity: 0;
   -webkit-transition: -webkit-transform .25s, opacity 1ms .25s;
   -moz-transition: -moz-transform .25s, opacity 1ms .25s;
   transition: transform .25s, opacity 1ms .25s;
@@ -2119,8 +2119,8 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .modal.active */
 
 :scope /shadow-deep/ .modal.active {
-  opacity: 1;
   height: 100%;
+  opacity: 1;
   -webkit-transition: -webkit-transform .25s;
   -moz-transition: -moz-transform .25s;
   transition: transform .25s;
@@ -2148,37 +2148,37 @@ license that can be found in the LICENSE file.
   position: relative;
   font-size: 0;
   white-space: nowrap;
-  -webkit-transition: all 0 linear;
-  -moz-transition: all 0 linear;
-  transition: all 0 linear;
+  -webkit-transition: all 0s linear;
+  -moz-transition: all 0s linear;
+  transition: all 0s linear;
 }
 
 /* @polyfill :host /shadow-deep/ .slider .slide-group .slide */
 
 :scope /shadow-deep/ .slider .slide-group .slide {
   display: inline-block;
-  vertical-align: top;
   width: 100%;
   height: 100%;
   font-size: 14px;
+  vertical-align: top;
 }
 
 /* @polyfill :host /shadow-deep/ .toggle */
 
 :scope /shadow-deep/ .toggle {
-  display: block;
   position: relative;
+  display: block;
   width: 74px;
   height: 30px;
   background-color: #fff;
   border: 2px solid #ddd;
   border-radius: 20px;
+  -webkit-transition-duration: .2s;
+  -moz-transition-duration: .2s;
+  transition-duration: .2s;
   -webkit-transition-property: background-color, border;
   -moz-transition-property: background-color, border;
   transition-property: background-color, border;
-  -webkit-transition-duration: 0.2s;
-  -moz-transition-duration: 0.2s;
-  transition-duration: 0.2s;
 }
 
 /* @polyfill :host /shadow-deep/ .toggle .toggle-handle */
@@ -2193,12 +2193,12 @@ license that can be found in the LICENSE file.
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 100px;
+  -webkit-transition-duration: .2s;
+  -moz-transition-duration: .2s;
+  transition-duration: .2s;
   -webkit-transition-property: -webkit-transform, border, width;
   -moz-transition-property: -moz-transform, border, width;
   transition-property: transform, border, width;
-  -webkit-transition-duration: 0.2s;
-  -moz-transition-duration: 0.2s;
-  transition-duration: 0.2s;
 }
 
 /* @polyfill :host /shadow-deep/ .toggle:before */
@@ -2207,8 +2207,8 @@ license that can be found in the LICENSE file.
   position: absolute;
   top: 3px;
   right: 11px;
-  color: #999;
   font-size: 13px;
+  color: #999;
   text-transform: uppercase;
   content: "Off";
 }
@@ -2216,8 +2216,8 @@ license that can be found in the LICENSE file.
 /* @polyfill :host /shadow-deep/ .toggle.active */
 
 :scope /shadow-deep/ .toggle.active {
-  border: 2px solid #5cb85c;
   background-color: #5cb85c;
+  border: 2px solid #5cb85c;
 }
 
 /* @polyfill :host /shadow-deep/ .toggle.active .toggle-handle */
@@ -2296,15 +2296,15 @@ license that can be found in the LICENSE file.
   position: absolute;
   top: 50%;
   display: inline-block;
-  color: #bbb;
   font-family: Ratchicons;
   font-size: inherit;
-  text-decoration: none;
   line-height: 1;
-  -webkit-font-smoothing: antialiased;
+  color: #bbb;
+  text-decoration: none;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* @polyfill :host /shadow-deep/ .navigate-left:after, :host /shadow-deep/ .push-left:after */
@@ -2325,10 +2325,10 @@ license that can be found in the LICENSE file.
 
 @font-face {
   font-family: Ratchicons;
+  font-style: normal;
+  font-weight: normal;
   src: url(../dependencies/ratchet/fonts/ratchicons.eot);
   src: url(../dependencies/ratchet/fonts/ratchicons.eot?#iefix) format("embedded-opentype"), url(../dependencies/ratchet/fonts/ratchicons.woff) format("woff"), url(../dependencies/ratchet/fonts/ratchicons.ttf) format("truetype"), url(../dependencies/ratchet/fonts/ratchicons.svg#svgFontName) format("svg");
-  font-weight: normal;
-  font-style: normal;
 }
 
 /* @polyfill :host /shadow-deep/ .icon */
@@ -2337,15 +2337,9 @@ license that can be found in the LICENSE file.
   display: inline-block;
   font-family: Ratchicons;
   font-size: 24px;
-  text-decoration: none;
   line-height: 1;
+  text-decoration: none;
   -webkit-font-smoothing: antialiased;
-}
-
-/* @polyfill :host /shadow-deep/ .icon-and-up:before */
-
-:scope /shadow-deep/ .icon-and-up:before {
-  content: '\e809';
 }
 
 /* @polyfill :host /shadow-deep/ .icon-back:before */
@@ -2390,18 +2384,6 @@ license that can be found in the LICENSE file.
   content: '\e813';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-down-nav:before */
-
-:scope /shadow-deep/ .icon-down-nav:before {
-  content: '\e814';
-}
-
-/* @polyfill :host /shadow-deep/ .icon-down:before */
-
-:scope /shadow-deep/ .icon-down:before {
-  content: '\e820';
-}
-
 /* @polyfill :host /shadow-deep/ .icon-download:before */
 
 :scope /shadow-deep/ .icon-download:before {
@@ -2436,18 +2418,6 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .icon-info:before {
   content: '\e82c';
-}
-
-/* @polyfill :host /shadow-deep/ .icon-left-nav:before */
-
-:scope /shadow-deep/ .icon-left-nav:before {
-  content: '\e82d';
-}
-
-/* @polyfill :host /shadow-deep/ .icon-left:before */
-
-:scope /shadow-deep/ .icon-left:before {
-  content: '\e822';
 }
 
 /* @polyfill :host /shadow-deep/ .icon-list:before */
@@ -2504,18 +2474,6 @@ license that can be found in the LICENSE file.
   content: '\e825';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-right-nav:before */
-
-:scope /shadow-deep/ .icon-right-nav:before {
-  content: '\e818';
-}
-
-/* @polyfill :host /shadow-deep/ .icon-right:before */
-
-:scope /shadow-deep/ .icon-right:before {
-  content: '\e826';
-}
-
 /* @polyfill :host /shadow-deep/ .icon-search:before */
 
 :scope /shadow-deep/ .icon-search:before {
@@ -2526,6 +2484,12 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .icon-share:before {
   content: '\e81a';
+}
+
+/* @polyfill :host /shadow-deep/ .icon-sound:before */
+
+:scope /shadow-deep/ .icon-sound:before {
+  content: '\e827';
 }
 
 /* @polyfill :host /shadow-deep/ .icon-sound2:before */
@@ -2544,12 +2508,6 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .icon-sound4:before {
   content: '\e80c';
-}
-
-/* @polyfill :host /shadow-deep/ .icon-sound:before */
-
-:scope /shadow-deep/ .icon-sound:before {
-  content: '\e827';
 }
 
 /* @polyfill :host /shadow-deep/ .icon-star-filled:before */
@@ -2586,6 +2544,42 @@ license that can be found in the LICENSE file.
 
 :scope /shadow-deep/ .icon-up:before {
   content: '\e80d';
+}
+
+/* @polyfill :host /shadow-deep/ .icon-right-nav:before */
+
+:scope /shadow-deep/ .icon-right-nav:before {
+  content: '\e818';
+}
+
+/* @polyfill :host /shadow-deep/ .icon-right:before */
+
+:scope /shadow-deep/ .icon-right:before {
+  content: '\e826';
+}
+
+/* @polyfill :host /shadow-deep/ .icon-down-nav:before */
+
+:scope /shadow-deep/ .icon-down-nav:before {
+  content: '\e814';
+}
+
+/* @polyfill :host /shadow-deep/ .icon-down:before */
+
+:scope /shadow-deep/ .icon-down:before {
+  content: '\e820';
+}
+
+/* @polyfill :host /shadow-deep/ .icon-left-nav:before */
+
+:scope /shadow-deep/ .icon-left-nav:before {
+  content: '\e82d';
+}
+
+/* @polyfill :host /shadow-deep/ .icon-left:before */
+
+:scope /shadow-deep/ .icon-left:before {
+  content: '\e822';
 }</style>
     <style>/* @polyfill :host /shadow-deep/ .ui-responsive */
 
@@ -3319,6 +3313,7 @@ license that can be found in the LICENSE file.
     get cacheReady: Returns a promise that on completion returns an instance of storecache if smartstore is available.
 -->
 
+
 <polymer-element name="force-sobject-store" attributes="sobject fieldstoindex" assetpath="../elements/force-sobject-store/">
   
 </polymer-element>
@@ -3339,6 +3334,7 @@ license that can be found in the LICENSE file.
     @methods:
     fetch: Initiates the fetching of records from the relevant data store (server/offline store).
 -->
+
 
 
 <polymer-element name="force-sobject-collection" attributes="sobject query querytype autosync maxsize" assetpath="../elements/force-sobject-collection/">
@@ -3578,6 +3574,7 @@ license that can be found in the LICENSE file.
 -->
 
 
+
 <polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield autosync mergemode" assetpath="../elements/force-sobject/">
     <template>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
@@ -3604,6 +3601,7 @@ license that can be found in the LICENSE file.
 -->
 
 
+
 <polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield" assetpath="../elements/force-sobject-layout/">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" idfield="{{idfield}}" recordid="{{recordid}}" autosync="false"></force-sobject>
@@ -3624,6 +3622,7 @@ license that can be found in the LICENSE file.
 
 
 
+
 <polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout" assetpath="../elements/force-ui-detail/">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" idfield="{{idfield}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
@@ -3636,6 +3635,7 @@ license that can be found in the LICENSE file.
 <polymer-element name="force-html-output" attributes="value" assetpath="../elements/force-ui-detail/">
   
 </polymer-element>
+
 
 
 
