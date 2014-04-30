@@ -12,7 +12,8 @@
         },
         render: function() {
             var that = this;
-            if (this.sobject) {
+            //FIX: Need to have better validation of attribute values
+            if (this.sobject && typeof this.sobject == 'string') {
                 SFDC.launcher.done(function() { renderView(that); });
             }
         },
