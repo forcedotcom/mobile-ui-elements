@@ -1,5 +1,7 @@
 # Mobile UI Elements (BETA) #
 
+[Try it out!!](https://sfdc-designer.herokuapp.com/designer/index.html)
+
 Mobile UI Elements is a free, open-source Force.com (unsupported) library to simplify the development of mobile apps. The library, based on the [Google’s Polymer framework](http://www.polymer-project.org), provides the fundamental building blocks for creating HTML5 apps that run well on smartphones and tablets. The elements can be mixed together to create fairly complex force.com applications and the apps can be deployed in the browser or embedded inside Container from the Salesforce Mobile SDK.
 Note: The library is still in heavy development and is missing certain features as well as complete documentation.
 This document is intended to introduce you to the app's architecture and design and make it as easy as possible for you to jump in, run it, and start contributing.
@@ -46,8 +48,8 @@ To run the sample app in Safari:
 
 ```
 1. Open index.html in an editor
-2. At line 35, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
-3. At line 36, plug in the instance url of the org. Eg. https://na1.salesforce.com
+2. At line 55, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
+3. At line 56, plug in the instance url of the org. Eg. https://na1.salesforce.com
 4. Open index.html in Safari and you should be able to browse a simple list and detail of an account.
 ```
 
@@ -59,17 +61,10 @@ Obtaining salesforce session Id for running the sample app:
 3. In debugshell, run the following command to obtain the session ID: sforce.connection.sessionId
 ```
 
-### Salesforce Unmanaged Package
-
-Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-package](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tU00000009eeb). This package contains all the UI Elements along with a sample app and the Polymer Sandbox tool.
-
-
 ## Available UI Elements ##
-1. __force-ui-app__: force-ui-app element is a top level UI element that extends the `force-app` element and also provides the basic styling and structure for the application. This element also contains the `polymer-flex-layout` element to enable flexible sections on the page, esp. in single page view with split view panels.
+1. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element also contains the `polymer-flex-layout` element to enable flexible sections on the page, esp. in single page view with split view panels.
 
 	Supported attributes include:
-	- `accesstoken`: (Required) Session ID or OAuth access token to make API calls to Salesforce.
-	- `instanceurl`: (Optional) Default: Host url of current application. Host instance URL of the salesforce org to make API calls. Eg. https://na1.salesforce.com
 	- `multipage`: (Optional) Default: false. When true, force-ui-app shows only one direct child, with class="page", at a time and allows navigation to other child elements.
 	- `startpage`: (Optional) Default: first direct child element with class="page". Instance of the DOM element, with class="page", that should be shown first when the app loads.
 	- `hideheader`: (Optional) Default: false. Show/Hide default header on the page.
@@ -77,7 +72,7 @@ Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-pack
 	Example (when using inside Visualforce):
 
 	```
-	<force-ui-app accesstoken="{!$Api.Session_ID}"></force-ui-app>
+	<force-ui-app multipage="true"></force-ui-app>
 	```
 
 2. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of `force-ui-app` element.
@@ -204,22 +199,7 @@ Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-pack
 	<force-sobject-layout sobject="Account"></force-sobject-layout>
 	```
 
-9. __force-app__: force-app element is a top level element that builds the base for consuming all other force.com Mobile UI Elements. This element is required and should always be the parent element to all other UI Elements. This element manages all the Javascript dependencies for the elements and manages user session.
-
-	Supported attributes include:
-	- `accesstoken`: (Required) Session ID or OAuth access token to make API calls to Salesforce.
-	- `instanceurl`: (Optional) Default: Host url of current application. Host instance URL of the salesforce org to make API calls. Eg. https://na1.salesforce.com
-
-	Methods:
-	- `launch`: Initiate the launch to start rendering all the other child elements. Cannot be done until the accesstoken and instanceurl are provided.
-
-	Example (when using inside Visualforce):
-
-	```
-	<force-app accesstoken="{!$Api.Session_ID}"></force-app>
-	```
-
-10. __force-sobject-relatedlists__: force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It extends the `force-sobject-layout` element to fetch the related lists configuraton from the page layout settings. a) Parses the related lists configuration for a particular sobject type, and b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
+9. __force-sobject-relatedlists__: force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It extends the `force-sobject-layout` element to fetch the related lists configuraton from the page layout settings. a) Parses the related lists configuration for a particular sobject type, and b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
 
     Supported attributes include:
     - All attributes of force-sobject-layout
@@ -234,7 +214,7 @@ Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-pack
 	<force-sobject-relatedlists sobject="Account" recordid="001000000000AAA"></force-sobject-relatedlists>
 	```
 
-11. __force-selector-relatedlist__: force-selector-relatedlist element is an extension of p`olymer-selector` element and provides a wrapper around `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+10. __force-selector-relatedlist__: force-selector-relatedlist element is an extension of p`olymer-selector` element and provides a wrapper around `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
 
 	Supported attributes include:
 	- `related`: (Required) Object instance of each related list item from the array obtained via force-sobject-relatedlists element. The object must contain the query and querytype properties to fetch the related items
@@ -251,7 +231,7 @@ Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-pack
 	<force-selector-relatedlist related="{{related}}"></force-selector-relatedlist>
 	```
 
-12. __force-ui-relatedlist__: force-ui-relatedlist element is an extension of `force-selector-relatedlist` element and renders a list of related records to an sobject record.
+11. __force-ui-relatedlist__: force-ui-relatedlist element is an extension of `force-selector-relatedlist` element and renders a list of related records to an sobject record.
 
 	Supported attributes include:
     - All attributes of force-selector-relatedlist
@@ -264,6 +244,23 @@ Install the unmanaged package in your salesforce org from [bit.ly/mobile-ui-pack
 	```
 	<force-ui-relatedlist related="{{related}}"></force-ui-relatedlist>
 	```
+
+### Using these elements on a web page ###
+
+To initiate these elements to start fetching data from salesforce, you need setup a valid salesforce session information. To do so, you will need to call the `SFDC.launch()` method with `accessToken` and `instanceUrl` information of your salesforce org.
+
+Example:
+
+```
+<script>
+    document.addEventListener('WebComponentsReady', function() {
+        SFDC.launch({
+            accessToken: '<valid salesforce session id. Can be obtained via mobile sdk>',
+            instanceUrl: '<valid salesforce instance url or your salesforce org>'
+        });
+    });
+</script>
+```
 
 ## Third-party Code ##
 
@@ -300,7 +297,7 @@ Please check the JavaScript console to be sure of the error. You might not be ge
 
 
 ## Mobile UI Elements License ##
-Copyright (c) 2013, salesforce.com, inc. All rights reserved.
+Copyright (c) 2014, salesforce.com, inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
