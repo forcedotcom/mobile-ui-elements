@@ -32,7 +32,7 @@ and then open Terminal:
 
 ### Project Setup
 
-    $ git clone git@github.com:ForceDotComLabs/mobile-ui-elements.git
+    $ git clone https://github.com/ForceDotComLabs/mobile-ui-elements.git
     $ cd mobile-ui-elements
     $ npm install
 
