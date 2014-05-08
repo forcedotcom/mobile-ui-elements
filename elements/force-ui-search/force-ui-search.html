@@ -1,0 +1,34 @@
+<!--
+    force-ui-search element
+
+    @attributes:
+    sobject: (Required) Type of sobject that you want to be searching on.
+    searchfield: (Required) Field you want to be searching by.
+-->
+<link rel="import" href="../force-sobject-store/force-sobject-store.html">
+<polymer-element name="force-ui-search" attributes="sobject searchfield">
+  <template>
+      <force-sobject-store sobject="{{sobject}}" fieldstoindex="{{searchfield}}"></force-sobject-store>
+      <div class="bar bar-standard bar-header-secondary">
+        <input type="search" class="search-key" value="{{criteria}}" on-keyup="{{computeQuery}}" placeholder="Search"/>
+      </div>
+  </template>
+  <script>
+    Polymer('force-ui-search', {
+        querytype: "mru",
+        query: null,
+
+        computeQuery: function() {
+            var criteria = (this.criteria == null ? "" : this.criteria);
+            if (SFDC.isOnline()) {
+                this.querytype = "soql";
+                this.query = "SELECT Id, " + this.searchfield + " FROM " + this.sobject + " WHERE " + this.searchfield + " LIKE '" + criteria + "%' ORDER BY " + this.searchfield + " LIMIT 25";
+            }
+            else {
+                this.querytype = "cache";
+                this.query = {queryType:"smart", smartSql:"SELECT {" + this.sobject + ":_soup} FROM {" + this.sobject + "} WHERE {" + this.sobject + ":" + this.searchfield + "} LIKE '" + criteria + "%' ORDER BY LOWER({" + this.sobject + ":" + this.searchfield + "})", pageSize:25};
+            }
+        }
+    });
+  </script>
+</polymer-element>
