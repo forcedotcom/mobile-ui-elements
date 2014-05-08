@@ -8,19 +8,21 @@
     "modernizr": "~2.6.2",
     "polymer": "Polymer/polymer#0.2.2",
     "polymer-elements": "Polymer/polymer-elements#0.2.2",
-    "polymer-ui-elements":  "Polymer/polymer-ui-elements#0.2.2",
+    "polymer-ui-elements": "Polymer/polymer-ui-elements#0.2.2",
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
     "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared#master",
-    "ratchet": "latest"
+    "ratchet": "latest",
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1"
   },
   "exportsOverride": {
     "modernizr": {
       ".": "modernizr*.js"
     },
     "jquery": {
-      ".": ["dist/*"]
+      ".": "dist/*"
     },
     "backbone": {
       ".": "backbone*.js"
@@ -34,6 +36,9 @@
         "test/Mock*.js"
       ]
     },
+    "mocha": {
+      ".": ["*.js", "*.css"]
+    },
     "polymer": {
       "Polymer/.": [
         "polymer.js",
@@ -42,7 +47,7 @@
       ]
     },
     "polymer-*": {
-      "Polymer/.": ["."]
+      "Polymer/.": "."
     },
     "ratchet": {
       ".": "dist/."
