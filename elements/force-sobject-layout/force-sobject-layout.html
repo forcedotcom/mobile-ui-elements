@@ -9,7 +9,6 @@
     hasrecordtypes: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
     recordtypeid: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
     recordid: (Optional) Default: null. Id of the record for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordtypeid" is not provided.
-    idfield: (Optional) Default: ID. Name of the ID field, required especially for the cases of External Object.
 
     @methods:
     whenDetailSections: Initiate the fetching of layout's detail view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all detail sections.
@@ -19,9 +18,9 @@
 <link rel="import" href="../../dependencies/Polymer/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject/force-sobject.html">
-<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield">
+<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid">
   <template>
-    <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" idfield="{{idfield}}" recordid="{{recordid}}" autosync="false"></force-sobject>
+    <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" recordid="{{recordid}}" autosync="false"></force-sobject>
   </template>
   <script src="force-sobject-layout.js"></script>
 </polymer-element>

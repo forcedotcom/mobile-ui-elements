@@ -46,7 +46,6 @@
         hasrecordtypes: false,
         recordtypeid: null,
         recordid: null,
-        idfield: 'Id',
         //applyAuthorStyles: true,
         //resetStyleInheritance: true,
         whenDetailSections: function() {

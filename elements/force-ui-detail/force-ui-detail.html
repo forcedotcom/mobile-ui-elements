@@ -15,7 +15,7 @@
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
 <polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout">
   <template>
-    <force-sobject id="force_sobject" sobject="{{sobject}}" idfield="{{idfield}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
+    <force-sobject id="force_sobject" sobject="{{sobject}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
     <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
     <content select="*"></content>
   </template>
