@@ -12409,7 +12409,7 @@ defineDeprecatedProperty(window, 'Timeline', function() {
                 if (model && model.id) {
                     this.whenModelReady().then(function() {
                         // Perform delete of record against the server
-                        this._model.destroy(options);
+                        model.destroy(options);
                     });
                 } else console.warn('sobject Type and recordid required for delete.');
             }
@@ -12470,7 +12470,6 @@ defineDeprecatedProperty(window, 'Timeline', function() {
         hasrecordtypes: false,
         recordtypeid: null,
         recordid: null,
-        idfield: 'Id',
         //applyAuthorStyles: true,
         //resetStyleInheritance: true,
         whenDetailSections: function() {

@@ -3563,7 +3563,6 @@ license that can be found in the LICENSE file.
     sobject: (Required) Type of sobject on which you want to fetch the record
     recordid: (Required) Id of the record that needs to be fetched.
     fieldlist: (Optional) Default: All fields. Comma separated list of fields that need to be fetched for the record.
-    idfield: (Optional) Default: ID. Name of the ID field, especially for the cases of External Object.
     autosync: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
     mergemode: (Optional) Default: "Overwrite". The merge model to use when saving record changes to salesforce.
 
@@ -3575,7 +3574,7 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-sobject" attributes="sobject recordid fieldlist idfield autosync mergemode" assetpath="../elements/force-sobject/">
+<polymer-element name="force-sobject" attributes="sobject recordid fieldlist autosync mergemode" assetpath="../elements/force-sobject/">
     <template>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
     </template>
@@ -3592,7 +3591,6 @@ license that can be found in the LICENSE file.
     hasrecordtypes: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
     recordtypeid: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
     recordid: (Optional) Default: null. Id of the record for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordtypeid" is not provided.
-    idfield: (Optional) Default: ID. Name of the ID field, required especially for the cases of External Object.
 
     @methods:
     whenDetailSections: Initiate the fetching of layout's detail view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all detail sections.
@@ -3602,9 +3600,9 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid, idfield" assetpath="../elements/force-sobject-layout/">
+<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid" assetpath="../elements/force-sobject-layout/">
   <template>
-    <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" idfield="{{idfield}}" recordid="{{recordid}}" autosync="false"></force-sobject>
+    <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" recordid="{{recordid}}" autosync="false"></force-sobject>
   </template>
   
 </polymer-element>
@@ -3625,7 +3623,7 @@ license that can be found in the LICENSE file.
 
 <polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout" assetpath="../elements/force-ui-detail/">
   <template>
-    <force-sobject id="force_sobject" sobject="{{sobject}}" idfield="{{idfield}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
+    <force-sobject id="force_sobject" sobject="{{sobject}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
     <div id="viewContainer" class="{{foredit ? &apos;edit&apos; :&apos;&apos;}}"></div>
     <content select="*"></content>
   </template>
