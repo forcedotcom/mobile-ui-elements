@@ -14,7 +14,7 @@
         return new (Force.SObject.extend({
             cacheMode: SFDC.cacheMode,
             sobjectType: sobject.toLowerCase(),
-            idAttribute: sobject.search(/__x$/) ? 'ExternalId' : 'Id'
+            idAttribute: sobject.search(/__x$/) > 0 ? 'ExternalId' : 'Id'
         }));
     }
 
@@ -51,13 +51,17 @@
         // Resets all the properties on the model.
         // Recreates model if sobject type or id of model has changed.
         init: function() {
-            var model;
+            var that = this,
+                model;
 
             if (this.sobject && typeof this.sobject === 'string') {
                 model = this._model = createModel(this.sobject);
                 model.id = this.recordid;
                 model.fieldlist = this.fieldlist;
                 model.set({attributes: {type: this.sobject}});
+                model.on('sync', function() {
+                    that.fire('sync');
+                });
 
                 this.fields = new SObjectViewModel(model);
                 if (this.autosync) this.fetch();

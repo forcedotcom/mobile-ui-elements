@@ -40,16 +40,17 @@
             query: "reset",
             querytype: "reset"
         },
-        fireSyncEvent: function() {
-            this.asyncFire('sync');
-        },
         ready: function() {
-            this.collection = new (Force.SObjectCollection.extend({
-                config: generateConfig(_.pick(this, _.keys(viewProps)))
-            }));
-            this.collection.on('sync', this.fireSyncEvent.bind(this));
+            var that = this;
 
-            if (this.autosync) this.fetch();
+            that.collection = new (Force.SObjectCollection.extend({
+                config: generateConfig(_.pick(that, _.keys(viewProps)))
+            }));
+            that.collection.on('sync', function() {
+                that.fire('sync');
+            });
+
+            if (that.autosync) that.fetch();
         },
         reset: function() {
             var config = generateConfig(_.pick(this, _.keys(viewProps)));
