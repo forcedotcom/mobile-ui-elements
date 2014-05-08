@@ -12,32 +12,33 @@ describe('force-sobject', function() {
 
     describe('#model', function() {
         it('should be undefined when sobject type is not defined', function(){
-            should.not.exist(sobject._model);
+            sobject.should.not.have.property('_model');
         });
         it('should be defined when sobject type is defined', function(done) {
             sobject.sobject = 'asdf';
             sobject.async(function() {
-                done(should.exist(sobject._model));
+                sobject.should.have.property('_model');
+                done();
             });
         });
         it('should have idAttribute as "Id" when standard sobject', function(done) {
             sobject.sobject = 'Account';
             sobject.async(function() {
-                sobject._model.idAttribute.should.be.equal('Id');
+                sobject._model.idAttribute.should.eql('Id');
                 done();
             });
         });
         it('should have idAttribute as "Id" when custom sobject', function(done) {
             sobject.sobject = 'Custom__c';
             sobject.async(function() {
-                sobject._model.idAttribute.should.be.equal('Id');
+                sobject._model.idAttribute.should.eql('Id');
                 done();
             });
         });
         it('should have idAttribute as "ExternalId" when external data sobject', function(done) {
             sobject.sobject = 'External__x';
             sobject.async(function() {
-                sobject._model.idAttribute.should.be.equal('ExternalId');
+                sobject._model.idAttribute.should.eql('ExternalId');
                 done();
             });
         });
@@ -56,7 +57,7 @@ describe('force-sobject', function() {
             sobject.sobject = 'account';
             sobject.recordid = '001000fakeid';
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
-                should.not.exist(this);
+                false.should.be.ok; //throw error
             }
             sobject.async(done);
         });
@@ -77,7 +78,7 @@ describe('force-sobject', function() {
                 });
             };
             sobject.addEventListener('sync', function() {
-                sobject.fields.Name.should.be.equal('Mock Account');
+                sobject.fields.Name.should.eql('Mock Account');
                 done();
             });
             sobject.fetch();
@@ -86,13 +87,13 @@ describe('force-sobject', function() {
 
     describe('#save', function() {
         it('should not throw error and return self when sobject type is not defined', function() {
-            sobject.save().should.be.equal(sobject);
+            sobject.save().should.eql(sobject);
         });
     });
 
     describe('#delete', function() {
         it('should not throw error and return self when sobject type is not defined', function() {
-            sobject.delete().should.be.equal(sobject);
+            sobject.delete().should.eql(sobject);
         });
     });
 });

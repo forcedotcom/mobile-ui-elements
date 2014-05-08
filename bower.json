@@ -15,7 +15,7 @@
     "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared#master",
     "ratchet": "latest",
     "mocha": "~1.18.2",
-    "chai": "~1.9.1"
+    "should": "~3.3.1"
   },
   "exportsOverride": {
     "modernizr": {
@@ -37,7 +37,10 @@
       ]
     },
     "mocha": {
-      ".": ["*.js", "*.css"]
+      ".": [
+        "*.js",
+        "*.css"
+      ]
     },
     "polymer": {
       "Polymer/.": [
@@ -51,6 +54,9 @@
     },
     "ratchet": {
       ".": "dist/."
+    },
+    "should": {
+      ".": "*.js"
     },
     "web-animations-js": {
       "Polymer/.": "web-animations.js"
