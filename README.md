@@ -146,7 +146,6 @@ Obtaining salesforce session Id for running the sample app:
 	- `sobject`: (Required) Type of sobject on which you want to fetch the record
 	- `recordid`: (Required) Id of the record that needs to be fetched.
 	- `fieldlist`: (Optional) Default: All fields. Comma separated list of fields that need to be fetched for the record.
-	- `idfield`: (Optional) Default: ID. Name of the ID field, especially for the cases of External Object.
 	- `autosync`: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
 	- `mergemode`: (Optional) Default: "Overwrite". The merge model to use when saving record changes to salesforce.
 
