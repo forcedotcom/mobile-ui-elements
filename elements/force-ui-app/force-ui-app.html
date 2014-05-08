@@ -124,6 +124,43 @@
               navigate(this, this.activepage, $target[0]);
             }
           }
+        },
+        setupRouter: function(routesAndHandlers) {
+          return new (HashRouter.extend(_.extend({app:this}, routesAndHandlers)));
+        }
+      });
+  
+      var HashRouter = Backbone.Router.extend({
+        hashHistory: [],
+
+        navigateFirst: function() {
+          this.navigate("#", {trigger:true});
+        },
+
+        navigateBack: function() {
+          this.navigate(this.getPreviousPage(), {trigger:true});
+        },
+
+        gotoPageId: function(targetId) {
+          // First page loaded
+          if (this.hashHistory.length == 0) {
+            this.hashHistory = [window.location.hash];
+          // first page is automatically loaded, we don't need to "navigate" to it
+          }
+          // New page is the same as the previous page -> back transition
+          else if (this.hashHistory.length > 1 && window.location.hash === this.hashHistory[this.hashHistory.length - 2]) {
+            this.hashHistory.pop();
+            this.app.navigateBack();
+          } 
+          // Otherwise forward transition
+          else {
+            this.hashHistory.push(window.location.hash);
+            this.app.navigateTo(targetId);
+          }
+        },
+
+        getPreviousPage: function() {
+          return (this.hashHistory != null && this.hashHistory.length > 1 ? this.hashHistory[this.hashHistory.length - 2] : "#");
         }
       });
 

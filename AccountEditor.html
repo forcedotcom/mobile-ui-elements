@@ -1,0 +1,374 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Importing Google Polymer framework -->
+        <script src="dependencies/platform/platform.js"></script>
+
+        <!-- Container --/>
+        <script src="cordova-2.3.0.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <!-- End Container -->
+
+        <!-- Local Testing -->
+        <script src="dependencies/mobilesdk-shared/MockCordova.js"></script>
+        <script src="dependencies/mobilesdk-shared/cordova.force.js"></script>
+        <script src="dependencies/mobilesdk-shared/MockSmartStore.js"></script>
+        <!-- End Local Testing -->
+
+        <!-- Place your HTML imports here -->
+        <link rel="import" href="elements/mobile-ui-elements.html">
+        <link rel="import" href="dependencies/Polymer/polymer-ui-toggle-button/polymer-ui-toggle-button.html">
+    </head>
+    <body>
+        <polymer-element name="search-screen" attributes="sobject">
+            <template>
+                <header class="bar bar-nav">
+                    <h1 class="title">{{sobject}}s</h1>
+                    <a class="btn btn-nav pull-right" href="#add">Create</a>
+                </header>
+                <force-ui-search id="search" sobject="{{sobject}}" searchfield="Name"></force-ui-search>
+                <div class="content" style="margin-top:44px /* XXX */">
+                    <force-selector-list id="list" sobject="{{sobject}}" querytype="{{$.search.querytype}}" query="{{$.search.query}}"></force-selector-list>
+                    <ul id="listbody" class="table-view">
+                        <template repeat="{{$.list.collection.models}}">
+                            <li name="{{id}}" class="table-view-cell">
+                                <a href="#edit/{{id}}">
+                                    <span class="important">{{attributes.Name}}</span>
+                                    <template if="{{attributes.__sync_failed__}}"><span class="pull-right badge badge-negative">Failed to sync</span></template>
+                                    <template if="{{attributes.__local__}}">
+                                        <span class="pull-right badge badge-primary">Locally
+                                            <template if="{{attributes.__locally_created__}}"> created</template>
+                                            <template if="{{attributes.__locally_updated__}}"> updated</template>
+                                            <template if="{{attributes.__locally_deleted__}}"> deleted</template>
+                                        </span>
+                                    </template>
+                                    <template if="{{!attributes.__local__}}"><span class="pull-right badge badge-positive">Cached</span></template>
+                                </a>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('search-screen', {
+                refresh: function() {
+                    this.$.list.fetch();
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <polymer-element name="sync-screen" attributes="sobject">
+            <template>
+                <header class="bar bar-nav">
+                    <h1 class="title">Sync</h1>
+                    <a class="icon icon-left-nav pull-left" on-tap="{{goBack}}"></a>
+                </header>
+                <div class="bar bar-standard bar-header-secondary">
+                    <a class="btn btn-block" on-click="{{doSync}}">Process {{$.list.collection.length}} records</a>
+                </div>
+                <force-selector-list id="list" sobject="{{sobject}}" querytype="cache" query="{{query}}"></force-selector-list>
+                <div style="margin-top:88px /*XXX*/">
+                    <ul id="listbody" class="table-view">
+                        <template repeat="{{$.list.collection.models}}">
+                            <li name="{{id}}" class="table-view-cell">
+                                <a href="#editFromCache/{{id}}">
+                                    {{attributes.Name}}
+                                    <template if="{{attributes.__sync_failed__}}"><span class="pull-right badge badge-negative">Failed to sync</span></template>
+                                </a>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('sync-screen', {
+                query: {queryType:"exact", indexPath:"__local__", matchKey:true, order:"ascending", pageSize:25},
+
+                doSync: function() {
+                    var that = this;
+                    var collection = this.$.list.collection;
+                    if (collection.length == 0 || collection.at(0).get("__sync_failed__")) {
+                        // we push sync failures back to the end of the list - if we encounter one, it means we are done
+                        return;
+                    }
+                    else {
+                        var record = collection.shift();
+
+                        var options = {
+                            mergeMode: Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED,
+                            success: function() {
+                                if (collection.length == 0) {
+                                    app.router.navigateFirst();
+                                }
+                                else {
+                                    that.doSync();
+                                }
+                            },
+                            error: function() {
+                                record = record.set("__sync_failed__", true);
+                                collection.push(record);
+                                that.doSync();
+                            },
+                            fieldlist: _.intersection(_.keys(record.attributes), app.editablefieldlist),
+                            cache: collection.cache,
+                            cacheForOriginals: collection.cacheForOriginals
+                        };
+
+                        return record.get("__locally_deleted__") ? record.destroy(options) : record.save(null, options);
+                    }
+                },
+
+                goBack: function() {
+                    if (this.$.list.collection.length > 0) {
+                        // We are not done - going back offline before leaving screen
+                        app.onlinestatus = false;
+                        // NB: This will cause us to navigate out of the sync screen
+                    }
+                    else {
+                        app.router.navigateFirst();
+                    }
+                },
+
+                refresh: function() {
+                    this.$.list.fetch();
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <polymer-element name="detail-screen" attributes="sobject recordid">
+            <template>
+                <header class="bar bar-nav">
+                    <h1 class="title">{{recordid ? 'Edit' : 'Add'}} {{sobject}}</h1>
+                    <a class="icon icon-left-nav pull-left" on-tap="{{goBack}}"></a>
+                    <a class="btn btn-nav pull-right btn-negative" style="display:{{recordid ? 'display' : 'block'}}" id="toggleDeleteButton" on-click="{{doToggleDelete}}">{{model.attributes.__locally_deleted__ ? 'Undelete' : 'Delete'}}</a>
+                </header>
+                <div class="content">
+                    <div class="content-padded">
+                        <a class="btn btn-primary" id="saveButton" on-click="{{doSave}}">Save</a>
+                        <template if="{{forcingCacheFetch}}">
+                            <a class="btn btn-positive" id="mergeButton" on-click="{{doSaveMerge}}">Merge</a>
+                            <a class="btn btn-negative" id="overwriteButton" on-click="{{doSaveOverwrite}}">Overwrite</a>
+                        </template>
+                    </div>
+                    <div class="content-padded">
+                        <template if="{{model.attributes.__local__}}">
+                            <span class="badge badge-primary">Locally
+                                <template if="{{model.attributes.__locally_created__}}"> created</template>
+                                <template if="{{model.attributes.__locally_updated__}}"> updated</template>
+                                <template if="{{model.attributes.__locally_deleted__}}"> deleted</template>
+                            </span>
+                        </template>
+                        <force-ui-detail flex id="detail" sobject="{{sobject}}" recordid="{{recordid}}" foredit="true"></force-ui-detail>
+                    </div>
+                </div>
+            </template>
+            <script type="text/javascript">
+            Polymer('detail-screen', {
+                get model() {
+                    return (this.$ ? this.$.detail.model : null);
+                },
+
+                forceCacheFetch: function(b) {
+                    this.forcingCacheFetch = b;
+                    this.$.detail.fetchCacheMode = b ? Force.CACHE_MODE.CACHE_ONLY : null;
+                },
+
+                refresh: function() {
+                    this.$.detail.$.force_sobject.init();
+                },
+
+                goBack: function() {
+                    app.router.navigateBack();
+                },
+
+                getSaveOptions: function(mergeMode, cacheMode) {
+                    var that = this;
+
+
+                    return {
+                        cacheMode: cacheMode,
+                        mergeMode: mergeMode,
+                        success: this.goBack,
+                        error: function(data, err, options) {
+                            var error = new Force.Error(err);
+                            if (error.type == "ConflictError") {
+                                $(that.$.mergeButton).show();
+                                $(that.$.overwriteButton).show();
+                            }
+                        },
+                        fieldlist: this.model.get("__local__")
+                            ? _.intersection(_.keys(this.model.attributes), app.editablefieldlist)
+                            : _.keys(this.model.changed)
+                    };
+                },
+
+                handleError: function(error) {
+                    if (error.type == "ConflictError") {
+                        $(this.$.mergeButton).show();
+                        $(this.$.overwriteButton).show();
+                    }
+                },
+
+                doSave: function() {
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_FAIL_IF_CHANGED));
+                },
+
+                doSaveMerge: function() {
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.MERGE_ACCEPT_YOURS));
+                },
+
+                doSaveOverwrite: function() {
+                    this.$.detail.save(this.getSaveOptions(Force.MERGE_MODE.OVERWRITE));
+                },
+
+                doToggleDelete: function() {
+                    var that = this;
+                    var force_sobject = this.$.detail.$.force_sobject;
+                    if (force_sobject.fields.__locally_deleted__) {
+                        force_sobject.fields.__locally_deleted__ = false;
+                        force_sobject.save(this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
+                    }
+                    else {
+                        force_sobject.delete({
+                            success: this.goBack,
+                            error: function(data, err, options) {
+                                var error = new Force.Error(err);
+                                alert("Failed to delete " + that.sobject + ": " + (error.type === "RestError" ? error.details[0].message : "Remote change detected - delete aborted"));
+                            }
+                        });
+                    }
+                }
+            })
+            </script>
+        </polymer-element>
+
+        <polymer-element name="mobile-app" attributes="sobject">
+            <template>
+                <force-ui-app id="force_ui_app" multipage="true" accesstoken="{{accesstoken}}" instanceurl="{{instanceurl}}" hideheader="true">
+                    <search-screen id="search" class="page absolute" sobject="{{sobject}}"></search-screen>
+                    <detail-screen id="detail" class="page absolute" sobject="{{sobject}}"></detail-screen>
+                    <sync-screen id="sync" class="page absolute" sobject="{{sobject}}"></sync-screen>
+                </force-ui-app>
+                <polymer-ui-toggle-button id="onlineToggler" value="{{onlinestatus}}" onCaption="Online" offCaption="Offline" style="position: fixed; bottom: 0; right: 0; margin: 20px;"></polymer-ui-toggle-button>
+            </template>
+            <script type="text/javascript">
+            Polymer('mobile-app', {
+                observe: {
+                    "sobject": "reset",
+                },
+                _onlineStatus: true,
+
+                get onlinestatus() {
+                    return this._onlineStatus;
+                },
+
+                set onlinestatus(newStatus) {
+                    if (newStatus && !this._onlineStatus) {
+                        app.router.navigate("#sync", {trigger:true})
+                    }
+                    else if (!newStatus && document.location.hash == "#sync") {
+                        app.router.navigate("#", {trigger:true});
+                    }
+
+                    SFDC.isOnline = function() { return newStatus }; // XXX
+                    this._onlineStatus = newStatus;
+                },
+
+                reset: function() {
+                    var that = this;
+                    $.when(SFDC.launcher).then(function() {
+                        SFDC.getSObjectType(that.sobject).describe().then(function(describeResult) {
+                            app.editablefieldlist = _.pluck(_.filter(describeResult.fields, function(fieldInfo) {
+                                return fieldInfo.updateable;
+                            }), "name");
+                        });
+                    });
+                },
+
+                ready: function() {
+                    var app = this;
+                    this.router = app.$.force_ui_app.setupRouter({
+                        routes: {
+                            "": "list",
+                            "list": "list",
+                            "add": "add",
+                            "edit/:id": "edit",
+                            "editFromCache/:id" : "editFromCache",
+                            "sync":"sync"
+                        },
+
+                        list: function() {
+                            app.$.search.refresh();
+                            app.router.gotoPageId('#search');
+                        },
+
+                        add: function() {
+                            this.edit("");
+                        },
+
+                        editFromCache: function(recordid) {
+                            this.showDetail(recordid, true);
+                        },
+
+                        edit: function(recordid) {
+                            this.showDetail(recordid);
+                        },
+
+                        showDetail: function(recordid, fetchFromCache) {
+                            app.$.detail.forceCacheFetch(fetchFromCache);
+
+                            if (app.$.detail.recordid == recordid) {
+                                app.$.detail.refresh();
+                            }
+                            app.$.detail.recordid = recordid;
+                            app.router.gotoPageId('#detail');
+                        },
+
+                        sync: function() {
+                            app.$.sync.refresh();
+                            app.router.gotoPageId('#sync');
+                        }
+                    });
+                    Backbone.history.start();
+                }
+            });
+            </script>
+        </polymer-element>
+
+        <mobile-app sobject="Account"></mobile-app>
+
+        <script type="text/javascript">
+        var app;
+        window.addEventListener('WebComponentsReady', function() {
+            app = $("mobile-app")[0];
+
+            // Container
+            if (cordova.callbackId) {
+                document.addEventListener("deviceready", function() {
+                    cordova.require("salesforce/plugin/oauth").getAuthCredentials(
+                        function(creds) {
+                            SFDC.launch(creds, cordova.require("salesforce/plugin/oauth").forcetkRefresh);
+                        },
+                        function(error) {
+                            console.log("Auth failed: " + error);
+                        });
+                }, false);
+            }
+            // Local testing
+            else {
+                var creds = {
+                    accessToken: '00DU0000000Hb57!AR0AQMDlC0nZ2dyxqGGlBjdvAZROcp1DU9pllc708BF.1XMvAdTK0J1hg9wQjJDny8ioMw6VZQgLKe0oHqPLG7TTNvVuI8rl',
+                    instanceUrl: 'https://na12.salesforce.com'
+                };
+                SFDC.launch(creds);
+            }
+        });
+        </script>
+    </body>
+</html>

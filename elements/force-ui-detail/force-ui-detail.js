@@ -27,6 +27,36 @@
         },
         get model() {
             return this.$ ? this.$.force_sobject._model : null;
+        },
+        save: function(options) {
+            var that = this;
+            var originalErrorCB = options.error;
+            var onError = function(model, xhr) {
+                var viewErrors = {messages: []};
+                var error = new Force.Error(xhr);
+                if (error.type === "RestError") {
+                    _.each(error.details, function(detail) {
+                        if (detail.fields == null || detail.fields.length == 0) {
+                            viewErrors.messages.push(detail.message);
+                        } else {
+                            _.each(detail.fields, function(field) {
+                                viewErrors[field] = detail.message;
+                            });
+                        }
+                    });
+                }
+                else if (error.type === "ConflictError") {
+                    _.each(error.remoteChanges, function(field) {
+                        var conflict = error.conflictingChanges.indexOf(field) >=0;
+                        viewErrors[field] = "Conflicting with server value: " +  error.theirs[field];
+                    });
+                }
+
+                that.viewModel["__errors__"] = viewErrors;
+                if (typeof originalErrorCB == 'function') originalErrorCB.apply(null, arguments);
+            }
+            options.error = onError;
+            that.$.force_sobject.save(options);
         }
     });
 
