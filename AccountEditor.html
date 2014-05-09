@@ -235,7 +235,7 @@
                         force_sobject.save(this.getSaveOptions(null, Force.CACHE_MODE.CACHE_ONLY));
                     }
                     else {
-                        force_sobject.delete({
+                        force_sobject.destroy({
                             success: this.goBack,
                             error: function(data, err, options) {
                                 var error = new Force.Error(err);
