@@ -92,8 +92,8 @@ Obtaining salesforce session Id for running the sample app:
 
 	Supported attributes include:
 	- All attributes of `force-sobject-layout` element.
-	- `fieldlist`: (Optional) Default: All fields on the layout. Comma separated list of fields that should be displayed for the record.
-    - `fieldlabels`: (Optional) Default: Actual field labels. Comma separated list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
+	- `fieldlist`: (Optional) Default: All fields on the layout. A list of fields that should be displayed for the record.
+    - `fieldlabels`: (Optional) Default: Actual field labels. A list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
 
 	Example:
 
@@ -145,7 +145,7 @@ Obtaining salesforce session Id for running the sample app:
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to fetch the record
 	- `recordid`: (Required) Id of the record that needs to be fetched.
-	- `fieldlist`: (Optional) Default: All fields. Comma separated list of fields that need to be fetched for the record.
+	- `fieldlist`: (Optional) Default: All fields. A list of fields that need to be fetched for the record.
 	- `autosync`: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
 	- `mergemode`: (Optional) Default: "Overwrite". The merge model to use when saving record changes to salesforce.
 
@@ -208,7 +208,7 @@ Obtaining salesforce session Id for running the sample app:
 
     Supported attributes include:
     - All attributes of force-sobject-layout
-    - `relationships`: (Optional) Default: null. A comma separated list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
+    - `relationships`: (Optional) Default: null. A list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
 
     Properties:
     - `relatedLists`: An array of all the related list information.

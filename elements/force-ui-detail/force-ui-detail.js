@@ -101,11 +101,12 @@
     var generateViewTemplate = function(view) {
         // Check if default layout is overriden. Don't do anything if yes.
         if (!isLayoutOverriden(view) && view.sobject) {
-            if (view.fieldlist && view.fieldlist.trim().length) {
+            if (view.fieldlist && typeof view.fieldlist === 'string' && view.fieldlist.trim().length) {
                 // Parse the labels and generate fieldname to fieldlabel mapping.
                 var fieldLabelMap = {};
-                var fieldsArray = view.fieldlist.split(',');
-                var fieldLabelsArray = view.fieldlabels ? view.fieldlabels.split(',') : [];
+                var fieldsArray = view.fieldlist.trim().split(/\s+/);
+                var fieldLabelsArray = typeof view.fieldlabels === 'string'
+                                    ? view.fieldlabels.trim().split(',') : [];
                 for (var idx in fieldsArray) {
                     var label = fieldLabelsArray[idx];
                     if (label) fieldLabelMap[fieldsArray[idx]] = label.trim();

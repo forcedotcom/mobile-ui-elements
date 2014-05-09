@@ -48,7 +48,7 @@ describe('force-sobject', function() {
         it('should create fields hashmap for all fields specified in fieldlist', function(done) {
             sobject.sobject = 'account';
             sobject.recordid = '001000fakeid';
-            sobject.fieldlist = 'Name, BillingCity, Phone';
+            sobject.fieldlist = 'Name  BillingCity  Phone';
             sobject.async(function() {
                 sobject.fields.should.have.properties('Name', 'BillingCity', 'Phone');
                 done();

@@ -43,11 +43,10 @@
     }
 
     function processFieldlist(fieldlist) {
-        if (typeof fieldlist === 'string') {
-            var fieldArray = fieldlist.split(',');
-            return _.map(fieldArray, function(val) { return val.trim(); });
-        }
-        return fieldlist;
+        if (typeof fieldlist === 'string')
+            return fieldlist.trim().split(/\s+/);
+        else
+            return fieldlist;
     }
 
     Polymer('force-sobject', _.extend({}, viewProps, {

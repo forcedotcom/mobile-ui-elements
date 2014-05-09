@@ -12,7 +12,8 @@
     });
 
     var fetchRelatedLists = function(view) {
-        var relsToKeep = view.relationships ? view.relationships.split(',') : null;
+        var relsToKeep = typeof view.relationships === 'string'
+                            ? view.relationships.trim().split(/\s+/) : null;
         var parentType = SFDC.getSObjectType(view.sobject);
 
         var addConfigIfAllowed = function(related, childInfo, parentDescribe) {
