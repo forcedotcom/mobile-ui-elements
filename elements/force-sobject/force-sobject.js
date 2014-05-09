@@ -34,12 +34,20 @@
                 });
             });
         }
-        setupProps(_.keys(model.attributes));
+        setupProps(_.union(_.keys(model.attributes), model.fieldlist));
 
         // Setup an event listener to update properties whenever model attributes change
         model.on('change', function() {
             setupProps(_.difference(_.keys(model.attributes), _.keys(_self)));
         });
+    }
+
+    function processFieldlist(fieldlist) {
+        if (typeof fieldlist === 'string') {
+            var fieldArray = fieldlist.split(',');
+            return _.map(fieldArray, function(val) { return val.trim(); });
+        }
+        return fieldlist;
     }
 
     Polymer('force-sobject', _.extend({}, viewProps, {
@@ -55,11 +63,22 @@
                 model;
 
             if (this.sobject && typeof this.sobject === 'string') {
+                that._changedAttributes = [];
                 model = this._model = createModel(this.sobject);
                 model.set(model.idAttribute, this.recordid);
-                model.fieldlist = this.fieldlist;
+                model.fieldlist = processFieldlist(this.fieldlist);
                 model.set({attributes: {type: this.sobject}});
                 model.on('all', function(event) {
+                    switch(event) {
+                        case 'change':
+                            var changedFields = _.keys(model.changedAttributes());
+                            changedFields = changedFields.filter(function(field) {
+                                return field.indexOf('__') != 0;
+                            })
+                            that._changedAttributes = _.union(that._changedAttributes, changedFields);
+                            break;
+                        case 'sync': that._changedAttributes = [];
+                    }
                     that.fire(event);
                 });
 
@@ -103,7 +122,11 @@
                 var that = this,
                     model = that._model;
 
-                options = _.extend({mergeMode: this.mergemode}, options);
+                options = _.extend({
+                    mergeMode: this.mergemode,
+                    fieldlist: this._changedAttributes
+                }, options);
+
                 var successCB = options.success;
                 options.success = function() {
                     that.recordid = model.id;

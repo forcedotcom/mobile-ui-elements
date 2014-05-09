@@ -44,6 +44,18 @@ describe('force-sobject', function() {
         });
     });
 
+    describe('#fieldlist', function() {
+        it('should create fields hashmap for all fields specified in fieldlist', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            sobject.fieldlist = 'Name, BillingCity, Phone';
+            sobject.async(function() {
+                sobject.fields.should.have.properties('Name', 'BillingCity', 'Phone');
+                done();
+            });
+        });
+    });
+
     describe('#autosync', function() {
         it('should auto fetch data when sobject and recordid are set', function(done) {
             sobject.sobject = 'account';
@@ -63,7 +75,7 @@ describe('force-sobject', function() {
         });
     });
 
-    describe('#fetch', function() {
+    describe('#fetch()', function() {
         it('should trigger "invalid" event and return self when sobject type is not defined', function(done) {
             sobject.addEventListener('invalid', function() {
                 done();
@@ -119,7 +131,7 @@ describe('force-sobject', function() {
         });
     });
 
-    describe('#save', function() {
+    describe('#save()', function() {
         it('should trigger "invalid" event and return self when sobject type is not defined', function(done) {
             sobject.addEventListener('invalid', function() {
                 done();
@@ -166,9 +178,41 @@ describe('force-sobject', function() {
             });
             sobject.save();
         });
+        it('should save only specified fields when fieldlist is specified on save', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            Force.forcetkClient.impl.ajax = function(path, callback, error, method, payload) {
+                payload = eval('(' + payload + ')');
+                payload.should.have.keys('BillingCity');
+                payload.should.have.property('BillingCity', 'San Francisco');
+                done();
+            };
+            sobject.async(function() {
+                sobject._model.set({'Name': 'Mock Account', 'BillingCity': 'San Francisco'})
+                sobject.save({fieldlist: ['BillingCity']});
+            });
+        });
+        it('should save only changed fields when no fieldlist is specified', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            Force.forcetkClient.impl.ajax = function(path, callback, error, method, payload) {
+                payload = eval('(' + payload + ')');
+                payload.should.have.keys('BillingCity');
+                payload.should.have.property('BillingCity', 'San Francisco');
+                done();
+            };
+            sobject.async(function() {
+                sobject._model.set({'Name': 'Mock Account'});
+                sobject._changedAttributes.should.containEql('Name');
+                // Reset changedAttributes to track future changes
+                sobject._changedAttributes = [];
+                sobject._model.set({'BillingCity': 'San Francisco'});
+                sobject.save();
+            });
+        });
     });
 
-    describe('#destroy', function() {
+    describe('#destroy()', function() {
         it('should trigger "invalid" event and return self when sobject type is not defined', function(done) {
             sobject.addEventListener('invalid', function() {
                 done();
