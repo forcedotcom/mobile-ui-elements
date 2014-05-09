@@ -14,7 +14,14 @@
     @methods:
     fetch: Initiate the fetching of record data from the relevant data store (server/offline store).
     save: Initiate the saving of record data to the relevant data store (server/offline store).
-    delete: Initiate the deleting of record data from the relevant data store (server/offline store).
+    destroy: Initiate the deleting of record data from the relevant data store (server/offline store).
+
+    @events:
+    change: when a field value has changed.
+    sync: when the data has been successfully synced with the server.
+    destroy: when a record is deleted.
+    error: when a request to remote server has failed.
+    invalid: when the data validation fails on the client.
 -->
 <link rel="import" href="../../dependencies/Polymer/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">

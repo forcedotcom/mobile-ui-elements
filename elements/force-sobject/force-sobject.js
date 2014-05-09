@@ -56,11 +56,11 @@
 
             if (this.sobject && typeof this.sobject === 'string') {
                 model = this._model = createModel(this.sobject);
-                model.id = this.recordid;
+                model.set(model.idAttribute, this.recordid);
                 model.fieldlist = this.fieldlist;
                 model.set({attributes: {type: this.sobject}});
-                model.on('sync', function() {
-                    that.fire('sync');
+                model.on('all', function(event) {
+                    that.fire(event);
                 });
 
                 this.fields = new SObjectViewModel(model);
@@ -88,7 +88,10 @@
                     this.whenModelReady().then(function() {
                         model.fetch(opts);
                     });
-                } else console.warn('sobject Type and recordid required for fetch.');
+                } else if (!this.autosync) {
+                    //if sync was not auto initiated, trigger a 'invalid' event
+                    this.fire('invalid', 'sobject Type and recordid required for fetch.');
+                }
             }
             // Queue the operation for next cycle after all change watchers are fired.
             this.async(operation.bind(this));
@@ -97,21 +100,32 @@
         save: function(options) {
 
             var operation = function() {
-                var model = this._model;
+                var that = this,
+                    model = that._model;
+
                 options = _.extend({mergeMode: this.mergemode}, options);
+                var successCB = options.success;
+                options.success = function() {
+                    that.recordid = model.id;
+                    if (successCB) successCB(arguments);
+                }
+
                 if (model) {
                     this.whenModelReady().then(function() {
                         // Perform save (upsert) against the server
                         model.save(null, options);
                     });
-                } else console.warn('sobject Type required for save.');
+                } else if (!this.autosync) {
+                    //if sync was not auto initiated, trigger a 'invalid' event
+                    this.fire('invalid', 'sobject Type required for save.');
+                }
             }
 
             // Queue the operation for next cycle after all change watchers are fired.
             this.async(operation.bind(this));
             return this;
         },
-        delete: function(options) {
+        destroy: function(options) {
 
             var operation = function() {
                 var model = this._model;
@@ -121,7 +135,10 @@
                         // Perform delete of record against the server
                         model.destroy(options);
                     });
-                } else console.warn('sobject Type and recordid required for delete.');
+                } else if (!this.autosync) {
+                    //if sync was not auto initiated, trigger a 'invalid' event
+                    this.fire('invalid', 'sobject Type and recordid required for delete.');
+                }
             }
 
             // Queue the operation for next cycle after all change watchers are fired.

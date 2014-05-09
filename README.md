@@ -152,10 +152,16 @@ Obtaining salesforce session Id for running the sample app:
 	Methods:
 	- `fetch`: Initiate the fetching of record data from the relevant data store (server/offline store).
 	- `save`: Initiate the saving of record data to the relevant data store (server/offline store).
-	- `delete`: Initiate the deleting of record data from the relevant data store (server/offline store).
+	- `destroy`: Initiate the deleting of record data from the relevant data store (server/offline store).
 
 	Properties:
 	- `fields`: Returns an object with map of all the sobject fields and corresponding values. Use this object to get/set the sobject field values.
+
+	Events:
+    - `sync`: when the data has been successfully synced with the server.
+    - `destroy`: when a record is deleted.
+    - `error`: when a request to remote server has failed.
+    - `invalid`: when the data validation fails on the client.
 
 	Example:
 

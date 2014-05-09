@@ -64,10 +64,44 @@ describe('force-sobject', function() {
     });
 
     describe('#fetch', function() {
-        it('should not throw error and return self when sobject type is not defined', function() {
+        it('should trigger "invalid" event and return self when sobject type is not defined', function(done) {
+            sobject.addEventListener('invalid', function() {
+                done();
+            });
             sobject.fetch().should.be.equal(sobject);
+
         });
-        it('should fetch data when sobject and recordid are set', function(done) {
+        it('should trigger "invalid" event and return self when recordid is not defined', function(done) {
+            sobject.sobject = 'account';
+            sobject.addEventListener('invalid', function() {
+                done();
+            });
+            sobject.fetch().should.be.equal(sobject);
+
+        });
+        it('should throw error event when xhr fails', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            Force.forcetkClient.impl.ajax = function(path, callback, error) {
+                error();
+            };
+            sobject.addEventListener('error', function() {
+                done();
+            });
+            sobject.fetch();
+        });
+        it('should throw change event when model changes', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            sobject.addEventListener('change', function() {
+                sobject.fields.Name.should.eql('Mock Account');
+                done();
+            });
+            sobject.async(function() {
+                sobject._model.set('Name', 'Mock Account');
+            });
+        });
+        it('should fetch data and throw sync event when sobject and recordid are set', function(done) {
             sobject.sobject = 'account';
             sobject.recordid = '001000fakeid';
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
@@ -86,14 +120,94 @@ describe('force-sobject', function() {
     });
 
     describe('#save', function() {
-        it('should not throw error and return self when sobject type is not defined', function() {
-            sobject.save().should.eql(sobject);
+        it('should trigger "invalid" event and return self when sobject type is not defined', function(done) {
+            sobject.addEventListener('invalid', function() {
+                done();
+            });
+            sobject.save().should.be.equal(sobject);
+
+        });
+        it('should throw error event when xhr fails', function(done) {
+            sobject.sobject = 'account';
+            Force.forcetkClient.impl.ajax = function(path, callback, error) {
+                error();
+            };
+            sobject.addEventListener('error', function() {
+                done();
+            });
+            sobject.save();
+        });
+        it('should update record id when insert is successful', function(done) {
+            sobject.sobject = 'account';
+            Force.forcetkClient.impl.ajax = function(path, callback, error) {
+                callback({
+                    id: '001000fakeid',
+                    success: true
+                });
+            };
+            sobject.addEventListener('sync', function() {
+                sobject.fields.Id.should.eql('001000fakeid');
+                sobject.recordid.should.eql('001000fakeid');
+                done();
+            });
+            sobject.save();
+        });
+        it('should throw sync event when update is successful', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            Force.forcetkClient.impl.ajax = function(path, callback, error) {
+                callback({
+                    id: '001000fakeid',
+                    success: true
+                });
+            };
+            sobject.addEventListener('sync', function() {
+                done();
+            });
+            sobject.save();
         });
     });
 
-    describe('#delete', function() {
-        it('should not throw error and return self when sobject type is not defined', function() {
-            sobject.delete().should.eql(sobject);
+    describe('#destroy', function() {
+        it('should trigger "invalid" event and return self when sobject type is not defined', function(done) {
+            sobject.addEventListener('invalid', function() {
+                done();
+            });
+            sobject.destroy().should.be.equal(sobject);
+
+        });
+        it('should trigger "invalid" event and return self when recordid is not defined', function(done) {
+            sobject.sobject = 'account';
+            sobject.addEventListener('invalid', function() {
+                done();
+            });
+            sobject.destroy().should.be.equal(sobject);
+
+        });
+        it('should throw error event when xhr fails', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            Force.forcetkClient.impl.ajax = function(path, callback, error) {
+                error();
+            };
+            sobject.addEventListener('error', function() {
+                done();
+            });
+            sobject.destroy();
+        });
+        it('should throw destroy event when delete is successful', function(done) {
+            sobject.sobject = 'account';
+            sobject.recordid = '001000fakeid';
+            Force.forcetkClient.impl.ajax = function(path, callback, error) {
+                callback({
+                    id: '001000fakeid',
+                    success: true
+                });
+            };
+            sobject.addEventListener('destroy', function() {
+                done();
+            });
+            sobject.destroy();
         });
     });
 });
