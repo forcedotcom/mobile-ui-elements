@@ -46,28 +46,22 @@
         hasrecordtypes: false,
         recordtypeid: null,
         recordid: null,
-        //applyAuthorStyles: true,
-        //resetStyleInheritance: true,
-        whenDetailSections: function() {
-            return fetchRecordTypeId(this)
-                .then(getLayoutInfo)
-                .then(function(layout) {
-                    return layout.detailLayoutSections;
-                });
+        observe: {
+            sobject: "fetch",
+            recordid: "fetch",
+            hasrecordtypes: "fetch",
+            recordtypeid: "fetch"
         },
-        whenEditSections: function() {
-            return fetchRecordTypeId(this)
+        fetch: function() {
+            this.layout = null;
+            if (this.sobject && typeof this.sobject === 'string') {
+                fetchRecordTypeId(this)
                 .then(getLayoutInfo)
                 .then(function(layout) {
-                    return layout.editLayoutSections;
-                });
-        },
-        whenRelatedLists: function() {
-            return fetchRecordTypeId(this)
-                .then(getLayoutInfo)
-                .then(function(layout) {
-                    return layout.relatedLists;
-                });
+                    this.layout = layout;
+                    this.fire('layout-change');
+                }.bind(this));
+            }
         }
     });
 

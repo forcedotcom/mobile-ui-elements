@@ -101,6 +101,9 @@
     @properties:
     relatedLists: An array of all the related list information.
 -->
-<polymer-element name="force-sobject-relatedlists" attributes="relationships" extends="force-sobject-layout">
+<polymer-element name="force-sobject-relatedlists" attributes="sobject recordid hasrecordtypes recordtypeid relationships">
+  <template>
+    <force-sobject-layout id="sobject_layout" sobject="{{sobject}}" recordid="{{recordid}}" hasrecordtypes="{{hasrecordtypes}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
+  </template>
   <script src="force-ui-relatedlist.js"></script>
 </polymer-element>

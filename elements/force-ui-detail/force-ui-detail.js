@@ -3,26 +3,30 @@
     Polymer('force-ui-detail', {
         foredit: false,
         fieldlist: null,
-        //applyAuthorStyles: true,
-        //resetStyleInheritance: true,
-        ready: function() {
-            this.autosync = false;
-            this.super();
-            this.render();
+        observe: {
+            fieldlist: "render",
+            fieldlabels: "render"
         },
-        render: function() {
+        foreditChanged: function() {
+            // Execute render after current process ends to allow processing all change handlers on parent.
+            setTimeout(this.render.bind(this), 0);
+        },
+        ready: function() {
+            this.super();
+            this.$.sobject_layout.addEventListener('layout-change', this.render.bind(this));
+        },
+        render: function(ev) {
             var that = this;
             //FIX: Need to have better validation of attribute values
             if (this.sobject && typeof this.sobject == 'string') {
                 SFDC.launcher.done(function() { renderView(that); });
             }
         },
+        compileTemplate: function(layoutSections) {
+            return compileTemplateForLayout(layoutSections);
+        },
         get model() {
             return this.$.force_sobject._model;
-        },
-        attributeChanged: function(attrName, oldVal, newVal) {
-            this.super(arguments);
-            this.async(this.render);
         }
     });
 
@@ -35,14 +39,6 @@
             else break;
         }
         return shadowRoot.querySelector('shadow') != null;
-    }
-
-    // Given the recordtypeid, it fetches the related layout sections based on the view settings
-    // Returns a promise, which gets resolved when the response is received from the salesforce
-    var fetchLayoutSections = function(view) {
-        // fetch layout sections (detail or edit) based on view setting
-        return (view.foredit) ? view.whenEditSections()
-            : view.whenDetailSections();
     }
 
     var describeField = function(sobject, fieldname) {
@@ -117,9 +113,12 @@
                     .then(function(fieldInfos) {
                         return compileTemplateForFields(fieldInfos, fieldLabelMap, view.foredit);
                     });
-            } else {
-                return fetchLayoutSections(view)
-                    .then(compileTemplateForLayout)
+            } else if (view.$.sobject_layout.layout) {
+                // Return a promise to keep the return type consistent
+                return $.when(view.compileTemplate(
+                    view.foredit ? view.$.sobject_layout.layout.editLayoutSections
+                                 : view.$.sobject_layout.layout.detailLayoutSections
+                ));
             }
         }
     }
@@ -130,15 +129,18 @@
         var renderTemplate = function(templateInfo) {
             // Template info is null when there's no template generated
             if (templateInfo) {
-                if (view.model.id) {
+                if (view.recordid) {
                     // Perform data fetch for the fieldlist used in template
-                    view.$.force_sobject.fetch({ fieldlist: templateInfo.fields });
+                    view.$.force_sobject.fetch({
+                        fieldlist: templateInfo.fields,
+                        success: function() {
+                            // Attach the template instance to the view
+                            var template = templateInfo.template;
+                            view.viewModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
+                            $(view.$.viewContainer).empty().append(template.createInstance(view.viewModel));
+                        }
+                    });
                 }
-
-                // Attach the template instance to the view
-                var template = templateInfo.template;
-                var templateModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
-                $(view.$.viewContainer).empty().append(template.createInstance(templateModel));
             }
         };
 

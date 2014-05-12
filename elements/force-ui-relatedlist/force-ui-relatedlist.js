@@ -1,11 +1,15 @@
 (function($, SFDC) {
 
     Polymer('force-sobject-relatedlists', {
-        //applyAuthorStyles: true,
-        //resetStyleInheritance: true,
         relatedLists: [],
-        attributeChanged: function(attrName, oldVal, newVal) {
-            this.super(arguments);
+        relationshipsChanged: function() {
+            // Execute generateRelatedLists after current process ends to allow processing all change handlers on parent.
+            setTimeout(this.generateRelatedLists.bind(this), 0);
+        },
+        ready: function() {
+            this.$.sobject_layout.addEventListener('layout-change', this.generateRelatedLists.bind(this));
+        },
+        generateRelatedLists: function(ev) {
             this.relatedLists = [];
             fetchRelatedLists(this);
         }
@@ -34,8 +38,10 @@
             }
         }
 
-        $.when(view.whenRelatedLists())
-        .then(generateRelatedListConfigs);
+        // Generate related lists if the layout has been fetched
+        if (view.recordid && view.$.sobject_layout.layout) {
+            generateRelatedListConfigs(view.$.sobject_layout.layout.relatedLists);
+        }
     }
 
 
