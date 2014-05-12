@@ -335,7 +335,6 @@
                             app.router.gotoPageId('#sync');
                         }
                     });
-                    Backbone.history.start();
                 }
             });
             </script>
@@ -368,6 +367,7 @@
                 };
                 SFDC.launch(creds);
             }
+            Backbone.history.start();
         });
         </script>
     </body>
