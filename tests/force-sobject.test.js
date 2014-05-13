@@ -1,14 +1,27 @@
 describe('force-sobject', function() {
     var sobject;
+    var origAjax;
+    var smartstore;
+
+    /* Disable smartstore for this testsuite */
+    before(function() {
+        smartstore = navigator.smartstore;
+        navigator.smartstore = undefined;
+    })
+
+    after(function() {
+        navigator.smartstore = smartstore;
+    })
 
     beforeEach(function() {
         sobject = document.createElement('force-sobject');
         sobject.autosync = false;
-        SFDC.launch({
-            accessToken: 'mock_token',
-            instanceUrl: 'https://mock.salesforce.com'
-        });
+        origAjax = Force.forcetkClient.impl.ajax;
     });
+
+    afterEach(function() {
+        Force.forcetkClient.impl.ajax = origAjax;
+    })
 
     describe('#model', function() {
         it('should be undefined when sobject type is not defined', function(){

@@ -10,7 +10,12 @@
     fieldstoindex: (Optional) Addition fields (given by their name) that you want to have indexes on.
 
     @properties:
-    get cacheReady: Returns a promise that on completion returns an instance of storecache if smartstore is available.
+    cacheReady: Returns a promise to track store cache creation progress.
+    cache: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
+    cacheForOriginals: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
+
+    @events:
+    store-ready: Fires this event when the store cache has been successfully created and ready to use.
 -->
 <link rel="import" href="../../dependencies/Polymer/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
