@@ -158,10 +158,10 @@ Obtaining salesforce session Id for running the sample app:
 	- `fields`: Returns an object with map of all the sobject fields and corresponding values. Use this object to get/set the sobject field values.
 
 	Events:
-    - `sync`: when the data has been successfully synced with the server.
-    - `destroy`: when a record is deleted.
-    - `error`: when a request to remote server has failed.
-    - `invalid`: when the data validation fails on the client.
+	- `sync`: when the data has been successfully synced with the server.
+	- `destroy`: when a record is deleted.
+	- `error`: when a request to remote server has failed.
+	- `invalid`: when the data validation fails on the client.
 
 	Example:
 
@@ -176,7 +176,12 @@ Obtaining salesforce session Id for running the sample app:
 	- `fieldstoindex`: (Optional) Addition fields (given by their name) that you want to have indexes on.
 
 	Properties:
-	- `cacheReady`: Returns a promise that on completion returns an instance of storecache if smartstore is available.
+	- `cacheReady`: Returns a promise to track store cache creation progress.
+	- `cache`: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
+	- `cacheForOriginals`: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
+
+	Events:
+	- `store-ready`: Fires this event when the store cache has been successfully created and ready to use.
 
 	Example:
 
