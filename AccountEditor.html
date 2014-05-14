@@ -335,6 +335,7 @@
                             app.router.gotoPageId('#sync');
                         }
                     });
+                    app.router.gotoPageId('#list');
                 }
             });
             </script>
@@ -363,7 +364,7 @@
             else {
                 var creds = {
                     accessToken: '',
-                    instanceUrl: 'https://<instance>.salesforce.com'
+                    instanceUrl: 'https://<instanceurl>.salesforce.com'
                 };
                 SFDC.launch(creds);
             }

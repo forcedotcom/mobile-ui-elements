@@ -169,6 +169,7 @@
                     // Perform data fetch for the fieldlist used in template
                     view.$.force_sobject.fetch({
                         fieldlist: templateInfo.fields,
+			cacheMode: view.fetchCacheMode,
                         success: renderModel
                     });
                 } else renderModel();
