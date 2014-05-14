@@ -186,8 +186,12 @@ Obtaining salesforce session Id for running the sample app:
 	- `cache`: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
 	- `cacheForOriginals`: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
 
+	Methods:
+	- `destroy`: Removes the soup from smartstore. Returns a promise to track the completion of process.
+
 	Events:
 	- `store-ready`: Fires this event when the store cache has been successfully created and ready to use.
+	- `store-destroy`: Fires this event when the store cache has been successfully removed.
 
 	Example:
 

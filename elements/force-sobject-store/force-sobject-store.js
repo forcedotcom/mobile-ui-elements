@@ -7,20 +7,29 @@
 
     var generateIndexSpec = function(describeResult, fieldsToIndex) {
         var indexSpecs = [{path: "attributes.type", type: "string"}];
-        describeResult.fields.forEach(function(field) {
-            if (field.type == 'reference' || _.contains(fieldsToIndex, field.name.toLowerCase())) {
-                var storeType;
-                switch(field.type) {
-                    case 'int': storeType = 'integer'; break;
-                    case 'double': storeType = 'real'; break;
-                    default: storeType = 'string';
+        if (describeResult) {
+            describeResult.fields.forEach(function(field) {
+                if (field.type == 'reference' || _.contains(fieldsToIndex, field.name.toLowerCase())) {
+                    var storeType;
+                    switch(field.type) {
+                        case 'int': storeType = 'integer'; break;
+                        case 'double': storeType = 'real'; break;
+                        default: storeType = 'string';
+                    }
+                    indexSpecs.push({
+                        path: field.name,
+                        type: storeType
+                    });
                 }
-                indexSpecs.push({
-                    path: field.name,
-                    type: storeType
-                })
-            }
-        })
+            });
+        } else if (fieldsToIndex) { // If describe sobject is not available, just create index on specified fields.
+            fieldsToIndex.forEach(function(field) {
+                indexspec.push({
+                    path: field,
+                    type: "string"
+                });
+            });
+        }
         return indexSpecs;
     }
 
@@ -28,6 +37,7 @@
     var createStores = function(sobject, keyField, fieldsToIndex) {
         var dataStore;
         var originalDataStore;
+        var that = this;
 
         // Initiate store cache creation if none initiated already for this sobject
         if (sobject && !sobjectStores[sobject]) {
@@ -44,6 +54,7 @@
                 }).then(function() {
                     sobjectStores[sobject] = dataStore;
                     originalSObjectStores[sobject] = originalDataStore;
+                    that.fire('store-ready');
                 });
             // Capture the store creation promise, until the real store gets assigned.
             // This will prevent creation of same store twice.
@@ -87,11 +98,27 @@
 
                 // Create offline stores if launcher is complete
                 return SFDC.launcher.then(function() {
-                    return createStores(sobject, keyField, fieldsToIndex);
-                }).then(function() {
-                    that.fire('store-ready');
+                    var storeCreator = createStores.bind(that);
+                    return storeCreator(sobject, keyField, fieldsToIndex);
                 });
             }
+        },
+        destroy: function() {
+            var cacheDestroy, cacheForOriginalsDestroy;
+            var that = this;
+
+            if (this.cache) {
+                cacheDestroy = Force.smartstoreClient.removeSoup(this.cache.soupName);
+                delete sobjectStores[processName(this.sobject)];
+            }
+            if (this.cacheForOriginals) {
+                cacheForOriginalsDestroy = Force.smartstoreClient.removeSoup(this.cacheForOriginals.soupName);
+                delete originalSObjectStores[processName(this.sobject)];
+            }
+            return $.when(cacheDestroy, cacheForOriginalsDestroy).then(function() {
+                // Fire this only when actual remove soup operation has happened
+                if (cacheDestroy) that.fire('store-destroy');
+            });
         }
     });
 

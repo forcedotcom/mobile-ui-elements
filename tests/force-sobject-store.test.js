@@ -18,7 +18,7 @@ describe('force-sobject-store', function() {
         it('should be valid when sobject type is defined', function(done) {
             sobjectStore.sobject = 'Mock__c';
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
-                callback({ fields: [] });
+                setTimeout(function() { callback({ fields: [] }); }, 0);
             };
             sobjectStore.addEventListener('store-ready', function() {
                 sobjectStore.cache.should.be.an.instanceOf(Force.StoreCache).and.be.ok;
@@ -37,7 +37,7 @@ describe('force-sobject-store', function() {
         it('should have ExternalId as keyField when sobject type is External Data object', function(done) {
             sobjectStore.sobject = 'Mock__x';
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
-                callback({ fields: [] });
+                setTimeout(function() { callback({ fields: [] });   }, 0);
             };
             sobjectStore.addEventListener('store-ready', function() {
                 sobjectStore.cache.should.be.an.instanceOf(Force.StoreCache).and.be.ok;
@@ -49,10 +49,12 @@ describe('force-sobject-store', function() {
         it('should have additional indices for all sobject parent relationships', function(done) {
             sobjectStore.sobject = 'MockSObject1';
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
-                callback({
-                    fields: [{   name: 'rel1', type: 'reference' },
-                             {   name: 'rel2', type: 'reference' }]
-                });
+                setTimeout(function() {
+                    callback({
+                        fields: [{   name: 'rel1', type: 'reference' },
+                                 {   name: 'rel2', type: 'reference' }]
+                    });
+                }, 0);
             };
             sobjectStore.addEventListener('store-ready', function() {
                 sobjectStore.cache.should.be.an.instanceOf(Force.StoreCache).and.be.ok;
@@ -75,10 +77,12 @@ describe('force-sobject-store', function() {
             sobjectStore.sobject = 'MockSObject2';
             sobjectStore.fieldstoindex = 'Name Employees';
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
-                callback({
-                    fields: [{   name: 'Name', type: 'string' },
-                             {   name: 'Employees', type: 'int'  }]
-                });
+                setTimeout(function() {
+                    callback({
+                        fields: [{   name: 'Name', type: 'string' },
+                                 {   name: 'Employees', type: 'int'  }]
+                    });
+                }, 0);
             };
             sobjectStore.addEventListener('store-ready', function() {
                 sobjectStore.cache.should.be.an.instanceOf(Force.StoreCache).and.be.ok;
@@ -101,10 +105,12 @@ describe('force-sobject-store', function() {
             sobjectStore.sobject = 'MockSObject3';
             sobjectStore.fieldstoindex = 'Invalid';
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
-                callback({
-                    fields: [{   name: 'Name', type: 'string' },
-                             {   name: 'Employees', type: 'int'  }]
-                });
+                setTimeout(function() {
+                    callback({
+                        fields: [{   name: 'Name', type: 'string' },
+                                 {   name: 'Employees', type: 'int'  }]
+                    });
+                }, 0);
             };
             sobjectStore.addEventListener('store-ready', function() {
                 sobjectStore.cache.should.be.an.instanceOf(Force.StoreCache).and.be.ok;
