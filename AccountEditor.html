@@ -56,6 +56,7 @@
             <script type="text/javascript">
             Polymer('search-screen', {
                 refresh: function() {
+                    this.$.search.computeQuery();
                     this.$.list.fetch();
                 }
             });
@@ -146,7 +147,9 @@
                 <header class="bar bar-nav">
                     <h1 class="title">{{recordid ? 'Edit' : 'Add'}} {{sobject}}</h1>
                     <a class="icon icon-left-nav pull-left" on-tap="{{goBack}}"></a>
-                    <a class="btn btn-nav pull-right btn-negative" style="display:{{recordid ? 'display' : 'block'}}" id="toggleDeleteButton" on-click="{{doToggleDelete}}">{{model.attributes.__locally_deleted__ ? 'Undelete' : 'Delete'}}</a>
+                    <template if="{{model.id || model.attributes.__local__}}">
+                        <a class="btn btn-nav pull-right btn-negative" style="display:{{recordid ? 'display' : 'block'}}" id="toggleDeleteButton" on-click="{{doToggleDelete}}">{{model.attributes.__locally_deleted__ ? 'Undelete' : 'Delete'}}</a>
+                    </template>
                 </header>
                 <div class="content">
                     <div class="content-padded">
@@ -309,7 +312,7 @@
                         },
 
                         add: function() {
-                            this.edit("");
+                            this.edit();
                         },
 
                         editFromCache: function(recordid) {
@@ -364,7 +367,7 @@
             else {
                 var creds = {
                     accessToken: '',
-                    instanceUrl: 'https://<instanceurl>.salesforce.com'
+                    instanceUrl: 'https://<instance>.salesforce.com'
                 };
                 SFDC.launch(creds);
             }
