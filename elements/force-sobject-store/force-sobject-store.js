@@ -69,10 +69,6 @@
 
     //TBD: Add a property "autoIndex" to generate indexes based on object describe result
     Polymer('force-sobject-store', {
-        observe: {
-            "sobject": "init",
-            "fieldstoindex": "init"
-        },
         sobject: null,
         observe: {
             sobject: "init",
