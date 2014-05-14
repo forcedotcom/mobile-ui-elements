@@ -95,9 +95,6 @@
                     model.cacheForOriginals = store.cacheForOriginals;
                 });
         },
-        ready: function() {
-            this.init();
-        },
         fetch: function(opts) {
 
             var operation = function() {

@@ -7,11 +7,11 @@ describe('force-sobject', function() {
     before(function() {
         smartstore = navigator.smartstore;
         navigator.smartstore = undefined;
-    })
+    });
 
     after(function() {
         navigator.smartstore = smartstore;
-    })
+    });
 
     beforeEach(function() {
         sobject = document.createElement('force-sobject');
@@ -21,7 +21,7 @@ describe('force-sobject', function() {
 
     afterEach(function() {
         Force.forcetkClient.impl.ajax = origAjax;
-    })
+    });
 
     describe('#model', function() {
         it('should be undefined when sobject type is not defined', function(){
@@ -77,6 +77,7 @@ describe('force-sobject', function() {
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
                 done();
             }
+            Platform.flush();
         });
         it('should not auto fetch data when autosync is false', function(done) {
             sobject.sobject = 'account';

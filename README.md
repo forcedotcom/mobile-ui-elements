@@ -133,6 +133,12 @@ Obtaining salesforce session Id for running the sample app:
 
 	Methods:
 	- `fetch`: Initiates the fetching of records from the relevant data store (server/offline store).
+	- `reset`: Replaces all the existing contents of the collection and initiates autosync if enabled.
+
+	Events:
+	- `reset`: when the collection's entire contents have been replaced.
+	- `sync`: when the collection has been successfully synced with the server
+	- `error`: when a request to remote server has failed.
 
 	Example:
 

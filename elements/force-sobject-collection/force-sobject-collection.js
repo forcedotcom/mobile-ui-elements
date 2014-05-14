@@ -15,7 +15,7 @@
         var config = {};
 
         // Fetch if only sobject type is specified.
-        if (props.sobject) {
+        if (props.sobject && typeof props.sobject === 'string') {
             // Is device offline and smartstore is available
             if (!SFDC.isOnline() && navigator.smartstore) {
                 // Only run cache queries. If none provided, fetch all data.
@@ -34,6 +34,7 @@
         return null;
     }
 
+    //TBD: Make collection a private property. Then expose sobjects property which contains the array of models wrapped into SObjectViewModel.
     Polymer('force-sobject-collection', _.extend({}, viewProps, {
         observe: {
             sobject: "reset",
@@ -43,47 +44,44 @@
         ready: function() {
             var that = this;
 
-            that.collection = new (Force.SObjectCollection.extend({
-                config: generateConfig(_.pick(that, _.keys(viewProps)))
-            }));
-            that.collection.on('sync', function() {
-                that.fire('sync');
+            that.collection = new Force.SObjectCollection();
+            that.collection.on('all', function(event) {
+                that.fire(event);
             });
-
-            if (that.autosync) that.fetch();
         },
         reset: function() {
-            var config = generateConfig(_.pick(this, _.keys(viewProps)));
-            // FIXME: Polymer is calling this method multiple times for single attribute change.
-            // That's why adding the isEqual check to prevent multiple server calls.
-            if (!_.isEqual(config, this.collection.config)) {
-                this.collection.config = config;
-                if (this.autosync) this.fetch();
-            }
+            this.collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
+            this.collection.reset();
+            if (this.autosync) this.fetch();
         },
         fetch: function() {
-            var collection = this.collection;
-            collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
-            // Define the collection model type. Set the idAttribute to 'ExternalId' if sobject is external object.
-            collection.model = Force.SObject.extend({
-                idAttribute: (this.sobject
-                    && this.sobject.toLowerCase().indexOf('__x') > 0)
-                    ? 'ExternalId' : 'Id'
-            });
 
             var onFetch = function() {
-                if ((this.maxsize < 0 || this.maxsize > collection.length)
-                    && collection.hasMore())
-                    collection.getMore().then(onFetch);
+                if ((this.maxsize < 0 || this.maxsize > this.collection.length)
+                    && this.collection.hasMore())
+                    this.collection.getMore().then(onFetch);
             }.bind(this);
 
-            var store = this.$.store;
-            $.when(store.cacheReady, SFDC.launcher)
-            .done(function() {
-                collection.cache = store.cache;
-                collection.cacheForOriginals = store.cacheForOriginals;
-                collection.fetch({ reset: true, success: onFetch });
-            });
+            var operation = function() {
+                var collection = this.collection;
+                var store = this.$.store;
+
+                if (collection.config) {
+                    // Define the collection model type. Set the idAttribute to 'ExternalId' if sobject is external object.
+                    collection.model = Force.SObject.extend({
+                        idAttribute: this.sobject.toLowerCase().search(/__x$/) > 0 ? 'ExternalId' : 'Id'
+                    });
+                    $.when(store.cacheReady, SFDC.launcher)
+                    .done(function() {
+                        collection.cache = store.cache;
+                        collection.cacheForOriginals = store.cacheForOriginals;
+                        collection.fetch({ reset: true, success: onFetch });
+                    });
+                }
+            }.bind(this);
+
+            // Queue the operation for next cycle after all change watchers are fired.
+            this.async(operation);
         }
     }));
 

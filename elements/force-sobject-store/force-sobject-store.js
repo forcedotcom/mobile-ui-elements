@@ -74,9 +74,6 @@
             var cache = originalSObjectStores[processName(this.sobject)];
             if (cache instanceof Force.StoreCache) return cache;
         },
-        ready: function() {
-            this.init();
-        },
         init: function() {
             var that = this;
             var sobject = processName(this.sobject);

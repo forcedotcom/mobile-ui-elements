@@ -32,6 +32,7 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
+            Platform.flush();
         });
         it('should have ExternalId as keyField when sobject type is External Data object', function(done) {
             sobjectStore.sobject = 'Mock__x';
@@ -43,6 +44,7 @@ describe('force-sobject-store', function() {
                 sobjectStore.cache.keyField.should.eql('ExternalId');
                 done();
             });
+            Platform.flush();
         });
         it('should have additional indices for all sobject parent relationships', function(done) {
             sobjectStore.sobject = 'MockSObject1';
@@ -67,6 +69,7 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
+            Platform.flush();
         });
         it('should have additional indices for additional fieldstoindex', function(done) {
             sobjectStore.sobject = 'MockSObject2';
@@ -92,6 +95,7 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
+            Platform.flush();
         });
         it('should not create index for non-existing fields in fieldstoindex', function(done) {
             sobjectStore.sobject = 'MockSObject3';
@@ -111,6 +115,7 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
+            Platform.flush();
         });
     });
 });
