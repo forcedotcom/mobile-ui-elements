@@ -2,13 +2,13 @@
   "name": "mobile-ui-elements",
   "version": "0.0.0",
   "dependencies": {
-    "platform": "Polymer/platform#0.2.2"
+    "platform": "Polymer/platform#0.2.4"
   },
   "devDependencies": {
     "modernizr": "~2.6.2",
-    "polymer": "Polymer/polymer#0.2.2",
-    "polymer-elements": "Polymer/polymer-elements#0.2.2",
-    "polymer-ui-elements": "Polymer/polymer-ui-elements#0.2.2",
+    "polymer": "Polymer/polymer#0.2.4",
+    "polymer-elements": "Polymer/polymer-elements#0.2.4",
+    "polymer-ui-elements": "Polymer/polymer-ui-elements#0.2.4",
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
@@ -61,5 +61,8 @@
     "web-animations-js": {
       "Polymer/.": "web-animations.js"
     }
+  },
+  "resolutions": {
+    "polymer": "0.2.4"
   }
 }
