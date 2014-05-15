@@ -26,7 +26,7 @@
             return compileTemplateForLayout(layoutSections);
         },
         get model() {
-            return this.$.force_sobject._model;
+            return this.$ ? this.$.force_sobject._model : null;
         }
     });
 
@@ -129,23 +129,25 @@
         var renderTemplate = function(templateInfo) {
             // Template info is null when there's no template generated
             if (templateInfo) {
+                var renderModel = function() {
+                    // Attach the template instance to the view
+                    var template = templateInfo.template;
+                    view.viewModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
+                    $(view.$.viewContainer).empty().append(template.createInstance(view.viewModel));
+                }
                 if (view.recordid) {
                     // Perform data fetch for the fieldlist used in template
                     view.$.force_sobject.fetch({
                         fieldlist: templateInfo.fields,
-                        success: function() {
-                            // Attach the template instance to the view
-                            var template = templateInfo.template;
-                            view.viewModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
-                            $(view.$.viewContainer).empty().append(template.createInstance(view.viewModel));
-                        }
+                        cacheMode: view.fetchCacheMode,
+                        success: renderModel
                     });
-                }
+                } else renderModel();
             }
         };
 
-        return generateViewTemplate(view)
-            .then(renderTemplate);
+        var templatePromise = generateViewTemplate(view);
+        if (templatePromise) templatePromise.then(renderTemplate);
     }
 
     var SObjectViewModel = function(model, fieldInfos) {

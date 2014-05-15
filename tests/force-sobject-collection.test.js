@@ -283,7 +283,7 @@ describe('force-sobject-collection', function() {
         afterEach(function(done) {
             sobjectColl.$.store.destroy().then(function() {
                 done();
-            })
+            });
         });
 
         describe('#querytype', function() {
