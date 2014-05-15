@@ -1,16 +1,28 @@
-<polymer-element name="polymer-body" extends="body" assetpath="../dependencies/Polymer/polymer/">
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 
-  
+<polymer-element name="polymer-body" extends="body" assetpath="../dependencies/Polymer/polymer/">
 
 </polymer-element>
 <!--
- Copyright 2013 The Polymer Authors. All rights reserved.
- Use of this source code is governed by a BSD-style
- license that can be found in the LICENSE file.
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<!-- <link rel="import" href="../polymer-dev/polymer.html"> -->
 
+
+
+<!--<link rel="import" href="../polymer-dev/polymer.html">--> 
 <!--
     force-app element is a top level element that builds the base for consuming all other force.com Mobile UI Elements.
     Why: a) Manages all the Javascript dependencies for the elements.
@@ -3310,8 +3322,18 @@ license that can be found in the LICENSE file.
     fieldstoindex: (Optional) Addition fields (given by their name) that you want to have indexes on.
 
     @properties:
-    get cacheReady: Returns a promise that on completion returns an instance of storecache if smartstore is available.
+    cacheReady: Returns a promise to track store cache creation progress.
+    cache: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
+    cacheForOriginals: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
+
+    @methods:
+    destroy: Removes the soup from smartstore. Returns a promise to track the completion of process.
+
+    @events:
+    store-ready: Fires this event when the store cache has been successfully created and ready to use.
+    store-destroy: Fires this event when the store cache has been successfully removed.
 -->
+<!-- TBD: Allow adding indices to existing stores. Add support for long data types for index. Make auto indexing based on the describe result optional. Make cacheForOriginals optional -->
 
 
 <polymer-element name="force-sobject-store" attributes="sobject fieldstoindex" assetpath="../elements/force-sobject-store/">
@@ -3333,6 +3355,12 @@ license that can be found in the LICENSE file.
 
     @methods:
     fetch: Initiates the fetching of records from the relevant data store (server/offline store).
+    reset: Replaces all the existing contents of the collection and initiates autosync if enabled.
+
+    @events:
+    reset: when the collection's entire contents have been replaced.
+    sync: when the collection has been successfully synced with the server
+    error: when a request to remote server has failed.
 -->
 
 
@@ -3562,14 +3590,20 @@ license that can be found in the LICENSE file.
     @attributes:
     sobject: (Required) Type of sobject on which you want to fetch the record
     recordid: (Required) Id of the record that needs to be fetched.
-    fieldlist: (Optional) Default: All fields. Comma separated list of fields that need to be fetched for the record.
+    fieldlist: (Optional) Default: All fields. List of field names that need to be fetched for the record.
     autosync: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
     mergemode: (Optional) Default: "Overwrite". The merge model to use when saving record changes to salesforce.
 
     @methods:
     fetch: Initiate the fetching of record data from the relevant data store (server/offline store).
     save: Initiate the saving of record data to the relevant data store (server/offline store).
-    delete: Initiate the deleting of record data from the relevant data store (server/offline store).
+    destroy: Initiate the deleting of record data from the relevant data store (server/offline store).
+
+    @events:
+    sync: when the data has been successfully synced with the server.
+    destroy: when a record is deleted.
+    error: when a request to remote server has failed.
+    invalid: when the data validation fails on the client.
 -->
 
 
@@ -3612,8 +3646,8 @@ license that can be found in the LICENSE file.
     b) Provides a simpler DOM based interface to fetch full or partial record.
 
     @attributes:
-    fieldlist: (Optional) Default: All fields on the layout. Comma separated list of fields that should be displayed for the record.
-    fieldlabels: (Optional) Default: Actual field labels. Comma separated list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
+    fieldlist: (Optional) Default: All fields on the layout. A list of fields that should be displayed for the record.
+    fieldlabels: (Optional) Default: Actual field labels. A list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
 
     @extends force-sobject-layout
 -->
@@ -3621,9 +3655,10 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-ui-detail" attributes="foredit fieldlist fieldlabels" extends="force-sobject-layout" assetpath="../elements/force-ui-detail/">
+<polymer-element name="force-ui-detail" attributes="sobject recordid hasrecordtypes recordtypeid foredit fieldlist fieldlabels" assetpath="../elements/force-ui-detail/">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
+    <force-sobject-layout id="sobject_layout" sobject="{{sobject}}" recordid="{{recordid}}" hasrecordtypes="{{hasrecordtypes}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
     <div id="viewContainer" class="{{foredit ? &apos;edit&apos; :&apos;&apos;}}"></div>
     <content select="*"></content>
   </template>
@@ -3697,12 +3732,15 @@ license that can be found in the LICENSE file.
     b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
 
     @attributes:
-    relationships: (Optional) Default: null. A comma separated list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
+    relationships: (Optional) Default: null. A list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
 
     @properties:
     relatedLists: An array of all the related list information.
 -->
-<polymer-element name="force-sobject-relatedlists" attributes="relationships" extends="force-sobject-layout" assetpath="../elements/force-ui-relatedlist/">
+<polymer-element name="force-sobject-relatedlists" attributes="sobject recordid hasrecordtypes recordtypeid relationships" assetpath="../elements/force-ui-relatedlist/">
+  <template>
+    <force-sobject-layout id="sobject_layout" sobject="{{sobject}}" recordid="{{recordid}}" hasrecordtypes="{{hasrecordtypes}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
+  </template>
   
 </polymer-element>
 
