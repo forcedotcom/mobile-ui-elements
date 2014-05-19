@@ -42,9 +42,16 @@
         "*.css"
       ]
     },
+    "platform": {
+      ".": [
+        "platform.js",
+        "platform.js.map"
+      ]
+    },
     "polymer": {
       "Polymer/.": [
         "polymer.js",
+        "polymer.js.map",
         "polymer.html",
         "polymer-body.html"
       ]
