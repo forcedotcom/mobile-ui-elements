@@ -3,17 +3,18 @@
   "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-clean": "0.4.0",
-    "grunt-bower-task": "~0.3.2",
-    "grunt-exec": "~0.4.2",
-    "matchdep": "~0.1.2",
-    "time-grunt": "~0.1.0",
     "cheerio": "~0.11.0",
-    "nopt": "~2.1.1",
+    "grunt": "~0.4.1",
+    "grunt-bower-install": "^1.6.0",
+    "grunt-bower-task": "~0.3.2",
+    "grunt-contrib-clean": "0.4.0",
     "grunt-contrib-uglify": "~0.2.7",
+    "grunt-exec": "~0.4.2",
     "grunt-vulcanize": "0.1.2",
-    "polymer-shim-styles": "akhileshgupta/polymer-shim-styles"
+    "matchdep": "~0.1.2",
+    "nopt": "~2.1.1",
+    "polymer-shim-styles": "akhileshgupta/polymer-shim-styles",
+    "time-grunt": "~0.1.0"
   },
   "engines": {
     "node": ">=0.8.0"

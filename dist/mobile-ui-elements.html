@@ -6,10 +6,276 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
+<style shim-shadowdom="">
+/*******************************
+          Flex Layout
+*******************************/
 
-<polymer-element name="polymer-body" extends="body" assetpath="../dependencies/Polymer/polymer/">
+html /deep/ [layout][horizontal], html /deep/ [layout][vertical] {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
 
-</polymer-element>
+html /deep/ [layout][horizontal][inline], html /deep/ [layout][vertical][inline] {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+}
+
+html /deep/ [layout][horizontal] {
+  -ms-flex-direction: row;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+}
+
+html /deep/ [layout][horizontal][reverse] {
+  -ms-flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
+html /deep/ [layout][vertical] {
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+html /deep/ [layout][vertical][reverse] {
+  -ms-flex-direction: column-reverse;
+  -webkit-flex-direction: column-reverse;
+  flex-direction: column-reverse;
+}
+
+html /deep/ [layout][wrap] {
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+html /deep/ [layout][wrap-reverse] {
+  -ms-flex-wrap: wrap-reverse;
+  -webkit-flex-wrap: wrap-reverse;
+  flex-wrap: wrap-reverse;
+}
+
+html /deep/ [flex] {
+  -ms-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+html /deep/ [flex][auto] {
+  -ms-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+html /deep/ [flex][none] {
+  -ms-flex: none;
+  -webkit-flex: none;
+  flex: none;
+}
+
+html /deep/ [flex][one] {
+  -ms-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+html /deep/ [flex][two] {
+  -ms-flex: 2;
+  -webkit-flex: 2;
+  flex: 2;
+}
+
+html /deep/ [flex][three] {
+  -ms-flex: 3;
+  -webkit-flex: 3;
+  flex: 3;
+}
+
+html /deep/ [flex][four] {
+  -ms-flex: 4;
+  -webkit-flex: 4;
+  flex: 4;
+}
+
+html /deep/ [flex][five] {
+  -ms-flex: 5;
+  -webkit-flex: 5;
+  flex: 5;
+}
+
+html /deep/ [flex][six] {
+  -ms-flex: 6;
+  -webkit-flex: 6;
+  flex: 6;
+}
+
+html /deep/ [flex][seven] {
+  -ms-flex: 7;
+  -webkit-flex: 7;
+  flex: 7;
+}
+
+html /deep/ [flex][eight] {
+  -ms-flex: 8;
+  -webkit-flex: 8;
+  flex: 8;
+}
+
+html /deep/ [flex][nine] {
+  -ms-flex: 9;
+  -webkit-flex: 9;
+  flex: 9;
+}
+
+html /deep/ [flex][ten] {
+  -ms-flex: 10;
+  -webkit-flex: 10;
+  flex: 10;
+}
+
+html /deep/ [flex][eleven] {
+  -ms-flex: 11;
+  -webkit-flex: 11;
+  flex: 11;
+}
+
+html /deep/ [flex][twelve] {
+  -ms-flex: 12;
+  -webkit-flex: 12;
+  flex: 12;
+}
+
+/* alignment in cross axis */
+
+html /deep/ [layout][start] {
+  -ms-flex-align: start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+
+html /deep/ [layout][center] {
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+html /deep/ [layout][end] {
+  -ms-flex-align: end;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
+}
+
+/* alignment in main axis */
+
+html /deep/ [layout][start-justified] {
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+html /deep/ [layout][center-justified] {
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+html /deep/ [layout][end-justified] {
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+html /deep/ [layout][around-justified] {
+  -ms-flex-pack: around;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+
+html /deep/ [layout][justified] {
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+/* self alignment */
+
+html /deep/ [self-start] {
+  -ms-align-self: flex-start;
+  -webkit-align-self: flex-start;
+  align-self: flex-start;
+}
+
+html /deep/ [self-center] {
+  -ms-align-self: center;
+  -webkit-align-self: center;
+  align-self: center;
+}
+
+html /deep/ [self-end] {
+  -ms-align-self: flex-end;
+  -webkit-align-self: flex-end;
+  align-self: flex-end;
+}
+
+html /deep/ [self-stretch] {
+  -ms-align-self: stretch;
+  -webkit-align-self: stretch;
+  align-self: stretch;
+}
+
+/*******************************
+          Other Layout
+*******************************/
+
+html /deep/ [block] {
+  display: block;
+}
+
+/* ie support for hidden */
+html /deep/ [hidden] {
+  display: none;
+}
+
+html /deep/ [relative] {
+  position: relative;
+}
+
+html /deep/ [fit] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+body[fullbleed] {
+  margin: 0;
+  height: 100vh;
+}
+
+/*******************************
+            Other
+*******************************/
+
+html /deep/ [segment], html /deep/ segment {
+  display: block;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 1em 0.5em;
+  padding: 1em;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 5px 5px 5px 5px;
+}
+
+</style>
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -43,114 +309,172 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <!--
-Copyright 2013 The Polymer Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
+
 <!--
-/**
- * @module Polymer Elements
- */
-/**
- * polymer-flex-layout provides a helper to use CSS3 Flexible Boxes.  By putting
- * polymer-flex-layout inside an element it makes the element a flex
- * container. Use 'flex' attribute to make the flex item flexible.
- *
- * Example:
- *
- *     <div>
- *       <polymer-flex-layout></polymer-flex-layout>
- *       <div>Left</div>
- *       <div flex>Main</div>
- *       <div>Right</div>
- *     </div>
- *
- *     ---------------------------------
- *     |-------------------------------|
- *     ||Left|       Main       |Right||
- *     |-------------------------------|
- *     ---------------------------------
- *
- *     <div>
- *       <polymer-flex-layout vertical></polymer-flex-layout>
- *       <div>Header</div>
- *       <div flex>Body</div>
- *       <div>Footer</div>
- *     </div>
- *
- *     ----------
- *     ||------||
- *     ||Header||
- *     ||------||
- *     ||Body  ||
- *     ||      ||
- *     ||      ||
- *     ||      ||
- *     ||      ||
- *     ||      ||
- *     ||      ||
- *     ||------||
- *     ||Footer||
- *     ||------||
- *     ----------
- *
- * @class polymer-flex-layout
- */
-/**
- * If true, flex items are aligned vertically.
- *
- * @attribute vertical
- * @type boolean
- * @default false
- */
-/**
- * Defines the default for how flex items are laid out along the cross axis on 
- * the current line.  Possible values are 'start', 'center' and 'end'.
- *
- * @attribute align
- * @type string
- * @default ''
- */
-/**
- * Defines how flex items are laid out along the main axis on the current line.
- * Possible values are 'start', 'center' and 'end'.
- *
- * @attribute justify
- * @type string
- * @default ''
- */
-/**
- * If true, polymer-flex-layout is the flex container.
- *
- * Example:
- *
- *     <polymer-flex-layout isContainer>
- *       <div>Left</div>
- *       <div flex>Main</div>
- *       <div>Right</div>
- *     </polymer-flex-layout>
- *
- *     ---------------------------------
- *     |-------------------------------|
- *     ||Left|       Main       |Right||
- *     |-------------------------------|
- *     ---------------------------------
- *
- * @attribute isContainer
- * @type boolean
- * @default false
- */
+The `core-layout` element is a helper for using
+[CSS3 Flexible Boxes](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes).
+A `core-layout` element enables a set of css selectors for easy flexbox styling.
+
+Example:
+
+    <core-layout>
+      <div>Left</div>
+      <div core-flex>Main</div>
+      <div>Right</div>
+    </core-layout>
+
+ Renders something like this:
+
+    ---------------------------------
+    |-------------------------------|
+    ||Left|       Main       |Right||
+    |-------------------------------|
+    ---------------------------------
+
+__Note__: the `core-layout` element applies layout to itself if it has children or to
+its parent element, if it does not. This feature allows you to apply layout to an
+arbitrary parent.
+
+Elements can layout horizontally, such that their items stack
+left to right or vertically, such that their items stack top to bottom. The
+default is horizontal. Set `vertical` to true to layout the elements vertically.
+
+To make a particular child _flexible_, use the `core-flex` attribute.
+You can control flexibility from 1 to 3 by giving the attribute a
+corresponding value. For other values, apply the css manually.
+
+It's common in flexbox parlance to hear the terms _main axis_ and _cross axis_.
+For a horizontal layout the main axis is horizontal and the cross axis is vertical.
+These are exchanged for a vertical layout.
+
+To effect alignment in the main axis, use the `justify` attribute. The 
+supported values are `start`, `center`, `end`, and `between`.
+
+To effect alignment in the cross axis, use the `align` attribute. The
+supported values are `start`, `center`, and `end`.
+
+Note, it's also possible to include the `core-layout.css` stylesheet separate
+from the `core-layout` element. Including the element automatically includes
+the stylesheet. To use the stylesheet independent of the element, css classes 
+should be used of the following form: `core-h`, `core-v`, `core-flex`, 
+`core-justify-start`, and `core-align-start`.
+
+The `core-layout` and css file also provide a few commonly needed layout
+behaviors. Apply the `core-fit` class to fit an element to its container. To 
+ensure a container will contain an element inside it with the `core-fit` class
+give it the `core-relative` class.
+
+More examples:
+
+    <core-layout vertical>
+
+      <div>Header</div>
+      <div core-flex>Body</div>
+      <div>Footer</div>
+
+    </core-layout>
+
+    ----------
+    ||------||
+    ||Header||
+    ||------||
+    ||Body  ||
+    ||      ||
+    ||      ||
+    ||      ||
+    ||      ||
+    ||      ||
+    ||      ||
+    ||------||
+    ||Footer||
+    ||------||
+    ----------
+
+Justify:
+
+    <core-layout justify="end">
+      <div core-flex>Left</div>
+      <div>Main</div>
+      <div>Right</div>
+    </core-layout>
+
+    ---------------------------------
+    |-------------------------------|
+    ||              Left|Main|Right||
+    |-------------------------------|
+    ---------------------------------
+
+Align:
+
+    <core-layout align="center">
+      <div>Left</div>
+      <div core-flex>Main</div>
+      <div>Right</div>
+    </core-layout>
+
+    ---------------------------------
+    |-------------------------------|
+    ||    |                  |     ||
+    ||Left|       Main       |Right||
+    ||    |                  |     ||
+    |-------------------------------|
+    ---------------------------------
+
+
+To layout contents of a parent element, place a `core-layout` inside of it:
+
+    <some-element>
+      <core-layout></core-layout>
+      <div>Left</div>
+      <div core-flex>Main</div>
+      <div>Right</div>
+    <some-element>
+
+    ---------------------------------
+    |-------------------------------|
+    ||Left|       Main       |Right||
+    |-------------------------------|
+    ---------------------------------
+
+You may also use the `core-layout` stylesheet directly:
+
+    <link rel="stylesheet" href="../core-layout/core-layout.css">
+    <div class="core-h core-justify-end">
+      <div core-flex>Left</div>
+      <div>Main</div>
+      <div>Right</div>  
+    </div>
+
+    ---------------------------------
+    |-------------------------------|
+    ||              Left|Main|Right||
+    |-------------------------------|
+    ---------------------------------
+
+@group Polymer Core Elements
+@element core-layout
+
 -->
 
 
-<polymer-element name="polymer-flex-layout" attributes="vertical align justify isContainer" assetpath="../dependencies/Polymer/polymer-flex-layout/">
+<polymer-element name="core-layout" attributes="vertical justify align isContainer reverse" assetpath="../dependencies/core-layout/">
+  
   <template>
-    <style polymer-scope="controller">/*
+  
+    <style no-shim="">/*
 Copyright 2013 The Polymer Authors. All rights reserved.
 Use of this source code is governed by a BSD-style
 license that can be found in the LICENSE file.
 */
-.flexbox, [flexbox], [h-flexbox], [v-flexbox] {
+
+.core-h, .core-v {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: -moz-flex !important;
@@ -158,7 +482,7 @@ license that can be found in the LICENSE file.
   display: flex !important;
 }
 
-.flexbox.row, [flexbox], [h-flexbox] {
+.core-h {
   -webkit-box-orient: horizontal;
   -ms-flex-direction: row;
   -moz-flex-direction: row;
@@ -166,7 +490,15 @@ license that can be found in the LICENSE file.
   flex-direction: row;
 }
 
-.flexbox.column, [v-flexbox] {
+.core-h.core-reverse {
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: row-reverse;
+  -moz-flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
+.core-v {
   -webkit-box-orient: vertical;
   -ms-flex-direction: column;
   -moz-flex-direction: column;
@@ -174,7 +506,31 @@ license that can be found in the LICENSE file.
   flex-direction: column;
 }
 
-.flex, [flex], [fit] {
+.core-v.core-reverse {
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: column-reverse;
+  -moz-flex-direction: column-reverse;
+  -webkit-flex-direction: column-reverse;
+  flex-direction: column-reverse;
+}
+
+.core-relative {
+  position: relative;
+}
+
+.core-fit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body.core-fit {
+  margin: 0;
+}
+
+.core-flex, [core-flex] {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -moz-flex: 1;
@@ -182,9 +538,23 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-::content > .flex, 
-::content > [flex],
-::content > [fit] {
+.core-flex-auto, [core-flex-auto] {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+.core-flex-none, [core-flex-none] {
+  -webkit-box-flex: none;
+  -ms-flex: none;
+  -moz-flex: none;
+  -webkit-flex: none;
+  flex: none;
+}
+
+.core-flex1, [core-flex=1] {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -moz-flex: 1;
@@ -192,31 +562,73 @@ license that can be found in the LICENSE file.
   flex: 1;
 }
 
-.flexbox.align-start {
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  -moz-align-items: flex-start;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
+.core-flex2, [core-flex=2] {
+  -webkit-box-flex: 2;
+  -ms-flex: 2;
+  -moz-flex: 2;
+  -webkit-flex: 2;
+  flex: 2;
 }
 
-.flexbox.align-end {
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  -moz-align-items: flex-end;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
+.core-flex3, [core-flex=3] {
+  -webkit-box-flex: 3;
+  -ms-flex: 3;
+  -moz-flex: 3;
+  -webkit-flex: 3;
+  flex: 3;
 }
 
-.flexbox.align-center {
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  align-items: center;
+/* distributed elements */
+::content > .core-flex, ::content > [core-flex] {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
 }
 
-.flexbox.justify-start {
+::content > .core-flex-auto, ::content > [core-flex-auto] {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+::content > .core-flex-none, ::content > [core-flex-none] {
+  -webkit-box-flex: none;
+  -ms-flex: none;
+  -moz-flex: none;
+  -webkit-flex: none;
+  flex: none;
+}
+
+::content > .core-flex1, ::content > [core-flex=1] {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+::content > .core-flex2, ::content > [core-flex=2] {
+  -webkit-box-flex: 2;
+  -ms-flex: 2;
+  -moz-flex: 2;
+  -webkit-flex: 2;
+  flex: 2;
+}
+
+::content > .core-flex3, ::content > [core-flex=3] {
+  -webkit-box-flex: 3;
+  -ms-flex: 3;
+  -moz-flex: 3;
+  -webkit-flex: 3;
+  flex: 3;
+}
+
+/* alignment in main axis */
+.core-justify-start {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   -moz-justify-content: flex-start;
@@ -224,15 +636,7 @@ license that can be found in the LICENSE file.
   justify-content: flex-start;
 }
 
-.flexbox.justify-end {
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -moz-justify-content: flex-end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-}
-
-.flexbox.justify-center {
+.core-justify-center {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   -moz-justify-content: center;
@@ -240,7 +644,15 @@ license that can be found in the LICENSE file.
   justify-content: center;
 }
 
-.flexbox.justify-between {
+.core-justify-end {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -moz-justify-content: flex-end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.core-justify-between {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   -moz-justify-content: space-between;
@@ -248,47 +660,16 @@ license that can be found in the LICENSE file.
   justify-content: space-between;
 }
 
-:host(.flexbox:host, [flexbox]:host, [h-flexbox]:host, [v-flexbox]:host) {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: -moz-flex !important;
-  display: -webkit-flex !important;
-  display: flex !important;
-}
-  
-:host(.flexbox.row:host, [flexbox]:host, [h-flexbox]:host) {
-  -webkit-box-orient: horizontal;
-  -ms-flex-direction: row;
-  -moz-flex-direction: row;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-}
-  
-:host(.flexbox.column:host, [v-flexbox]:host) {
-  -webkit-box-orient: vertical;
-  -ms-flex-direction: column;
-  -moz-flex-direction: column;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-}
-  
-:host(.flexbox.align-start:host) {
+/* alignment in cross axis */
+.core-align-start {
   -webkit-box-align: start;
   -ms-flex-align: start;
   -moz-align-items: flex-start;
   -webkit-align-items: flex-start;
   align-items: flex-start;
 }
-  
-:host(.flexbox.align-end:host) {
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  -moz-align-items: flex-end;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
-}
 
-:host(.flexbox.align-center:host) {
+.core-align-center {
   -webkit-box-align: center;
   -ms-flex-align: center;
   -moz-align-items: center;
@@ -296,142 +677,24 @@ license that can be found in the LICENSE file.
   align-items: center;
 }
 
-:host(.flexbox.justify-start:host) {
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -moz-justify-content: flex-start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-}
-
-:host(.flexbox.justify-end:host) {
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -moz-justify-content: flex-end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-}
-
-:host(.flexbox.justify-center:host) {
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-:host(.flexbox.justify-between:host) {
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  -moz-justify-content: space-between;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
+.core-align-end {
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  -moz-align-items: flex-end;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
 }
 </style>
-    <style>/*
-Copyright 2013 The Polymer Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
+    <style no-shim="">/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
-.flexbox, [flexbox], [h-flexbox], [v-flexbox] {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: -moz-flex !important;
-  display: -webkit-flex !important;
-  display: flex !important;
-}
 
-.flexbox.row, [flexbox], [h-flexbox] {
-  -webkit-box-orient: horizontal;
-  -ms-flex-direction: row;
-  -moz-flex-direction: row;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-}
-
-.flexbox.column, [v-flexbox] {
-  -webkit-box-orient: vertical;
-  -ms-flex-direction: column;
-  -moz-flex-direction: column;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-}
-
-.flex, [flex], [fit] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  -moz-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
-}
-
-::content > .flex, 
-::content > [flex],
-::content > [fit] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  -moz-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
-}
-
-.flexbox.align-start {
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  -moz-align-items: flex-start;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
-}
-
-.flexbox.align-end {
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  -moz-align-items: flex-end;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
-}
-
-.flexbox.align-center {
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-
-.flexbox.justify-start {
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -moz-justify-content: flex-start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-}
-
-.flexbox.justify-end {
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -moz-justify-content: flex-end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-}
-
-.flexbox.justify-center {
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.flexbox.justify-between {
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  -moz-justify-content: space-between;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-:host(.flexbox:host, [flexbox]:host, [h-flexbox]:host, [v-flexbox]:host) {
+:host {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: -moz-flex !important;
@@ -439,7 +702,7 @@ license that can be found in the LICENSE file.
   display: flex !important;
 }
   
-:host(.flexbox.row:host, [flexbox]:host, [h-flexbox]:host) {
+:host(.core-h) {
   -webkit-box-orient: horizontal;
   -ms-flex-direction: row;
   -moz-flex-direction: row;
@@ -447,39 +710,32 @@ license that can be found in the LICENSE file.
   flex-direction: row;
 }
   
-:host(.flexbox.column:host, [v-flexbox]:host) {
+:host(.core-v) {
   -webkit-box-orient: vertical;
   -ms-flex-direction: column;
   -moz-flex-direction: column;
   -webkit-flex-direction: column;
   flex-direction: column;
 }
-  
-:host(.flexbox.align-start:host) {
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  -moz-align-items: flex-start;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
+
+:host(.core-h.core-reverse) {
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: row-reverse;
+  -moz-flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+  flex-direction: row-reverse;
 }
   
-:host(.flexbox.align-end:host) {
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  -moz-align-items: flex-end;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
+:host(.core-v.core-reverse) {
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: column-reverse;
+  -moz-flex-direction: column-reverse;
+  -webkit-flex-direction: column-reverse;
+  flex-direction: column-reverse;
 }
 
-:host(.flexbox.align-center:host) {
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-
-:host(.flexbox.justify-start:host) {
+/* alignment in main axis */
+:host(.core-justify-start) {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   -moz-justify-content: flex-start;
@@ -487,15 +743,7 @@ license that can be found in the LICENSE file.
   justify-content: flex-start;
 }
 
-:host(.flexbox.justify-end:host) {
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -moz-justify-content: flex-end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-}
-
-:host(.flexbox.justify-center:host) {
+:host(.core-justify-center) {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   -moz-justify-content: center;
@@ -503,51 +751,56 @@ license that can be found in the LICENSE file.
   justify-content: center;
 }
 
-:host(.flexbox.justify-between:host) {
+:host(.core-justify-end) {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -moz-justify-content: flex-end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+:host(.core-justify-between) {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   -moz-justify-content: space-between;
   -webkit-justify-content: space-between;
   justify-content: space-between;
+}
+
+/* alignment in cross axis */
+:host(.core-align-start) {
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  -moz-align-items: flex-start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+
+:host(.core-align-center) {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+  
+:host(.core-align-end) {
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  -moz-align-items: flex-end;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
 }
 </style>
-    <content></content>
+  
   </template>
   
-</polymer-element>
-
-
-
-
-<polymer-element name="polymer-animation-keyframe" attributes="offset value easing" assetpath="../dependencies/Polymer/polymer-animation/">
-	
-</polymer-element>
-
-
-
-
-<polymer-element name="polymer-animation-prop" attributes="name value" assetpath="../dependencies/Polymer/polymer-animation/">
   
-</polymer-element>
 
-
-
-
-
-
-<polymer-element name="polymer-animation" attributes="target keyframes sample composite duration fill easing iterationStart iterationCount delay direction autoplay targetSelector" assetpath="../dependencies/Polymer/polymer-animation/">
-  
-</polymer-element>
-
-
-<polymer-element name="polymer-translate" extends="polymer-animation" attributes="fromX fromY toX toY" assetpath="../dependencies/Polymer/polymer-animation/">
-  <template>
-  </template>
-  
 </polymer-element>
 
 <!--
-    force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element also contains the polymer-flex-layout element to enable flexible sections on the page, esp. in single page view with split view panels.
+    force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element also contains the core-layout element to enable flexible sections on the page, esp. in single page view with split view panels.
     Why: a) Manages all the UI stylesheets.
     b) Provides simple header and content location for the app.
     c) Provides way to create splitview or multipage app with built-in navigation.
@@ -578,7 +831,7 @@ license that can be found in the LICENSE file.
 
 
 
-
+<!--link rel="import" href="../../dependencies/core-animation/core-translate.html"-->
 <polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" assetpath="../elements/force-ui-app/">
   
   <template>
@@ -594,316 +847,309 @@ license that can be found in the LICENSE file.
 
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 
-/* @polyfill :host */
-
-:scope {
+:scope,
+:host {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
 
-/* @polyfill :host */
-
-:scope {
+:scope,
+:host {
   margin: 0;
 }
 
-/* @polyfill :host /shadow-deep/ article, :host /shadow-deep/ aside, :host /shadow-deep/ details, :host /shadow-deep/ figcaption, :host /shadow-deep/ figure, :host /shadow-deep/ footer, :host /shadow-deep/ header, :host /shadow-deep/ hgroup, :host /shadow-deep/ main, :host /shadow-deep/ nav, :host /shadow-deep/ section, :host /shadow-deep/ summary */
-
-:scope /shadow-deep/ article,
-:scope /shadow-deep/ aside,
-:scope /shadow-deep/ details,
-:scope /shadow-deep/ figcaption,
-:scope /shadow-deep/ figure,
-:scope /shadow-deep/ footer,
-:scope /shadow-deep/ header,
-:scope /shadow-deep/ hgroup,
-:scope /shadow-deep/ main,
-:scope /shadow-deep/ nav,
-:scope /shadow-deep/ section,
-:scope /shadow-deep/ summary {
+:scope /deep/ article,
+:host /deep/ article,
+:scope /deep/ aside,
+:host /deep/ aside,
+:scope /deep/ details,
+:host /deep/ details,
+:scope /deep/ figcaption,
+:host /deep/ figcaption,
+:scope /deep/ figure,
+:host /deep/ figure,
+:scope /deep/ footer,
+:host /deep/ footer,
+:scope /deep/ header,
+:host /deep/ header,
+:scope /deep/ hgroup,
+:host /deep/ hgroup,
+:scope /deep/ main,
+:host /deep/ main,
+:scope /deep/ nav,
+:host /deep/ nav,
+:scope /deep/ section,
+:host /deep/ section,
+:scope /deep/ summary,
+:host /deep/ summary {
   display: block;
 }
 
-/* @polyfill :host /shadow-deep/ audio, :host /shadow-deep/ canvas, :host /shadow-deep/ progress, :host /shadow-deep/ video */
-
-:scope /shadow-deep/ audio,
-:scope /shadow-deep/ canvas,
-:scope /shadow-deep/ progress,
-:scope /shadow-deep/ video {
+:scope /deep/ audio,
+:host /deep/ audio,
+:scope /deep/ canvas,
+:host /deep/ canvas,
+:scope /deep/ progress,
+:host /deep/ progress,
+:scope /deep/ video,
+:host /deep/ video {
   display: inline-block;
   vertical-align: baseline;
 }
 
-/* @polyfill :host /shadow-deep/ audio:not([controls]) */
-
-:scope /shadow-deep/ audio:not([controls]) {
+:scope /deep/ audio:not([controls]),
+:host /deep/ audio:not([controls]) {
   display: none;
   height: 0;
 }
 
-/* @polyfill :host /shadow-deep/ [hidden], :host /shadow-deep/ template */
-
-:scope /shadow-deep/ [hidden],
-:scope /shadow-deep/ template {
+:scope /deep/ [hidden],
+:host /deep/ [hidden],
+:scope /deep/ template,
+:host /deep/ template {
   display: none;
 }
 
-/* @polyfill :host /shadow-deep/ a */
-
-:scope /shadow-deep/ a {
+:scope /deep/ a,
+:host /deep/ a {
   background: transparent;
 }
 
-/* @polyfill :host /shadow-deep/ a:active, :host /shadow-deep/ a:hover */
-
-:scope /shadow-deep/ a:active,
-:scope /shadow-deep/ a:hover {
+:scope /deep/ a:active,
+:host /deep/ a:active,
+:scope /deep/ a:hover,
+:host /deep/ a:hover {
   outline: 0;
 }
 
-/* @polyfill :host /shadow-deep/ abbr[title] */
-
-:scope /shadow-deep/ abbr[title] {
+:scope /deep/ abbr[title],
+:host /deep/ abbr[title] {
   border-bottom: 1px dotted;
 }
 
-/* @polyfill :host /shadow-deep/ b, :host /shadow-deep/ strong */
-
-:scope /shadow-deep/ b,
-:scope /shadow-deep/ strong {
+:scope /deep/ b,
+:host /deep/ b,
+:scope /deep/ strong,
+:host /deep/ strong {
   font-weight: bold;
 }
 
-/* @polyfill :host /shadow-deep/ dfn */
-
-:scope /shadow-deep/ dfn {
+:scope /deep/ dfn,
+:host /deep/ dfn {
   font-style: italic;
 }
 
-/* @polyfill :host /shadow-deep/ h1 */
-
-:scope /shadow-deep/ h1 {
+:scope /deep/ h1,
+:host /deep/ h1 {
   margin: .67em 0;
   font-size: 2em;
 }
 
-/* @polyfill :host /shadow-deep/ mark */
-
-:scope /shadow-deep/ mark {
+:scope /deep/ mark,
+:host /deep/ mark {
   color: #000;
   background: #ff0;
 }
 
-/* @polyfill :host /shadow-deep/ small */
-
-:scope /shadow-deep/ small {
+:scope /deep/ small,
+:host /deep/ small {
   font-size: 80%;
 }
 
-/* @polyfill :host /shadow-deep/ sub, :host /shadow-deep/ sup */
-
-:scope /shadow-deep/ sub,
-:scope /shadow-deep/ sup {
+:scope /deep/ sub,
+:host /deep/ sub,
+:scope /deep/ sup,
+:host /deep/ sup {
   position: relative;
   font-size: 75%;
   line-height: 0;
   vertical-align: baseline;
 }
 
-/* @polyfill :host /shadow-deep/ sup */
-
-:scope /shadow-deep/ sup {
+:scope /deep/ sup,
+:host /deep/ sup {
   top: -.5em;
 }
 
-/* @polyfill :host /shadow-deep/ sub */
-
-:scope /shadow-deep/ sub {
+:scope /deep/ sub,
+:host /deep/ sub {
   bottom: -.25em;
 }
 
-/* @polyfill :host /shadow-deep/ img */
-
-:scope /shadow-deep/ img {
+:scope /deep/ img,
+:host /deep/ img {
   border: 0;
 }
 
-/* @polyfill :host /shadow-deep/ svg:not(:root) */
-
-:scope /shadow-deep/ svg:not(:root) {
+:scope /deep/ svg:not(:root),
+:host /deep/ svg:not(:root) {
   overflow: hidden;
 }
 
-/* @polyfill :host /shadow-deep/ figure */
-
-:scope /shadow-deep/ figure {
+:scope /deep/ figure,
+:host /deep/ figure {
   margin: 1em 40px;
 }
 
-/* @polyfill :host /shadow-deep/ hr */
-
-:scope /shadow-deep/ hr {
+:scope /deep/ hr,
+:host /deep/ hr {
   height: 0;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 
-/* @polyfill :host /shadow-deep/ pre */
-
-:scope /shadow-deep/ pre {
+:scope /deep/ pre,
+:host /deep/ pre {
   overflow: auto;
 }
 
-/* @polyfill :host /shadow-deep/ code, :host /shadow-deep/ kbd, :host /shadow-deep/ pre, :host /shadow-deep/ samp */
-
-:scope /shadow-deep/ code,
-:scope /shadow-deep/ kbd,
-:scope /shadow-deep/ pre,
-:scope /shadow-deep/ samp {
+:scope /deep/ code,
+:host /deep/ code,
+:scope /deep/ kbd,
+:host /deep/ kbd,
+:scope /deep/ pre,
+:host /deep/ pre,
+:scope /deep/ samp,
+:host /deep/ samp {
   font-family: monospace, monospace;
   font-size: 1em;
 }
 
-/* @polyfill :host /shadow-deep/ button, :host /shadow-deep/ input, :host /shadow-deep/ optgroup, :host /shadow-deep/ select, :host /shadow-deep/ textarea */
-
-:scope /shadow-deep/ button,
-:scope /shadow-deep/ input,
-:scope /shadow-deep/ optgroup,
-:scope /shadow-deep/ select,
-:scope /shadow-deep/ textarea {
+:scope /deep/ button,
+:host /deep/ button,
+:scope /deep/ input,
+:host /deep/ input,
+:scope /deep/ optgroup,
+:host /deep/ optgroup,
+:scope /deep/ select,
+:host /deep/ select,
+:scope /deep/ textarea,
+:host /deep/ textarea {
   margin: 0;
   font: inherit;
   color: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ button */
-
-:scope /shadow-deep/ button {
+:scope /deep/ button,
+:host /deep/ button {
   overflow: visible;
 }
 
-/* @polyfill :host /shadow-deep/ button, :host /shadow-deep/ select */
-
-:scope /shadow-deep/ button,
-:scope /shadow-deep/ select {
+:scope /deep/ button,
+:host /deep/ button,
+:scope /deep/ select,
+:host /deep/ select {
   text-transform: none;
 }
 
-/* @polyfill :host /shadow-deep/ button, :host /shadow-deep/ html input[type="button"], :host /shadow-deep/ input[type="reset"], :host /shadow-deep/ input[type="submit"] */
-
-:scope /shadow-deep/ button,
-:scope /shadow-deep/ html input[type="button"],
-:scope /shadow-deep/ input[type="reset"],
-:scope /shadow-deep/ input[type="submit"] {
+:scope /deep/ button,
+:host /deep/ button,
+:scope /deep/ html input[type="button"],
+:host /deep/ html input[type="button"],
+:scope /deep/ input[type="reset"],
+:host /deep/ input[type="reset"],
+:scope /deep/ input[type="submit"],
+:host /deep/ input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer;
 }
 
-/* @polyfill :host /shadow-deep/ button[disabled], :host /shadow-deep/ html input[disabled] */
-
-:scope /shadow-deep/ button[disabled],
-:scope /shadow-deep/ html input[disabled] {
+:scope /deep/ button[disabled],
+:host /deep/ button[disabled],
+:scope /deep/ html input[disabled],
+:host /deep/ html input[disabled] {
   cursor: default;
 }
 
-/* @polyfill :host /shadow-deep/ button::-moz-focus-inner, :host /shadow-deep/ input::-moz-focus-inner */
-
-:scope /shadow-deep/ button::-moz-focus-inner,
-:scope /shadow-deep/ input::-moz-focus-inner {
+:scope /deep/ button::-moz-focus-inner,
+:host /deep/ button::-moz-focus-inner,
+:scope /deep/ input::-moz-focus-inner,
+:host /deep/ input::-moz-focus-inner {
   padding: 0;
   border: 0;
 }
 
-/* @polyfill :host /shadow-deep/ input */
-
-:scope /shadow-deep/ input {
+:scope /deep/ input,
+:host /deep/ input {
   line-height: normal;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="checkbox"], :host /shadow-deep/ input[type="radio"] */
-
-:scope /shadow-deep/ input[type="checkbox"],
-:scope /shadow-deep/ input[type="radio"] {
+:scope /deep/ input[type="checkbox"],
+:host /deep/ input[type="checkbox"],
+:scope /deep/ input[type="radio"],
+:host /deep/ input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="number"]::-webkit-inner-spin-button, :host /shadow-deep/ input[type="number"]::-webkit-outer-spin-button */
-
-:scope /shadow-deep/ input[type="number"]::-webkit-inner-spin-button,
-:scope /shadow-deep/ input[type="number"]::-webkit-outer-spin-button {
+:scope /deep/ input[type="number"]::-webkit-inner-spin-button,
+:host /deep/ input[type="number"]::-webkit-inner-spin-button,
+:scope /deep/ input[type="number"]::-webkit-outer-spin-button,
+:host /deep/ input[type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="search"] */
-
-:scope /shadow-deep/ input[type="search"] {
+:scope /deep/ input[type="search"],
+:host /deep/ input[type="search"] {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   -webkit-appearance: textfield;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="search"]::-webkit-search-cancel-button, :host /shadow-deep/ input[type="search"]::-webkit-search-decoration */
-
-:scope /shadow-deep/ input[type="search"]::-webkit-search-cancel-button,
-:scope /shadow-deep/ input[type="search"]::-webkit-search-decoration {
+:scope /deep/ input[type="search"]::-webkit-search-cancel-button,
+:host /deep/ input[type="search"]::-webkit-search-cancel-button,
+:scope /deep/ input[type="search"]::-webkit-search-decoration,
+:host /deep/ input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-/* @polyfill :host /shadow-deep/ fieldset */
-
-:scope /shadow-deep/ fieldset {
+:scope /deep/ fieldset,
+:host /deep/ fieldset {
   padding: .35em .625em .75em;
   margin: 0 2px;
   border: 1px solid #c0c0c0;
 }
 
-/* @polyfill :host /shadow-deep/ legend */
-
-:scope /shadow-deep/ legend {
+:scope /deep/ legend,
+:host /deep/ legend {
   padding: 0;
   border: 0;
 }
 
-/* @polyfill :host /shadow-deep/ textarea */
-
-:scope /shadow-deep/ textarea {
+:scope /deep/ textarea,
+:host /deep/ textarea {
   overflow: auto;
 }
 
-/* @polyfill :host /shadow-deep/ optgroup */
-
-:scope /shadow-deep/ optgroup {
+:scope /deep/ optgroup,
+:host /deep/ optgroup {
   font-weight: bold;
 }
 
-/* @polyfill :host /shadow-deep/ table */
-
-:scope /shadow-deep/ table {
+:scope /deep/ table,
+:host /deep/ table {
   border-spacing: 0;
   border-collapse: collapse;
 }
 
-/* @polyfill :host /shadow-deep/ td, :host /shadow-deep/ th */
-
-:scope /shadow-deep/ td,
-:scope /shadow-deep/ th {
+:scope /deep/ td,
+:host /deep/ td,
+:scope /deep/ th,
+:host /deep/ th {
   padding: 0;
 }
 
-/* @polyfill :host /shadow-deep/ * */
-
-:scope /shadow-deep/ * {
+:scope /deep/ *,
+:host /deep/ * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-/* @polyfill :host */
-
-:scope {
+:scope,
+:host {
   position: fixed;
   top: 0;
   right: 0;
@@ -916,23 +1162,20 @@ license that can be found in the LICENSE file.
   background-color: #fff;
 }
 
-/* @polyfill :host /shadow-deep/ a */
-
-:scope /shadow-deep/ a {
+:scope /deep/ a,
+:host /deep/ a {
   color: #428bca;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* @polyfill :host /shadow-deep/ a:active */
-
-:scope /shadow-deep/ a:active {
+:scope /deep/ a:active,
+:host /deep/ a:active {
   color: #3071a9;
 }
 
-/* @polyfill :host /shadow-deep/ .content */
-
-:scope /shadow-deep/ .content {
+:scope /deep/ .content,
+:host /deep/ .content {
   position: absolute;
   top: 0;
   right: 0;
@@ -943,151 +1186,142 @@ license that can be found in the LICENSE file.
   background-color: #fff;
 }
 
-/* @polyfill :host /shadow-deep/ .content > * */
-
-:scope /shadow-deep/ .content > * {
+:scope /deep/ .content > *,
+:host /deep/ .content > * {
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
 }
 
-/* @polyfill :host /shadow-deep/ .bar-nav ~ .content */
-
-:scope /shadow-deep/ .bar-nav ~ .content {
+:scope /deep/ .bar-nav ~ .content,
+:host /deep/ .bar-nav ~ .content {
   padding-top: 44px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-header-secondary ~ .content */
-
-:scope /shadow-deep/ .bar-header-secondary ~ .content {
+:scope /deep/ .bar-header-secondary ~ .content,
+:host /deep/ .bar-header-secondary ~ .content {
   padding-top: 88px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-footer ~ .content */
-
-:scope /shadow-deep/ .bar-footer ~ .content {
+:scope /deep/ .bar-footer ~ .content,
+:host /deep/ .bar-footer ~ .content {
   padding-bottom: 44px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-footer-secondary ~ .content */
-
-:scope /shadow-deep/ .bar-footer-secondary ~ .content {
+:scope /deep/ .bar-footer-secondary ~ .content,
+:host /deep/ .bar-footer-secondary ~ .content {
   padding-bottom: 88px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-tab ~ .content */
-
-:scope /shadow-deep/ .bar-tab ~ .content {
+:scope /deep/ .bar-tab ~ .content,
+:host /deep/ .bar-tab ~ .content {
   padding-bottom: 50px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-footer-secondary-tab ~ .content */
-
-:scope /shadow-deep/ .bar-footer-secondary-tab ~ .content {
+:scope /deep/ .bar-footer-secondary-tab ~ .content,
+:host /deep/ .bar-footer-secondary-tab ~ .content {
   padding-bottom: 94px;
 }
 
-/* @polyfill :host /shadow-deep/ .content-padded */
-
-:scope /shadow-deep/ .content-padded {
+:scope /deep/ .content-padded,
+:host /deep/ .content-padded {
   margin: 10px;
 }
 
-/* @polyfill :host /shadow-deep/ .pull-left */
-
-:scope /shadow-deep/ .pull-left {
+:scope /deep/ .pull-left,
+:host /deep/ .pull-left {
   float: left;
 }
 
-/* @polyfill :host /shadow-deep/ .pull-right */
-
-:scope /shadow-deep/ .pull-right {
+:scope /deep/ .pull-right,
+:host /deep/ .pull-right {
   float: right;
 }
 
-/* @polyfill :host /shadow-deep/ .clearfix:before, :host /shadow-deep/ .clearfix:after */
-
-:scope /shadow-deep/ .clearfix:before,
-:scope /shadow-deep/ .clearfix:after {
+:scope /deep/ .clearfix:before,
+:host /deep/ .clearfix:before,
+:scope /deep/ .clearfix:after,
+:host /deep/ .clearfix:after {
   display: table;
   content: " ";
 }
 
-/* @polyfill :host /shadow-deep/ .clearfix:after */
-
-:scope /shadow-deep/ .clearfix:after {
+:scope /deep/ .clearfix:after,
+:host /deep/ .clearfix:after {
   clear: both;
 }
 
-/* @polyfill :host /shadow-deep/ h1, :host /shadow-deep/ h2, :host /shadow-deep/ h3, :host /shadow-deep/ h4, :host /shadow-deep/ h5, :host /shadow-deep/ h6 */
-
-:scope /shadow-deep/ h1,
-:scope /shadow-deep/ h2,
-:scope /shadow-deep/ h3,
-:scope /shadow-deep/ h4,
-:scope /shadow-deep/ h5,
-:scope /shadow-deep/ h6 {
+:scope /deep/ h1,
+:host /deep/ h1,
+:scope /deep/ h2,
+:host /deep/ h2,
+:scope /deep/ h3,
+:host /deep/ h3,
+:scope /deep/ h4,
+:host /deep/ h4,
+:scope /deep/ h5,
+:host /deep/ h5,
+:scope /deep/ h6,
+:host /deep/ h6 {
   margin-top: 0;
   margin-bottom: 10px;
   line-height: 1;
 }
 
-/* @polyfill :host /shadow-deep/ h1, :host /shadow-deep/ .h1 */
-
-:scope /shadow-deep/ h1,
-:scope /shadow-deep/ .h1 {
+:scope /deep/ h1,
+:host /deep/ h1,
+:scope /deep/ .h1,
+:host /deep/ .h1 {
   font-size: 36px;
 }
 
-/* @polyfill :host /shadow-deep/ h2, :host /shadow-deep/ .h2 */
-
-:scope /shadow-deep/ h2,
-:scope /shadow-deep/ .h2 {
+:scope /deep/ h2,
+:host /deep/ h2,
+:scope /deep/ .h2,
+:host /deep/ .h2 {
   font-size: 30px;
 }
 
-/* @polyfill :host /shadow-deep/ h3, :host /shadow-deep/ .h3 */
-
-:scope /shadow-deep/ h3,
-:scope /shadow-deep/ .h3 {
+:scope /deep/ h3,
+:host /deep/ h3,
+:scope /deep/ .h3,
+:host /deep/ .h3 {
   font-size: 24px;
 }
 
-/* @polyfill :host /shadow-deep/ h4, :host /shadow-deep/ .h4 */
-
-:scope /shadow-deep/ h4,
-:scope /shadow-deep/ .h4 {
+:scope /deep/ h4,
+:host /deep/ h4,
+:scope /deep/ .h4,
+:host /deep/ .h4 {
   font-size: 18px;
 }
 
-/* @polyfill :host /shadow-deep/ h5, :host /shadow-deep/ .h5 */
-
-:scope /shadow-deep/ h5,
-:scope /shadow-deep/ .h5 {
+:scope /deep/ h5,
+:host /deep/ h5,
+:scope /deep/ .h5,
+:host /deep/ .h5 {
   margin-top: 20px;
   font-size: 14px;
 }
 
-/* @polyfill :host /shadow-deep/ h6, :host /shadow-deep/ .h6 */
-
-:scope /shadow-deep/ h6,
-:scope /shadow-deep/ .h6 {
+:scope /deep/ h6,
+:host /deep/ h6,
+:scope /deep/ .h6,
+:host /deep/ .h6 {
   margin-top: 20px;
   font-size: 12px;
 }
 
-/* @polyfill :host /shadow-deep/ p */
-
-:scope /shadow-deep/ p {
+:scope /deep/ p,
+:host /deep/ p {
   margin-top: 0;
   margin-bottom: 10px;
   font-size: 14px;
   color: #777;
 }
 
-/* @polyfill :host /shadow-deep/ .btn */
-
-:scope /shadow-deep/ .btn {
+:scope /deep/ .btn,
+:host /deep/ .btn {
   position: relative;
   display: inline-block;
   padding: 6px 8px 7px;
@@ -1105,107 +1339,100 @@ license that can be found in the LICENSE file.
   border-radius: 3px;
 }
 
-/* @polyfill :host /shadow-deep/ .btn:active, :host /shadow-deep/ .btn.active */
-
-:scope /shadow-deep/ .btn:active,
-:scope /shadow-deep/ .btn.active {
+:scope /deep/ .btn:active,
+:host /deep/ .btn:active,
+:scope /deep/ .btn.active,
+:host /deep/ .btn.active {
   color: inherit;
   background-color: #ccc;
 }
 
-/* @polyfill :host /shadow-deep/ .btn:disabled, :host /shadow-deep/ .btn.disabled */
-
-:scope /shadow-deep/ .btn:disabled,
-:scope /shadow-deep/ .btn.disabled {
+:scope /deep/ .btn:disabled,
+:host /deep/ .btn:disabled,
+:scope /deep/ .btn.disabled,
+:host /deep/ .btn.disabled {
   opacity: .6;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-primary */
-
-:scope /shadow-deep/ .btn-primary {
+:scope /deep/ .btn-primary,
+:host /deep/ .btn-primary {
   color: #fff;
   background-color: #428bca;
   border: 1px solid #428bca;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-primary:active, :host /shadow-deep/ .btn-primary.active */
-
-:scope /shadow-deep/ .btn-primary:active,
-:scope /shadow-deep/ .btn-primary.active {
+:scope /deep/ .btn-primary:active,
+:host /deep/ .btn-primary:active,
+:scope /deep/ .btn-primary.active,
+:host /deep/ .btn-primary.active {
   color: #fff;
   background-color: #3071a9;
   border: 1px solid #3071a9;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-positive */
-
-:scope /shadow-deep/ .btn-positive {
+:scope /deep/ .btn-positive,
+:host /deep/ .btn-positive {
   color: #fff;
   background-color: #5cb85c;
   border: 1px solid #5cb85c;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-positive:active, :host /shadow-deep/ .btn-positive.active */
-
-:scope /shadow-deep/ .btn-positive:active,
-:scope /shadow-deep/ .btn-positive.active {
+:scope /deep/ .btn-positive:active,
+:host /deep/ .btn-positive:active,
+:scope /deep/ .btn-positive.active,
+:host /deep/ .btn-positive.active {
   color: #fff;
   background-color: #449d44;
   border: 1px solid #449d44;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-negative */
-
-:scope /shadow-deep/ .btn-negative {
+:scope /deep/ .btn-negative,
+:host /deep/ .btn-negative {
   color: #fff;
   background-color: #d9534f;
   border: 1px solid #d9534f;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-negative:active, :host /shadow-deep/ .btn-negative.active */
-
-:scope /shadow-deep/ .btn-negative:active,
-:scope /shadow-deep/ .btn-negative.active {
+:scope /deep/ .btn-negative:active,
+:host /deep/ .btn-negative:active,
+:scope /deep/ .btn-negative.active,
+:host /deep/ .btn-negative.active {
   color: #fff;
   background-color: #c9302c;
   border: 1px solid #c9302c;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-outlined */
-
-:scope /shadow-deep/ .btn-outlined {
+:scope /deep/ .btn-outlined,
+:host /deep/ .btn-outlined {
   background-color: transparent;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-outlined.btn-primary */
-
-:scope /shadow-deep/ .btn-outlined.btn-primary {
+:scope /deep/ .btn-outlined.btn-primary,
+:host /deep/ .btn-outlined.btn-primary {
   color: #428bca;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-outlined.btn-positive */
-
-:scope /shadow-deep/ .btn-outlined.btn-positive {
+:scope /deep/ .btn-outlined.btn-positive,
+:host /deep/ .btn-outlined.btn-positive {
   color: #5cb85c;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-outlined.btn-negative */
-
-:scope /shadow-deep/ .btn-outlined.btn-negative {
+:scope /deep/ .btn-outlined.btn-negative,
+:host /deep/ .btn-outlined.btn-negative {
   color: #d9534f;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-outlined.btn-primary:active, :host /shadow-deep/ .btn-outlined.btn-positive:active, :host /shadow-deep/ .btn-outlined.btn-negative:active */
-
-:scope /shadow-deep/ .btn-outlined.btn-primary:active,
-:scope /shadow-deep/ .btn-outlined.btn-positive:active,
-:scope /shadow-deep/ .btn-outlined.btn-negative:active {
+:scope /deep/ .btn-outlined.btn-primary:active,
+:host /deep/ .btn-outlined.btn-primary:active,
+:scope /deep/ .btn-outlined.btn-positive:active,
+:host /deep/ .btn-outlined.btn-positive:active,
+:scope /deep/ .btn-outlined.btn-negative:active,
+:host /deep/ .btn-outlined.btn-negative:active {
   color: #fff;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-link */
-
-:scope /shadow-deep/ .btn-link {
+:scope /deep/ .btn-link,
+:host /deep/ .btn-link {
   padding-top: 6px;
   padding-bottom: 6px;
   color: #428bca;
@@ -1213,17 +1440,16 @@ license that can be found in the LICENSE file.
   border: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-link:active, :host /shadow-deep/ .btn-link.active */
-
-:scope /shadow-deep/ .btn-link:active,
-:scope /shadow-deep/ .btn-link.active {
+:scope /deep/ .btn-link:active,
+:host /deep/ .btn-link:active,
+:scope /deep/ .btn-link.active,
+:host /deep/ .btn-link.active {
   color: #3071a9;
   background-color: transparent;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-block */
-
-:scope /shadow-deep/ .btn-block {
+:scope /deep/ .btn-block,
+:host /deep/ .btn-block {
   display: block;
   width: 100%;
   padding: 15px 0;
@@ -1231,54 +1457,52 @@ license that can be found in the LICENSE file.
   font-size: 18px;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="submit"], :host /shadow-deep/ input[type="reset"], :host /shadow-deep/ input[type="button"] */
-
-:scope /shadow-deep/ input[type="submit"],
-:scope /shadow-deep/ input[type="reset"],
-:scope /shadow-deep/ input[type="button"] {
+:scope /deep/ input[type="submit"],
+:host /deep/ input[type="submit"],
+:scope /deep/ input[type="reset"],
+:host /deep/ input[type="reset"],
+:scope /deep/ input[type="button"],
+:host /deep/ input[type="button"] {
   width: 100%;
 }
 
-/* @polyfill :host /shadow-deep/ .btn .badge */
-
-:scope /shadow-deep/ .btn .badge {
+:scope /deep/ .btn .badge,
+:host /deep/ .btn .badge {
   margin: -2px -4px -2px 4px;
   font-size: 12px;
   background-color: rgba(0, 0, 0, .15);
 }
 
-/* @polyfill :host /shadow-deep/ .btn .badge-inverted, :host /shadow-deep/ .btn:active .badge-inverted */
-
-:scope /shadow-deep/ .btn .badge-inverted,
-:scope /shadow-deep/ .btn:active .badge-inverted {
+:scope /deep/ .btn .badge-inverted,
+:host /deep/ .btn .badge-inverted,
+:scope /deep/ .btn:active .badge-inverted,
+:host /deep/ .btn:active .badge-inverted {
   background-color: transparent;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-primary:active .badge-inverted, :host /shadow-deep/ .btn-positive:active .badge-inverted, :host /shadow-deep/ .btn-negative:active .badge-inverted */
-
-:scope /shadow-deep/ .btn-primary:active .badge-inverted,
-:scope /shadow-deep/ .btn-positive:active .badge-inverted,
-:scope /shadow-deep/ .btn-negative:active .badge-inverted {
+:scope /deep/ .btn-primary:active .badge-inverted,
+:host /deep/ .btn-primary:active .badge-inverted,
+:scope /deep/ .btn-positive:active .badge-inverted,
+:host /deep/ .btn-positive:active .badge-inverted,
+:scope /deep/ .btn-negative:active .badge-inverted,
+:host /deep/ .btn-negative:active .badge-inverted {
   color: #fff;
 }
 
-/* @polyfill :host /shadow-deep/ .btn-block .badge */
-
-:scope /shadow-deep/ .btn-block .badge {
+:scope /deep/ .btn-block .badge,
+:host /deep/ .btn-block .badge {
   position: absolute;
   right: 0;
   margin-right: 10px;
 }
 
-/* @polyfill :host /shadow-deep/ .btn .icon */
-
-:scope /shadow-deep/ .btn .icon {
+:scope /deep/ .btn .icon,
+:host /deep/ .btn .icon {
   font-size: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ .bar */
-
-:scope /shadow-deep/ .bar {
+:scope /deep/ .bar,
+:host /deep/ .bar {
   position: fixed;
   right: 0;
   left: 0;
@@ -1292,48 +1516,43 @@ license that can be found in the LICENSE file.
   backface-visibility: hidden;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-header-secondary */
-
-:scope /shadow-deep/ .bar-header-secondary {
+:scope /deep/ .bar-header-secondary,
+:host /deep/ .bar-header-secondary {
   top: 44px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-footer */
-
-:scope /shadow-deep/ .bar-footer {
+:scope /deep/ .bar-footer,
+:host /deep/ .bar-footer {
   bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-footer-secondary */
-
-:scope /shadow-deep/ .bar-footer-secondary {
+:scope /deep/ .bar-footer-secondary,
+:host /deep/ .bar-footer-secondary {
   bottom: 44px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-footer-secondary-tab */
-
-:scope /shadow-deep/ .bar-footer-secondary-tab {
+:scope /deep/ .bar-footer-secondary-tab,
+:host /deep/ .bar-footer-secondary-tab {
   bottom: 50px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-footer, :host /shadow-deep/ .bar-footer-secondary, :host /shadow-deep/ .bar-footer-secondary-tab */
-
-:scope /shadow-deep/ .bar-footer,
-:scope /shadow-deep/ .bar-footer-secondary,
-:scope /shadow-deep/ .bar-footer-secondary-tab {
+:scope /deep/ .bar-footer,
+:host /deep/ .bar-footer,
+:scope /deep/ .bar-footer-secondary,
+:host /deep/ .bar-footer-secondary,
+:scope /deep/ .bar-footer-secondary-tab,
+:host /deep/ .bar-footer-secondary-tab {
   border-top: 1px solid #ddd;
   border-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-nav */
-
-:scope /shadow-deep/ .bar-nav {
+:scope /deep/ .bar-nav,
+:host /deep/ .bar-nav {
   top: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .title */
-
-:scope /shadow-deep/ .title {
+:scope /deep/ .title,
+:host /deep/ .title {
   position: absolute;
   display: block;
   width: 100%;
@@ -1347,15 +1566,13 @@ license that can be found in the LICENSE file.
   white-space: nowrap;
 }
 
-/* @polyfill :host /shadow-deep/ .title a */
-
-:scope /shadow-deep/ .title a {
+:scope /deep/ .title a,
+:host /deep/ .title a {
   color: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-tab */
-
-:scope /shadow-deep/ .bar-tab {
+:scope /deep/ .bar-tab,
+:host /deep/ .bar-tab {
   bottom: 0;
   display: table;
   width: 100%;
@@ -1366,9 +1583,8 @@ license that can be found in the LICENSE file.
   border-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-tab .tab-item */
-
-:scope /shadow-deep/ .bar-tab .tab-item {
+:scope /deep/ .bar-tab .tab-item,
+:host /deep/ .bar-tab .tab-item {
   display: table-cell;
   width: 1%;
   height: 50px;
@@ -1377,16 +1593,15 @@ license that can be found in the LICENSE file.
   vertical-align: middle;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-tab .tab-item.active, :host /shadow-deep/ .bar-tab .tab-item:active */
-
-:scope /shadow-deep/ .bar-tab .tab-item.active,
-:scope /shadow-deep/ .bar-tab .tab-item:active {
+:scope /deep/ .bar-tab .tab-item.active,
+:host /deep/ .bar-tab .tab-item.active,
+:scope /deep/ .bar-tab .tab-item:active,
+:host /deep/ .bar-tab .tab-item:active {
   color: #428bca;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-tab .tab-item .icon */
-
-:scope /shadow-deep/ .bar-tab .tab-item .icon {
+:scope /deep/ .bar-tab .tab-item .icon,
+:host /deep/ .bar-tab .tab-item .icon {
   top: 3px;
   width: 24px;
   height: 24px;
@@ -1394,16 +1609,14 @@ license that can be found in the LICENSE file.
   padding-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar-tab .tab-item .icon ~ .tab-label */
-
-:scope /shadow-deep/ .bar-tab .tab-item .icon ~ .tab-label {
+:scope /deep/ .bar-tab .tab-item .icon ~ .tab-label,
+:host /deep/ .bar-tab .tab-item .icon ~ .tab-label {
   display: block;
   font-size: 11px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn */
-
-:scope /shadow-deep/ .bar .btn {
+:scope /deep/ .bar .btn,
+:host /deep/ .bar .btn {
   position: relative;
   top: 7px;
   z-index: 20;
@@ -1412,21 +1625,18 @@ license that can be found in the LICENSE file.
   font-weight: 400;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn.pull-right */
-
-:scope /shadow-deep/ .bar .btn.pull-right {
+:scope /deep/ .bar .btn.pull-right,
+:host /deep/ .bar .btn.pull-right {
   margin-left: 10px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn.pull-left */
-
-:scope /shadow-deep/ .bar .btn.pull-left {
+:scope /deep/ .bar .btn.pull-left,
+:host /deep/ .bar .btn.pull-left {
   margin-right: 10px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn-link */
-
-:scope /shadow-deep/ .bar .btn-link {
+:scope /deep/ .bar .btn-link,
+:host /deep/ .bar .btn-link {
   top: 0;
   padding: 0;
   font-size: 16px;
@@ -1435,49 +1645,43 @@ license that can be found in the LICENSE file.
   border: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn-link:active, :host /shadow-deep/ .bar .btn-link.active */
-
-:scope /shadow-deep/ .bar .btn-link:active,
-:scope /shadow-deep/ .bar .btn-link.active {
+:scope /deep/ .bar .btn-link:active,
+:host /deep/ .bar .btn-link:active,
+:scope /deep/ .bar .btn-link.active,
+:host /deep/ .bar .btn-link.active {
   color: #3071a9;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn-block */
-
-:scope /shadow-deep/ .bar .btn-block {
+:scope /deep/ .bar .btn-block,
+:host /deep/ .bar .btn-block {
   top: 6px;
   padding: 7px 0;
   margin-bottom: 0;
   font-size: 16px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn-nav.pull-left */
-
-:scope /shadow-deep/ .bar .btn-nav.pull-left {
+:scope /deep/ .bar .btn-nav.pull-left,
+:host /deep/ .bar .btn-nav.pull-left {
   margin-left: -5px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn-nav.pull-left .icon-left-nav */
-
-:scope /shadow-deep/ .bar .btn-nav.pull-left .icon-left-nav {
+:scope /deep/ .bar .btn-nav.pull-left .icon-left-nav,
+:host /deep/ .bar .btn-nav.pull-left .icon-left-nav {
   margin-right: -3px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn-nav.pull-right */
-
-:scope /shadow-deep/ .bar .btn-nav.pull-right {
+:scope /deep/ .bar .btn-nav.pull-right,
+:host /deep/ .bar .btn-nav.pull-right {
   margin-right: -5px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn-nav.pull-right .icon-right-nav */
-
-:scope /shadow-deep/ .bar .btn-nav.pull-right .icon-right-nav {
+:scope /deep/ .bar .btn-nav.pull-right .icon-right-nav,
+:host /deep/ .bar .btn-nav.pull-right .icon-right-nav {
   margin-left: -3px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .icon */
-
-:scope /shadow-deep/ .bar .icon {
+:scope /deep/ .bar .icon,
+:host /deep/ .bar .icon {
   position: relative;
   z-index: 20;
   padding-top: 10px;
@@ -1485,43 +1689,37 @@ license that can be found in the LICENSE file.
   font-size: 24px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .btn .icon */
-
-:scope /shadow-deep/ .bar .btn .icon {
+:scope /deep/ .bar .btn .icon,
+:host /deep/ .bar .btn .icon {
   top: 3px;
   padding: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .title .icon */
-
-:scope /shadow-deep/ .bar .title .icon {
+:scope /deep/ .bar .title .icon,
+:host /deep/ .bar .title .icon {
   padding: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .title .icon.icon-caret */
-
-:scope /shadow-deep/ .bar .title .icon.icon-caret {
+:scope /deep/ .bar .title .icon.icon-caret,
+:host /deep/ .bar .title .icon.icon-caret {
   top: 4px;
   margin-left: -5px;
 }
 
-/* @polyfill :host /shadow-deep/ .bar input[type="search"] */
-
-:scope /shadow-deep/ .bar input[type="search"] {
+:scope /deep/ .bar input[type="search"],
+:host /deep/ .bar input[type="search"] {
   height: 29px;
   margin: 6px 0;
 }
 
-/* @polyfill :host /shadow-deep/ .bar .segmented-control */
-
-:scope /shadow-deep/ .bar .segmented-control {
+:scope /deep/ .bar .segmented-control,
+:host /deep/ .bar .segmented-control {
   top: 7px;
   margin: 0 auto;
 }
 
-/* @polyfill :host /shadow-deep/ .badge */
-
-:scope /shadow-deep/ .badge {
+:scope /deep/ .badge,
+:host /deep/ .badge {
   display: inline-block;
   padding: 2px 9px 3px;
   font-size: 12px;
@@ -1531,55 +1729,47 @@ license that can be found in the LICENSE file.
   border-radius: 100px;
 }
 
-/* @polyfill :host /shadow-deep/ .badge.badge-inverted */
-
-:scope /shadow-deep/ .badge.badge-inverted {
+:scope /deep/ .badge.badge-inverted,
+:host /deep/ .badge.badge-inverted {
   padding: 0 5px 0 0;
   background-color: transparent;
 }
 
-/* @polyfill :host /shadow-deep/ .badge-primary */
-
-:scope /shadow-deep/ .badge-primary {
+:scope /deep/ .badge-primary,
+:host /deep/ .badge-primary {
   color: #fff;
   background-color: #428bca;
 }
 
-/* @polyfill :host /shadow-deep/ .badge-primary.badge-inverted */
-
-:scope /shadow-deep/ .badge-primary.badge-inverted {
+:scope /deep/ .badge-primary.badge-inverted,
+:host /deep/ .badge-primary.badge-inverted {
   color: #428bca;
 }
 
-/* @polyfill :host /shadow-deep/ .badge-positive */
-
-:scope /shadow-deep/ .badge-positive {
+:scope /deep/ .badge-positive,
+:host /deep/ .badge-positive {
   color: #fff;
   background-color: #5cb85c;
 }
 
-/* @polyfill :host /shadow-deep/ .badge-positive.badge-inverted */
-
-:scope /shadow-deep/ .badge-positive.badge-inverted {
+:scope /deep/ .badge-positive.badge-inverted,
+:host /deep/ .badge-positive.badge-inverted {
   color: #5cb85c;
 }
 
-/* @polyfill :host /shadow-deep/ .badge-negative */
-
-:scope /shadow-deep/ .badge-negative {
+:scope /deep/ .badge-negative,
+:host /deep/ .badge-negative {
   color: #fff;
   background-color: #d9534f;
 }
 
-/* @polyfill :host /shadow-deep/ .badge-negative.badge-inverted */
-
-:scope /shadow-deep/ .badge-negative.badge-inverted {
+:scope /deep/ .badge-negative.badge-inverted,
+:host /deep/ .badge-negative.badge-inverted {
   color: #d9534f;
 }
 
-/* @polyfill :host /shadow-deep/ .card */
-
-:scope /shadow-deep/ .card {
+:scope /deep/ .card,
+:host /deep/ .card {
   margin: 10px;
   overflow: hidden;
   background-color: white;
@@ -1587,38 +1777,33 @@ license that can be found in the LICENSE file.
   border-radius: 6px;
 }
 
-/* @polyfill :host /shadow-deep/ .card .table-view */
-
-:scope /shadow-deep/ .card .table-view {
+:scope /deep/ .card .table-view,
+:host /deep/ .card .table-view {
   margin-bottom: 0;
   border-top: 0;
   border-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .card .table-view .table-view-divider:first-child */
-
-:scope /shadow-deep/ .card .table-view .table-view-divider:first-child {
+:scope /deep/ .card .table-view .table-view-divider:first-child,
+:host /deep/ .card .table-view .table-view-divider:first-child {
   top: 0;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
 
-/* @polyfill :host /shadow-deep/ .card .table-view .table-view-divider:last-child */
-
-:scope /shadow-deep/ .card .table-view .table-view-divider:last-child {
+:scope /deep/ .card .table-view .table-view-divider:last-child,
+:host /deep/ .card .table-view .table-view-divider:last-child {
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
 }
 
-/* @polyfill :host /shadow-deep/ .card .table-view-cell:last-child */
-
-:scope /shadow-deep/ .card .table-view-cell:last-child {
+:scope /deep/ .card .table-view-cell:last-child,
+:host /deep/ .card .table-view-cell:last-child {
   border-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view */
-
-:scope /shadow-deep/ .table-view {
+:scope /deep/ .table-view,
+:host /deep/ .table-view {
   padding-left: 0;
   margin-top: 0;
   margin-bottom: 15px;
@@ -1628,24 +1813,21 @@ license that can be found in the LICENSE file.
   border-bottom: 1px solid #ddd;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-cell */
-
-:scope /shadow-deep/ .table-view-cell {
+:scope /deep/ .table-view-cell,
+:host /deep/ .table-view-cell {
   position: relative;
   padding: 11px 65px 11px 15px;
   overflow: hidden;
   border-bottom: 1px solid #ddd;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-cell:last-child */
-
-:scope /shadow-deep/ .table-view-cell:last-child {
+:scope /deep/ .table-view-cell:last-child,
+:host /deep/ .table-view-cell:last-child {
   border-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-cell > a:not(.btn) */
-
-:scope /shadow-deep/ .table-view-cell > a:not(.btn) {
+:scope /deep/ .table-view-cell > a:not(.btn),
+:host /deep/ .table-view-cell > a:not(.btn) {
   position: relative;
   display: block;
   padding: inherit;
@@ -1654,21 +1836,18 @@ license that can be found in the LICENSE file.
   color: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-cell > a:not(.btn):active */
-
-:scope /shadow-deep/ .table-view-cell > a:not(.btn):active {
+:scope /deep/ .table-view-cell > a:not(.btn):active,
+:host /deep/ .table-view-cell > a:not(.btn):active {
   background-color: #eee;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-cell p */
-
-:scope /shadow-deep/ .table-view-cell p {
+:scope /deep/ .table-view-cell p,
+:host /deep/ .table-view-cell p {
   margin-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-divider */
-
-:scope /shadow-deep/ .table-view-divider {
+:scope /deep/ .table-view-divider,
+:host /deep/ .table-view-divider {
   padding-top: 6px;
   padding-bottom: 6px;
   padding-left: 15px;
@@ -1681,33 +1860,35 @@ license that can be found in the LICENSE file.
   border-bottom: 1px solid #ddd;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view .media, :host /shadow-deep/ .table-view .media-body */
-
-:scope /shadow-deep/ .table-view .media,
-:scope /shadow-deep/ .table-view .media-body {
+:scope /deep/ .table-view .media,
+:host /deep/ .table-view .media,
+:scope /deep/ .table-view .media-body,
+:host /deep/ .table-view .media-body {
   overflow: hidden;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view .media-object.pull-left */
-
-:scope /shadow-deep/ .table-view .media-object.pull-left {
+:scope /deep/ .table-view .media-object.pull-left,
+:host /deep/ .table-view .media-object.pull-left {
   margin-right: 10px;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view .media-object.pull-right */
-
-:scope /shadow-deep/ .table-view .media-object.pull-right {
+:scope /deep/ .table-view .media-object.pull-right,
+:host /deep/ .table-view .media-object.pull-right {
   margin-left: 10px;
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-cell > .btn, :host /shadow-deep/ .table-view-cell > .badge, :host /shadow-deep/ .table-view-cell > .toggle, :host /shadow-deep/ .table-view-cell > a > .btn, :host /shadow-deep/ .table-view-cell > a > .badge, :host /shadow-deep/ .table-view-cell > a > .toggle */
-
-:scope /shadow-deep/ .table-view-cell > .btn,
-:scope /shadow-deep/ .table-view-cell > .badge,
-:scope /shadow-deep/ .table-view-cell > .toggle,
-:scope /shadow-deep/ .table-view-cell > a > .btn,
-:scope /shadow-deep/ .table-view-cell > a > .badge,
-:scope /shadow-deep/ .table-view-cell > a > .toggle {
+:scope /deep/ .table-view-cell > .btn,
+:host /deep/ .table-view-cell > .btn,
+:scope /deep/ .table-view-cell > .badge,
+:host /deep/ .table-view-cell > .badge,
+:scope /deep/ .table-view-cell > .toggle,
+:host /deep/ .table-view-cell > .toggle,
+:scope /deep/ .table-view-cell > a > .btn,
+:host /deep/ .table-view-cell > a > .btn,
+:scope /deep/ .table-view-cell > a > .badge,
+:host /deep/ .table-view-cell > a > .badge,
+:scope /deep/ .table-view-cell > a > .toggle,
+:host /deep/ .table-view-cell > a > .toggle {
   position: absolute;
   top: 50%;
   right: 15px;
@@ -1716,69 +1897,106 @@ license that can be found in the LICENSE file.
   transform: translateY(-50%);
 }
 
-/* @polyfill :host /shadow-deep/ .table-view-cell .navigate-left > .btn, :host /shadow-deep/ .table-view-cell .navigate-left > .badge, :host /shadow-deep/ .table-view-cell .navigate-left > .toggle, :host /shadow-deep/ .table-view-cell .navigate-right > .btn, :host /shadow-deep/ .table-view-cell .navigate-right > .badge, :host /shadow-deep/ .table-view-cell .navigate-right > .toggle, :host /shadow-deep/ .table-view-cell .push-left > .btn, :host /shadow-deep/ .table-view-cell .push-left > .badge, :host /shadow-deep/ .table-view-cell .push-left > .toggle, :host /shadow-deep/ .table-view-cell .push-right > .btn, :host /shadow-deep/ .table-view-cell .push-right > .badge, :host /shadow-deep/ .table-view-cell .push-right > .toggle, :host /shadow-deep/ .table-view-cell > a .navigate-left > .btn, :host /shadow-deep/ .table-view-cell > a .navigate-left > .badge, :host /shadow-deep/ .table-view-cell > a .navigate-left > .toggle, :host /shadow-deep/ .table-view-cell > a .navigate-right > .btn, :host /shadow-deep/ .table-view-cell > a .navigate-right > .badge, :host /shadow-deep/ .table-view-cell > a .navigate-right > .toggle, :host /shadow-deep/ .table-view-cell > a .push-left > .btn, :host /shadow-deep/ .table-view-cell > a .push-left > .badge, :host /shadow-deep/ .table-view-cell > a .push-left > .toggle, :host /shadow-deep/ .table-view-cell > a .push-right > .btn, :host /shadow-deep/ .table-view-cell > a .push-right > .badge, :host /shadow-deep/ .table-view-cell > a .push-right > .toggle */
-
-:scope /shadow-deep/ .table-view-cell .navigate-left > .btn,
-:scope /shadow-deep/ .table-view-cell .navigate-left > .badge,
-:scope /shadow-deep/ .table-view-cell .navigate-left > .toggle,
-:scope /shadow-deep/ .table-view-cell .navigate-right > .btn,
-:scope /shadow-deep/ .table-view-cell .navigate-right > .badge,
-:scope /shadow-deep/ .table-view-cell .navigate-right > .toggle,
-:scope /shadow-deep/ .table-view-cell .push-left > .btn,
-:scope /shadow-deep/ .table-view-cell .push-left > .badge,
-:scope /shadow-deep/ .table-view-cell .push-left > .toggle,
-:scope /shadow-deep/ .table-view-cell .push-right > .btn,
-:scope /shadow-deep/ .table-view-cell .push-right > .badge,
-:scope /shadow-deep/ .table-view-cell .push-right > .toggle,
-:scope /shadow-deep/ .table-view-cell > a .navigate-left > .btn,
-:scope /shadow-deep/ .table-view-cell > a .navigate-left > .badge,
-:scope /shadow-deep/ .table-view-cell > a .navigate-left > .toggle,
-:scope /shadow-deep/ .table-view-cell > a .navigate-right > .btn,
-:scope /shadow-deep/ .table-view-cell > a .navigate-right > .badge,
-:scope /shadow-deep/ .table-view-cell > a .navigate-right > .toggle,
-:scope /shadow-deep/ .table-view-cell > a .push-left > .btn,
-:scope /shadow-deep/ .table-view-cell > a .push-left > .badge,
-:scope /shadow-deep/ .table-view-cell > a .push-left > .toggle,
-:scope /shadow-deep/ .table-view-cell > a .push-right > .btn,
-:scope /shadow-deep/ .table-view-cell > a .push-right > .badge,
-:scope /shadow-deep/ .table-view-cell > a .push-right > .toggle {
+:scope /deep/ .table-view-cell .navigate-left > .btn,
+:host /deep/ .table-view-cell .navigate-left > .btn,
+:scope /deep/ .table-view-cell .navigate-left > .badge,
+:host /deep/ .table-view-cell .navigate-left > .badge,
+:scope /deep/ .table-view-cell .navigate-left > .toggle,
+:host /deep/ .table-view-cell .navigate-left > .toggle,
+:scope /deep/ .table-view-cell .navigate-right > .btn,
+:host /deep/ .table-view-cell .navigate-right > .btn,
+:scope /deep/ .table-view-cell .navigate-right > .badge,
+:host /deep/ .table-view-cell .navigate-right > .badge,
+:scope /deep/ .table-view-cell .navigate-right > .toggle,
+:host /deep/ .table-view-cell .navigate-right > .toggle,
+:scope /deep/ .table-view-cell .push-left > .btn,
+:host /deep/ .table-view-cell .push-left > .btn,
+:scope /deep/ .table-view-cell .push-left > .badge,
+:host /deep/ .table-view-cell .push-left > .badge,
+:scope /deep/ .table-view-cell .push-left > .toggle,
+:host /deep/ .table-view-cell .push-left > .toggle,
+:scope /deep/ .table-view-cell .push-right > .btn,
+:host /deep/ .table-view-cell .push-right > .btn,
+:scope /deep/ .table-view-cell .push-right > .badge,
+:host /deep/ .table-view-cell .push-right > .badge,
+:scope /deep/ .table-view-cell .push-right > .toggle,
+:host /deep/ .table-view-cell .push-right > .toggle,
+:scope /deep/ .table-view-cell > a .navigate-left > .btn,
+:host /deep/ .table-view-cell > a .navigate-left > .btn,
+:scope /deep/ .table-view-cell > a .navigate-left > .badge,
+:host /deep/ .table-view-cell > a .navigate-left > .badge,
+:scope /deep/ .table-view-cell > a .navigate-left > .toggle,
+:host /deep/ .table-view-cell > a .navigate-left > .toggle,
+:scope /deep/ .table-view-cell > a .navigate-right > .btn,
+:host /deep/ .table-view-cell > a .navigate-right > .btn,
+:scope /deep/ .table-view-cell > a .navigate-right > .badge,
+:host /deep/ .table-view-cell > a .navigate-right > .badge,
+:scope /deep/ .table-view-cell > a .navigate-right > .toggle,
+:host /deep/ .table-view-cell > a .navigate-right > .toggle,
+:scope /deep/ .table-view-cell > a .push-left > .btn,
+:host /deep/ .table-view-cell > a .push-left > .btn,
+:scope /deep/ .table-view-cell > a .push-left > .badge,
+:host /deep/ .table-view-cell > a .push-left > .badge,
+:scope /deep/ .table-view-cell > a .push-left > .toggle,
+:host /deep/ .table-view-cell > a .push-left > .toggle,
+:scope /deep/ .table-view-cell > a .push-right > .btn,
+:host /deep/ .table-view-cell > a .push-right > .btn,
+:scope /deep/ .table-view-cell > a .push-right > .badge,
+:host /deep/ .table-view-cell > a .push-right > .badge,
+:scope /deep/ .table-view-cell > a .push-right > .toggle,
+:host /deep/ .table-view-cell > a .push-right > .toggle {
   right: 35px;
 }
 
-/* @polyfill :host /shadow-deep/ .content > .table-view:first-child */
-
-:scope /shadow-deep/ .content > .table-view:first-child {
+:scope /deep/ .content > .table-view:first-child,
+:host /deep/ .content > .table-view:first-child {
   margin-top: 15px;
 }
 
-/* @polyfill :host /shadow-deep/ input, :host /shadow-deep/ textarea, :host /shadow-deep/ button, :host /shadow-deep/ select */
-
-:scope /shadow-deep/ input,
-:scope /shadow-deep/ textarea,
-:scope /shadow-deep/ button,
-:scope /shadow-deep/ select {
+:scope /deep/ input,
+:host /deep/ input,
+:scope /deep/ textarea,
+:host /deep/ textarea,
+:scope /deep/ button,
+:host /deep/ button,
+:scope /deep/ select,
+:host /deep/ select {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-size: 17px;
 }
 
-/* @polyfill :host /shadow-deep/ select, :host /shadow-deep/ textarea, :host /shadow-deep/ input[type="text"], :host /shadow-deep/ input[type="search"], :host /shadow-deep/ input[type="password"], :host /shadow-deep/ input[type="datetime"], :host /shadow-deep/ input[type="datetime-local"], :host /shadow-deep/ input[type="date"], :host /shadow-deep/ input[type="month"], :host /shadow-deep/ input[type="time"], :host /shadow-deep/ input[type="week"], :host /shadow-deep/ input[type="number"], :host /shadow-deep/ input[type="email"], :host /shadow-deep/ input[type="url"], :host /shadow-deep/ input[type="tel"], :host /shadow-deep/ input[type="color"] */
-
-:scope /shadow-deep/ select,
-:scope /shadow-deep/ textarea,
-:scope /shadow-deep/ input[type="text"],
-:scope /shadow-deep/ input[type="search"],
-:scope /shadow-deep/ input[type="password"],
-:scope /shadow-deep/ input[type="datetime"],
-:scope /shadow-deep/ input[type="datetime-local"],
-:scope /shadow-deep/ input[type="date"],
-:scope /shadow-deep/ input[type="month"],
-:scope /shadow-deep/ input[type="time"],
-:scope /shadow-deep/ input[type="week"],
-:scope /shadow-deep/ input[type="number"],
-:scope /shadow-deep/ input[type="email"],
-:scope /shadow-deep/ input[type="url"],
-:scope /shadow-deep/ input[type="tel"],
-:scope /shadow-deep/ input[type="color"] {
+:scope /deep/ select,
+:host /deep/ select,
+:scope /deep/ textarea,
+:host /deep/ textarea,
+:scope /deep/ input[type="text"],
+:host /deep/ input[type="text"],
+:scope /deep/ input[type="search"],
+:host /deep/ input[type="search"],
+:scope /deep/ input[type="password"],
+:host /deep/ input[type="password"],
+:scope /deep/ input[type="datetime"],
+:host /deep/ input[type="datetime"],
+:scope /deep/ input[type="datetime-local"],
+:host /deep/ input[type="datetime-local"],
+:scope /deep/ input[type="date"],
+:host /deep/ input[type="date"],
+:scope /deep/ input[type="month"],
+:host /deep/ input[type="month"],
+:scope /deep/ input[type="time"],
+:host /deep/ input[type="time"],
+:scope /deep/ input[type="week"],
+:host /deep/ input[type="week"],
+:scope /deep/ input[type="number"],
+:host /deep/ input[type="number"],
+:scope /deep/ input[type="email"],
+:host /deep/ input[type="email"],
+:scope /deep/ input[type="url"],
+:host /deep/ input[type="url"],
+:scope /deep/ input[type="tel"],
+:host /deep/ input[type="tel"],
+:scope /deep/ input[type="color"],
+:host /deep/ input[type="color"] {
   width: 100%;
   height: 35px;
   -webkit-appearance: none;
@@ -1791,9 +2009,8 @@ license that can be found in the LICENSE file.
   outline: none;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="search"] */
-
-:scope /shadow-deep/ input[type="search"] {
+:scope /deep/ input[type="search"],
+:host /deep/ input[type="search"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1802,21 +2019,18 @@ license that can be found in the LICENSE file.
   border-radius: 20px;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="search"]:focus */
-
-:scope /shadow-deep/ input[type="search"]:focus {
+:scope /deep/ input[type="search"]:focus,
+:host /deep/ input[type="search"]:focus {
   text-align: left;
 }
 
-/* @polyfill :host /shadow-deep/ textarea */
-
-:scope /shadow-deep/ textarea {
+:scope /deep/ textarea,
+:host /deep/ textarea {
   height: auto;
 }
 
-/* @polyfill :host /shadow-deep/ select */
-
-:scope /shadow-deep/ select {
+:scope /deep/ select,
+:host /deep/ select {
   height: auto;
   font-size: 14px;
   background-color: #f8f8f8;
@@ -1824,16 +2038,15 @@ license that can be found in the LICENSE file.
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
 }
 
-/* @polyfill :host /shadow-deep/ .input-group */
-
-:scope /shadow-deep/ .input-group {
+:scope /deep/ .input-group,
+:host /deep/ .input-group {
   background-color: #fff;
 }
 
-/* @polyfill :host /shadow-deep/ .input-group input, :host /shadow-deep/ .input-group textarea */
-
-:scope /shadow-deep/ .input-group input,
-:scope /shadow-deep/ .input-group textarea {
+:scope /deep/ .input-group input,
+:host /deep/ .input-group input,
+:scope /deep/ .input-group textarea,
+:host /deep/ .input-group textarea {
   margin-bottom: 0;
   background-color: transparent;
   border-top: 0;
@@ -1844,17 +2057,15 @@ license that can be found in the LICENSE file.
   box-shadow: none;
 }
 
-/* @polyfill :host /shadow-deep/ .input-row */
-
-:scope /shadow-deep/ .input-row {
+:scope /deep/ .input-row,
+:host /deep/ .input-row {
   height: 35px;
   overflow: hidden;
   border-bottom: 1px solid #ddd;
 }
 
-/* @polyfill :host /shadow-deep/ .input-row label */
-
-:scope /shadow-deep/ .input-row label {
+:scope /deep/ .input-row label,
+:host /deep/ .input-row label {
   float: left;
   width: 35%;
   padding: 8px 15px;
@@ -1862,9 +2073,8 @@ license that can be found in the LICENSE file.
   line-height: 1.1;
 }
 
-/* @polyfill :host /shadow-deep/ .input-row input */
-
-:scope /shadow-deep/ .input-row input {
+:scope /deep/ .input-row input,
+:host /deep/ .input-row input {
   float: right;
   width: 65%;
   padding-left: 0;
@@ -1872,9 +2082,8 @@ license that can be found in the LICENSE file.
   border: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control */
-
-:scope /shadow-deep/ .segmented-control {
+:scope /deep/ .segmented-control,
+:host /deep/ .segmented-control {
   position: relative;
   display: table;
   overflow: hidden;
@@ -1885,9 +2094,8 @@ license that can be found in the LICENSE file.
   border-radius: 3px;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control .control-item */
-
-:scope /shadow-deep/ .segmented-control .control-item {
+:scope /deep/ .segmented-control .control-item,
+:host /deep/ .segmented-control .control-item {
   display: table-cell;
   width: 1%;
   padding-top: 6px;
@@ -1901,117 +2109,99 @@ license that can be found in the LICENSE file.
   border-left: 1px solid #ccc;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control .control-item:first-child */
-
-:scope /shadow-deep/ .segmented-control .control-item:first-child {
+:scope /deep/ .segmented-control .control-item:first-child,
+:host /deep/ .segmented-control .control-item:first-child {
   border-left-width: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control .control-item:active */
-
-:scope /shadow-deep/ .segmented-control .control-item:active {
+:scope /deep/ .segmented-control .control-item:active,
+:host /deep/ .segmented-control .control-item:active {
   background-color: #eee;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control .control-item.active */
-
-:scope /shadow-deep/ .segmented-control .control-item.active {
+:scope /deep/ .segmented-control .control-item.active,
+:host /deep/ .segmented-control .control-item.active {
   background-color: #ccc;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-primary */
-
-:scope /shadow-deep/ .segmented-control-primary {
+:scope /deep/ .segmented-control-primary,
+:host /deep/ .segmented-control-primary {
   border-color: #428bca;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-primary .control-item */
-
-:scope /shadow-deep/ .segmented-control-primary .control-item {
+:scope /deep/ .segmented-control-primary .control-item,
+:host /deep/ .segmented-control-primary .control-item {
   color: #428bca;
   border-color: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-primary .control-item:active */
-
-:scope /shadow-deep/ .segmented-control-primary .control-item:active {
+:scope /deep/ .segmented-control-primary .control-item:active,
+:host /deep/ .segmented-control-primary .control-item:active {
   background-color: #cde1f1;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-primary .control-item.active */
-
-:scope /shadow-deep/ .segmented-control-primary .control-item.active {
+:scope /deep/ .segmented-control-primary .control-item.active,
+:host /deep/ .segmented-control-primary .control-item.active {
   color: #fff;
   background-color: #428bca;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-positive */
-
-:scope /shadow-deep/ .segmented-control-positive {
+:scope /deep/ .segmented-control-positive,
+:host /deep/ .segmented-control-positive {
   border-color: #5cb85c;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-positive .control-item */
-
-:scope /shadow-deep/ .segmented-control-positive .control-item {
+:scope /deep/ .segmented-control-positive .control-item,
+:host /deep/ .segmented-control-positive .control-item {
   color: #5cb85c;
   border-color: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-positive .control-item:active */
-
-:scope /shadow-deep/ .segmented-control-positive .control-item:active {
+:scope /deep/ .segmented-control-positive .control-item:active,
+:host /deep/ .segmented-control-positive .control-item:active {
   background-color: #d8eed8;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-positive .control-item.active */
-
-:scope /shadow-deep/ .segmented-control-positive .control-item.active {
+:scope /deep/ .segmented-control-positive .control-item.active,
+:host /deep/ .segmented-control-positive .control-item.active {
   color: #fff;
   background-color: #5cb85c;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-negative */
-
-:scope /shadow-deep/ .segmented-control-negative {
+:scope /deep/ .segmented-control-negative,
+:host /deep/ .segmented-control-negative {
   border-color: #d9534f;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-negative .control-item */
-
-:scope /shadow-deep/ .segmented-control-negative .control-item {
+:scope /deep/ .segmented-control-negative .control-item,
+:host /deep/ .segmented-control-negative .control-item {
   color: #d9534f;
   border-color: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-negative .control-item:active */
-
-:scope /shadow-deep/ .segmented-control-negative .control-item:active {
+:scope /deep/ .segmented-control-negative .control-item:active,
+:host /deep/ .segmented-control-negative .control-item:active {
   background-color: #f9e2e2;
 }
 
-/* @polyfill :host /shadow-deep/ .segmented-control-negative .control-item.active */
-
-:scope /shadow-deep/ .segmented-control-negative .control-item.active {
+:scope /deep/ .segmented-control-negative .control-item.active,
+:host /deep/ .segmented-control-negative .control-item.active {
   color: #fff;
   background-color: #d9534f;
 }
 
-/* @polyfill :host /shadow-deep/ .control-content */
-
-:scope /shadow-deep/ .control-content {
+:scope /deep/ .control-content,
+:host /deep/ .control-content {
   display: none;
 }
 
-/* @polyfill :host /shadow-deep/ .control-content.active */
-
-:scope /shadow-deep/ .control-content.active {
+:scope /deep/ .control-content.active,
+:host /deep/ .control-content.active {
   display: block;
 }
 
-/* @polyfill :host /shadow-deep/ .popover */
-
-:scope /shadow-deep/ .popover {
+:scope /deep/ .popover,
+:host /deep/ .popover {
   position: fixed;
   top: 55px;
   left: 50%;
@@ -2032,9 +2222,8 @@ license that can be found in the LICENSE file.
   transform: translate3d(0, -15px, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .popover:before */
-
-:scope /shadow-deep/ .popover:before {
+:scope /deep/ .popover:before,
+:host /deep/ .popover:before {
   position: absolute;
   top: -15px;
   left: 50%;
@@ -2047,24 +2236,21 @@ license that can be found in the LICENSE file.
   border-left: 15px solid transparent;
 }
 
-/* @polyfill :host /shadow-deep/ .popover.visible */
-
-:scope /shadow-deep/ .popover.visible {
+:scope /deep/ .popover.visible,
+:host /deep/ .popover.visible {
   opacity: 1;
   -webkit-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .popover .bar ~ .table-view */
-
-:scope /shadow-deep/ .popover .bar ~ .table-view {
+:scope /deep/ .popover .bar ~ .table-view,
+:host /deep/ .popover .bar ~ .table-view {
   padding-top: 44px;
 }
 
-/* @polyfill :host /shadow-deep/ .backdrop */
-
-:scope /shadow-deep/ .backdrop {
+:scope /deep/ .backdrop,
+:host /deep/ .backdrop {
   position: fixed;
   top: 0;
   right: 0;
@@ -2074,21 +2260,18 @@ license that can be found in the LICENSE file.
   background-color: rgba(0, 0, 0, .3);
 }
 
-/* @polyfill :host /shadow-deep/ .popover .btn-block */
-
-:scope /shadow-deep/ .popover .btn-block {
+:scope /deep/ .popover .btn-block,
+:host /deep/ .popover .btn-block {
   margin-bottom: 5px;
 }
 
-/* @polyfill :host /shadow-deep/ .popover .btn-block:last-child */
-
-:scope /shadow-deep/ .popover .btn-block:last-child {
+:scope /deep/ .popover .btn-block:last-child,
+:host /deep/ .popover .btn-block:last-child {
   margin-bottom: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .popover .bar-nav */
-
-:scope /shadow-deep/ .popover .bar-nav {
+:scope /deep/ .popover .bar-nav,
+:host /deep/ .popover .bar-nav {
   border-bottom: 1px solid #ddd;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -2096,9 +2279,8 @@ license that can be found in the LICENSE file.
   box-shadow: none;
 }
 
-/* @polyfill :host /shadow-deep/ .popover .table-view */
-
-:scope /shadow-deep/ .popover .table-view {
+:scope /deep/ .popover .table-view,
+:host /deep/ .popover .table-view {
   max-height: 300px;
   margin-bottom: 0;
   overflow: auto;
@@ -2109,9 +2291,8 @@ license that can be found in the LICENSE file.
   border-radius: 6px;
 }
 
-/* @polyfill :host /shadow-deep/ .modal */
-
-:scope /shadow-deep/ .modal {
+:scope /deep/ .modal,
+:host /deep/ .modal {
   position: fixed;
   top: 0;
   z-index: 11;
@@ -2128,9 +2309,8 @@ license that can be found in the LICENSE file.
   transform: translate3d(0, 100%, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .modal.active */
-
-:scope /shadow-deep/ .modal.active {
+:scope /deep/ .modal.active,
+:host /deep/ .modal.active {
   height: 100%;
   opacity: 1;
   -webkit-transition: -webkit-transform .25s;
@@ -2141,22 +2321,19 @@ license that can be found in the LICENSE file.
   transform: translate3d(0, 0, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .slider */
-
-:scope /shadow-deep/ .slider {
+:scope /deep/ .slider,
+:host /deep/ .slider {
   width: 100%;
 }
 
-/* @polyfill :host /shadow-deep/ .slider */
-
-:scope /shadow-deep/ .slider {
+:scope /deep/ .slider,
+:host /deep/ .slider {
   overflow: hidden;
   background-color: #000;
 }
 
-/* @polyfill :host /shadow-deep/ .slider .slide-group */
-
-:scope /shadow-deep/ .slider .slide-group {
+:scope /deep/ .slider .slide-group,
+:host /deep/ .slider .slide-group {
   position: relative;
   font-size: 0;
   white-space: nowrap;
@@ -2165,9 +2342,8 @@ license that can be found in the LICENSE file.
   transition: all 0s linear;
 }
 
-/* @polyfill :host /shadow-deep/ .slider .slide-group .slide */
-
-:scope /shadow-deep/ .slider .slide-group .slide {
+:scope /deep/ .slider .slide-group .slide,
+:host /deep/ .slider .slide-group .slide {
   display: inline-block;
   width: 100%;
   height: 100%;
@@ -2175,9 +2351,8 @@ license that can be found in the LICENSE file.
   vertical-align: top;
 }
 
-/* @polyfill :host /shadow-deep/ .toggle */
-
-:scope /shadow-deep/ .toggle {
+:scope /deep/ .toggle,
+:host /deep/ .toggle {
   position: relative;
   display: block;
   width: 74px;
@@ -2193,9 +2368,8 @@ license that can be found in the LICENSE file.
   transition-property: background-color, border;
 }
 
-/* @polyfill :host /shadow-deep/ .toggle .toggle-handle */
-
-:scope /shadow-deep/ .toggle .toggle-handle {
+:scope /deep/ .toggle .toggle-handle,
+:host /deep/ .toggle .toggle-handle {
   position: absolute;
   top: -1px;
   left: -1px;
@@ -2213,9 +2387,8 @@ license that can be found in the LICENSE file.
   transition-property: transform, border, width;
 }
 
-/* @polyfill :host /shadow-deep/ .toggle:before */
-
-:scope /shadow-deep/ .toggle:before {
+:scope /deep/ .toggle:before,
+:host /deep/ .toggle:before {
   position: absolute;
   top: 3px;
   right: 11px;
@@ -2225,53 +2398,46 @@ license that can be found in the LICENSE file.
   content: "Off";
 }
 
-/* @polyfill :host /shadow-deep/ .toggle.active */
-
-:scope /shadow-deep/ .toggle.active {
+:scope /deep/ .toggle.active,
+:host /deep/ .toggle.active {
   background-color: #5cb85c;
   border: 2px solid #5cb85c;
 }
 
-/* @polyfill :host /shadow-deep/ .toggle.active .toggle-handle */
-
-:scope /shadow-deep/ .toggle.active .toggle-handle {
+:scope /deep/ .toggle.active .toggle-handle,
+:host /deep/ .toggle.active .toggle-handle {
   border-color: #5cb85c;
   -webkit-transform: translate3d(44px, 0, 0);
   -ms-transform: translate3d(44px, 0, 0);
   transform: translate3d(44px, 0, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .toggle.active:before */
-
-:scope /shadow-deep/ .toggle.active:before {
+:scope /deep/ .toggle.active:before,
+:host /deep/ .toggle.active:before {
   right: auto;
   left: 15px;
   color: #fff;
   content: "On";
 }
 
-/* @polyfill :host /shadow-deep/ .toggle input[type="checkbox"] */
-
-:scope /shadow-deep/ .toggle input[type="checkbox"] {
+:scope /deep/ .toggle input[type="checkbox"],
+:host /deep/ .toggle input[type="checkbox"] {
   display: none;
 }
 
-/* @polyfill :host /shadow-deep/ .content.fade */
-
-:scope /shadow-deep/ .content.fade {
+:scope /deep/ .content.fade,
+:host /deep/ .content.fade {
   left: 0;
   opacity: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .content.fade.in */
-
-:scope /shadow-deep/ .content.fade.in {
+:scope /deep/ .content.fade.in,
+:host /deep/ .content.fade.in {
   opacity: 1;
 }
 
-/* @polyfill :host /shadow-deep/ .content.sliding */
-
-:scope /shadow-deep/ .content.sliding {
+:scope /deep/ .content.sliding,
+:host /deep/ .content.sliding {
   z-index: 2;
   -webkit-transition: -webkit-transform .4s;
   -moz-transition: -moz-transform .4s;
@@ -2281,30 +2447,30 @@ license that can be found in the LICENSE file.
   transform: translate3d(0, 0, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .content.sliding.left */
-
-:scope /shadow-deep/ .content.sliding.left {
+:scope /deep/ .content.sliding.left,
+:host /deep/ .content.sliding.left {
   z-index: 1;
   -webkit-transform: translate3d(-100%, 0, 0);
   -ms-transform: translate3d(-100%, 0, 0);
   transform: translate3d(-100%, 0, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .content.sliding.right */
-
-:scope /shadow-deep/ .content.sliding.right {
+:scope /deep/ .content.sliding.right,
+:host /deep/ .content.sliding.right {
   z-index: 3;
   -webkit-transform: translate3d(100%, 0, 0);
   -ms-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
 }
 
-/* @polyfill :host /shadow-deep/ .navigate-left:after, :host /shadow-deep/ .navigate-right:after, :host /shadow-deep/ .push-left:after, :host /shadow-deep/ .push-right:after */
-
-:scope /shadow-deep/ .navigate-left:after,
-:scope /shadow-deep/ .navigate-right:after,
-:scope /shadow-deep/ .push-left:after,
-:scope /shadow-deep/ .push-right:after {
+:scope /deep/ .navigate-left:after,
+:host /deep/ .navigate-left:after,
+:scope /deep/ .navigate-right:after,
+:host /deep/ .navigate-right:after,
+:scope /deep/ .push-left:after,
+:host /deep/ .push-left:after,
+:scope /deep/ .push-right:after,
+:host /deep/ .push-right:after {
   position: absolute;
   top: 50%;
   display: inline-block;
@@ -2319,18 +2485,18 @@ license that can be found in the LICENSE file.
   -webkit-font-smoothing: antialiased;
 }
 
-/* @polyfill :host /shadow-deep/ .navigate-left:after, :host /shadow-deep/ .push-left:after */
-
-:scope /shadow-deep/ .navigate-left:after,
-:scope /shadow-deep/ .push-left:after {
+:scope /deep/ .navigate-left:after,
+:host /deep/ .navigate-left:after,
+:scope /deep/ .push-left:after,
+:host /deep/ .push-left:after {
   left: 15px;
   content: '\e822';
 }
 
-/* @polyfill :host /shadow-deep/ .navigate-right:after, :host /shadow-deep/ .push-right:after */
-
-:scope /shadow-deep/ .navigate-right:after,
-:scope /shadow-deep/ .push-right:after {
+:scope /deep/ .navigate-right:after,
+:host /deep/ .navigate-right:after,
+:scope /deep/ .push-right:after,
+:host /deep/ .push-right:after {
   right: 15px;
   content: '\e826';
 }
@@ -2339,13 +2505,12 @@ license that can be found in the LICENSE file.
   font-family: Ratchicons;
   font-style: normal;
   font-weight: normal;
-  src: url(../dependencies/ratchet/fonts/ratchicons.eot);
-  src: url(../dependencies/ratchet/fonts/ratchicons.eot?#iefix) format("embedded-opentype"), url(../dependencies/ratchet/fonts/ratchicons.woff) format("woff"), url(../dependencies/ratchet/fonts/ratchicons.ttf) format("truetype"), url(../dependencies/ratchet/fonts/ratchicons.svg#svgFontName) format("svg");
+  src: url(../dependencies/ratchet/dist/fonts/ratchicons.eot);
+  src: url(../dependencies/ratchet/dist/fonts/ratchicons.eot?#iefix) format("embedded-opentype"), url(../dependencies/ratchet/dist/fonts/ratchicons.woff) format("woff"), url(../dependencies/ratchet/dist/fonts/ratchicons.ttf) format("truetype"), url(../dependencies/ratchet/dist/fonts/ratchicons.svg#svgFontName) format("svg");
 }
 
-/* @polyfill :host /shadow-deep/ .icon */
-
-:scope /shadow-deep/ .icon {
+:scope /deep/ .icon,
+:host /deep/ .icon {
   display: inline-block;
   font-family: Ratchicons;
   font-size: 24px;
@@ -2354,260 +2519,217 @@ license that can be found in the LICENSE file.
   -webkit-font-smoothing: antialiased;
 }
 
-/* @polyfill :host /shadow-deep/ .icon-back:before */
-
-:scope /shadow-deep/ .icon-back:before {
+:scope /deep/ .icon-back:before,
+:host /deep/ .icon-back:before {
   content: '\e80a';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-bars:before */
-
-:scope /shadow-deep/ .icon-bars:before {
+:scope /deep/ .icon-bars:before,
+:host /deep/ .icon-bars:before {
   content: '\e80e';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-caret:before */
-
-:scope /shadow-deep/ .icon-caret:before {
+:scope /deep/ .icon-caret:before,
+:host /deep/ .icon-caret:before {
   content: '\e80f';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-check:before */
-
-:scope /shadow-deep/ .icon-check:before {
+:scope /deep/ .icon-check:before,
+:host /deep/ .icon-check:before {
   content: '\e810';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-close:before */
-
-:scope /shadow-deep/ .icon-close:before {
+:scope /deep/ .icon-close:before,
+:host /deep/ .icon-close:before {
   content: '\e811';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-code:before */
-
-:scope /shadow-deep/ .icon-code:before {
+:scope /deep/ .icon-code:before,
+:host /deep/ .icon-code:before {
   content: '\e812';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-compose:before */
-
-:scope /shadow-deep/ .icon-compose:before {
+:scope /deep/ .icon-compose:before,
+:host /deep/ .icon-compose:before {
   content: '\e813';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-download:before */
-
-:scope /shadow-deep/ .icon-download:before {
+:scope /deep/ .icon-download:before,
+:host /deep/ .icon-download:before {
   content: '\e815';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-edit:before */
-
-:scope /shadow-deep/ .icon-edit:before {
+:scope /deep/ .icon-edit:before,
+:host /deep/ .icon-edit:before {
   content: '\e829';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-forward:before */
-
-:scope /shadow-deep/ .icon-forward:before {
+:scope /deep/ .icon-forward:before,
+:host /deep/ .icon-forward:before {
   content: '\e82a';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-gear:before */
-
-:scope /shadow-deep/ .icon-gear:before {
+:scope /deep/ .icon-gear:before,
+:host /deep/ .icon-gear:before {
   content: '\e821';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-home:before */
-
-:scope /shadow-deep/ .icon-home:before {
+:scope /deep/ .icon-home:before,
+:host /deep/ .icon-home:before {
   content: '\e82b';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-info:before */
-
-:scope /shadow-deep/ .icon-info:before {
+:scope /deep/ .icon-info:before,
+:host /deep/ .icon-info:before {
   content: '\e82c';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-list:before */
-
-:scope /shadow-deep/ .icon-list:before {
+:scope /deep/ .icon-list:before,
+:host /deep/ .icon-list:before {
   content: '\e823';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-more-vertical:before */
-
-:scope /shadow-deep/ .icon-more-vertical:before {
+:scope /deep/ .icon-more-vertical:before,
+:host /deep/ .icon-more-vertical:before {
   content: '\e82e';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-more:before */
-
-:scope /shadow-deep/ .icon-more:before {
+:scope /deep/ .icon-more:before,
+:host /deep/ .icon-more:before {
   content: '\e82f';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-pages:before */
-
-:scope /shadow-deep/ .icon-pages:before {
+:scope /deep/ .icon-pages:before,
+:host /deep/ .icon-pages:before {
   content: '\e824';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-pause:before */
-
-:scope /shadow-deep/ .icon-pause:before {
+:scope /deep/ .icon-pause:before,
+:host /deep/ .icon-pause:before {
   content: '\e830';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-person:before */
-
-:scope /shadow-deep/ .icon-person:before {
+:scope /deep/ .icon-person:before,
+:host /deep/ .icon-person:before {
   content: '\e832';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-play:before */
-
-:scope /shadow-deep/ .icon-play:before {
+:scope /deep/ .icon-play:before,
+:host /deep/ .icon-play:before {
   content: '\e816';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-plus:before */
-
-:scope /shadow-deep/ .icon-plus:before {
+:scope /deep/ .icon-plus:before,
+:host /deep/ .icon-plus:before {
   content: '\e817';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-refresh:before */
-
-:scope /shadow-deep/ .icon-refresh:before {
+:scope /deep/ .icon-refresh:before,
+:host /deep/ .icon-refresh:before {
   content: '\e825';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-search:before */
-
-:scope /shadow-deep/ .icon-search:before {
+:scope /deep/ .icon-search:before,
+:host /deep/ .icon-search:before {
   content: '\e819';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-share:before */
-
-:scope /shadow-deep/ .icon-share:before {
+:scope /deep/ .icon-share:before,
+:host /deep/ .icon-share:before {
   content: '\e81a';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-sound:before */
-
-:scope /shadow-deep/ .icon-sound:before {
+:scope /deep/ .icon-sound:before,
+:host /deep/ .icon-sound:before {
   content: '\e827';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-sound2:before */
-
-:scope /shadow-deep/ .icon-sound2:before {
+:scope /deep/ .icon-sound2:before,
+:host /deep/ .icon-sound2:before {
   content: '\e828';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-sound3:before */
-
-:scope /shadow-deep/ .icon-sound3:before {
+:scope /deep/ .icon-sound3:before,
+:host /deep/ .icon-sound3:before {
   content: '\e80b';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-sound4:before */
-
-:scope /shadow-deep/ .icon-sound4:before {
+:scope /deep/ .icon-sound4:before,
+:host /deep/ .icon-sound4:before {
   content: '\e80c';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-star-filled:before */
-
-:scope /shadow-deep/ .icon-star-filled:before {
+:scope /deep/ .icon-star-filled:before,
+:host /deep/ .icon-star-filled:before {
   content: '\e81b';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-star:before */
-
-:scope /shadow-deep/ .icon-star:before {
+:scope /deep/ .icon-star:before,
+:host /deep/ .icon-star:before {
   content: '\e81c';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-stop:before */
-
-:scope /shadow-deep/ .icon-stop:before {
+:scope /deep/ .icon-stop:before,
+:host /deep/ .icon-stop:before {
   content: '\e81d';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-trash:before */
-
-:scope /shadow-deep/ .icon-trash:before {
+:scope /deep/ .icon-trash:before,
+:host /deep/ .icon-trash:before {
   content: '\e81e';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-up-nav:before */
-
-:scope /shadow-deep/ .icon-up-nav:before {
+:scope /deep/ .icon-up-nav:before,
+:host /deep/ .icon-up-nav:before {
   content: '\e81f';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-up:before */
-
-:scope /shadow-deep/ .icon-up:before {
+:scope /deep/ .icon-up:before,
+:host /deep/ .icon-up:before {
   content: '\e80d';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-right-nav:before */
-
-:scope /shadow-deep/ .icon-right-nav:before {
+:scope /deep/ .icon-right-nav:before,
+:host /deep/ .icon-right-nav:before {
   content: '\e818';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-right:before */
-
-:scope /shadow-deep/ .icon-right:before {
+:scope /deep/ .icon-right:before,
+:host /deep/ .icon-right:before {
   content: '\e826';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-down-nav:before */
-
-:scope /shadow-deep/ .icon-down-nav:before {
+:scope /deep/ .icon-down-nav:before,
+:host /deep/ .icon-down-nav:before {
   content: '\e814';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-down:before */
-
-:scope /shadow-deep/ .icon-down:before {
+:scope /deep/ .icon-down:before,
+:host /deep/ .icon-down:before {
   content: '\e820';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-left-nav:before */
-
-:scope /shadow-deep/ .icon-left-nav:before {
+:scope /deep/ .icon-left-nav:before,
+:host /deep/ .icon-left-nav:before {
   content: '\e82d';
 }
 
-/* @polyfill :host /shadow-deep/ .icon-left:before */
-
-:scope /shadow-deep/ .icon-left:before {
+:scope /deep/ .icon-left:before,
+:host /deep/ .icon-left:before {
   content: '\e822';
 }</style>
-    <style>/* @polyfill :host /shadow-deep/ .ui-responsive */
-
-:scope /shadow-deep/ .ui-responsive {
+    <style>:scope /deep/ .ui-responsive,
+:host /deep/ .ui-responsive {
   overflow: hidden;
 }
 
-/* @polyfill :host /shadow-deep/ .ui-responsive .ui-block:first */
-
-:scope /shadow-deep/ .ui-responsive .ui-block:first {
+:scope /deep/ .ui-responsive .ui-block:first,
+:host /deep/ .ui-responsive .ui-block:first {
   clear: left;
 }
 
-/* @polyfill :host /shadow-deep/ .ui-block */
-
-:scope /shadow-deep/ .ui-block {
+:scope /deep/ .ui-block,
+:host /deep/ .ui-block {
   width: 50%;
   margin: 0;
   padding: 0;
@@ -2623,96 +2745,174 @@ license that can be found in the LICENSE file.
 /* preset breakpoint to switch to stacked grid styles below 35em (560px) */
 
 @media all and (max-width: 35em) {
-  /* @polyfill :host /shadow-deep/ .ui-responsive .ui-block */
-
-  :scope /shadow-deep/ .ui-responsive .ui-block {
+  :scope /deep/ .ui-responsive .ui-block,
+  :host /deep/ .ui-responsive .ui-block {
     width: 100%;
     float: none;
   }
 }</style>
-    <style>/* @polyfill :host, :host, :host /shadow-deep/ div, :host /shadow-deep/ span, :host /shadow-deep/ applet, :host /shadow-deep/ object, :host /shadow-deep/ iframe, :host /shadow-deep/ h1, :host /shadow-deep/ h2, :host /shadow-deep/ h3, :host /shadow-deep/ h4, :host /shadow-deep/ h5, :host /shadow-deep/ h6, :host /shadow-deep/ p, :host /shadow-deep/ blockquote, :host /shadow-deep/ pre, :host /shadow-deep/ a, :host /shadow-deep/ abbr, :host /shadow-deep/ acronym, :host /shadow-deep/ address, :host /shadow-deep/ big, :host /shadow-deep/ cite, :host /shadow-deep/ code, :host /shadow-deep/ del, :host /shadow-deep/ dfn, :host /shadow-deep/ em, :host /shadow-deep/ img, :host /shadow-deep/ ins, :host /shadow-deep/ kbd, :host /shadow-deep/ q, :host /shadow-deep/ s, :host /shadow-deep/ samp, :host /shadow-deep/ small, :host /shadow-deep/ strike, :host /shadow-deep/ strong, :host /shadow-deep/ sub, :host /shadow-deep/ sup, :host /shadow-deep/ tt, :host /shadow-deep/ var, :host /shadow-deep/ b, :host /shadow-deep/ u, :host /shadow-deep/ i, :host /shadow-deep/ center, :host /shadow-deep/ dl, :host /shadow-deep/ dt, :host /shadow-deep/ dd, :host /shadow-deep/ ol, :host /shadow-deep/ ul, :host /shadow-deep/ li, :host /shadow-deep/ fieldset, :host /shadow-deep/ form, :host /shadow-deep/ label, :host /shadow-deep/ legend, :host /shadow-deep/ table, :host /shadow-deep/ caption, :host /shadow-deep/ tbody, :host /shadow-deep/ tfoot, :host /shadow-deep/ thead, :host /shadow-deep/ tr, :host /shadow-deep/ th, :host /shadow-deep/ td, :host /shadow-deep/ article, :host /shadow-deep/ aside, :host /shadow-deep/ canvas, :host /shadow-deep/ details, :host /shadow-deep/ embed, :host /shadow-deep/ figure, :host /shadow-deep/ figcaption, :host /shadow-deep/ footer, :host /shadow-deep/ header, :host /shadow-deep/ hgroup, :host /shadow-deep/ menu, :host /shadow-deep/ nav, :host /shadow-deep/ output, :host /shadow-deep/ ruby, :host /shadow-deep/ section, :host /shadow-deep/ summary, :host /shadow-deep/ time, :host /shadow-deep/ mark, :host /shadow-deep/ audio, :host /shadow-deep/ video */
-
+    <style>:scope,
+:host,
 :scope,
-:scope,
-:scope /shadow-deep/ div,
-:scope /shadow-deep/ span,
-:scope /shadow-deep/ applet,
-:scope /shadow-deep/ object,
-:scope /shadow-deep/ iframe,
-:scope /shadow-deep/ h1,
-:scope /shadow-deep/ h2,
-:scope /shadow-deep/ h3,
-:scope /shadow-deep/ h4,
-:scope /shadow-deep/ h5,
-:scope /shadow-deep/ h6,
-:scope /shadow-deep/ p,
-:scope /shadow-deep/ blockquote,
-:scope /shadow-deep/ pre,
-:scope /shadow-deep/ a,
-:scope /shadow-deep/ abbr,
-:scope /shadow-deep/ acronym,
-:scope /shadow-deep/ address,
-:scope /shadow-deep/ big,
-:scope /shadow-deep/ cite,
-:scope /shadow-deep/ code,
-:scope /shadow-deep/ del,
-:scope /shadow-deep/ dfn,
-:scope /shadow-deep/ em,
-:scope /shadow-deep/ img,
-:scope /shadow-deep/ ins,
-:scope /shadow-deep/ kbd,
-:scope /shadow-deep/ q,
-:scope /shadow-deep/ s,
-:scope /shadow-deep/ samp,
-:scope /shadow-deep/ small,
-:scope /shadow-deep/ strike,
-:scope /shadow-deep/ strong,
-:scope /shadow-deep/ sub,
-:scope /shadow-deep/ sup,
-:scope /shadow-deep/ tt,
-:scope /shadow-deep/ var,
-:scope /shadow-deep/ b,
-:scope /shadow-deep/ u,
-:scope /shadow-deep/ i,
-:scope /shadow-deep/ center,
-:scope /shadow-deep/ dl,
-:scope /shadow-deep/ dt,
-:scope /shadow-deep/ dd,
-:scope /shadow-deep/ ol,
-:scope /shadow-deep/ ul,
-:scope /shadow-deep/ li,
-:scope /shadow-deep/ fieldset,
-:scope /shadow-deep/ form,
-:scope /shadow-deep/ label,
-:scope /shadow-deep/ legend,
-:scope /shadow-deep/ table,
-:scope /shadow-deep/ caption,
-:scope /shadow-deep/ tbody,
-:scope /shadow-deep/ tfoot,
-:scope /shadow-deep/ thead,
-:scope /shadow-deep/ tr,
-:scope /shadow-deep/ th,
-:scope /shadow-deep/ td,
-:scope /shadow-deep/ article,
-:scope /shadow-deep/ aside,
-:scope /shadow-deep/ canvas,
-:scope /shadow-deep/ details,
-:scope /shadow-deep/ embed,
-:scope /shadow-deep/ figure,
-:scope /shadow-deep/ figcaption,
-:scope /shadow-deep/ footer,
-:scope /shadow-deep/ header,
-:scope /shadow-deep/ hgroup,
-:scope /shadow-deep/ menu,
-:scope /shadow-deep/ nav,
-:scope /shadow-deep/ output,
-:scope /shadow-deep/ ruby,
-:scope /shadow-deep/ section,
-:scope /shadow-deep/ summary,
-:scope /shadow-deep/ time,
-:scope /shadow-deep/ mark,
-:scope /shadow-deep/ audio,
-:scope /shadow-deep/ video {
+:host,
+:scope /deep/ div,
+:host /deep/ div,
+:scope /deep/ span,
+:host /deep/ span,
+:scope /deep/ applet,
+:host /deep/ applet,
+:scope /deep/ object,
+:host /deep/ object,
+:scope /deep/ iframe,
+:host /deep/ iframe,
+:scope /deep/ h1,
+:host /deep/ h1,
+:scope /deep/ h2,
+:host /deep/ h2,
+:scope /deep/ h3,
+:host /deep/ h3,
+:scope /deep/ h4,
+:host /deep/ h4,
+:scope /deep/ h5,
+:host /deep/ h5,
+:scope /deep/ h6,
+:host /deep/ h6,
+:scope /deep/ p,
+:host /deep/ p,
+:scope /deep/ blockquote,
+:host /deep/ blockquote,
+:scope /deep/ pre,
+:host /deep/ pre,
+:scope /deep/ a,
+:host /deep/ a,
+:scope /deep/ abbr,
+:host /deep/ abbr,
+:scope /deep/ acronym,
+:host /deep/ acronym,
+:scope /deep/ address,
+:host /deep/ address,
+:scope /deep/ big,
+:host /deep/ big,
+:scope /deep/ cite,
+:host /deep/ cite,
+:scope /deep/ code,
+:host /deep/ code,
+:scope /deep/ del,
+:host /deep/ del,
+:scope /deep/ dfn,
+:host /deep/ dfn,
+:scope /deep/ em,
+:host /deep/ em,
+:scope /deep/ img,
+:host /deep/ img,
+:scope /deep/ ins,
+:host /deep/ ins,
+:scope /deep/ kbd,
+:host /deep/ kbd,
+:scope /deep/ q,
+:host /deep/ q,
+:scope /deep/ s,
+:host /deep/ s,
+:scope /deep/ samp,
+:host /deep/ samp,
+:scope /deep/ small,
+:host /deep/ small,
+:scope /deep/ strike,
+:host /deep/ strike,
+:scope /deep/ strong,
+:host /deep/ strong,
+:scope /deep/ sub,
+:host /deep/ sub,
+:scope /deep/ sup,
+:host /deep/ sup,
+:scope /deep/ tt,
+:host /deep/ tt,
+:scope /deep/ var,
+:host /deep/ var,
+:scope /deep/ b,
+:host /deep/ b,
+:scope /deep/ u,
+:host /deep/ u,
+:scope /deep/ i,
+:host /deep/ i,
+:scope /deep/ center,
+:host /deep/ center,
+:scope /deep/ dl,
+:host /deep/ dl,
+:scope /deep/ dt,
+:host /deep/ dt,
+:scope /deep/ dd,
+:host /deep/ dd,
+:scope /deep/ ol,
+:host /deep/ ol,
+:scope /deep/ ul,
+:host /deep/ ul,
+:scope /deep/ li,
+:host /deep/ li,
+:scope /deep/ fieldset,
+:host /deep/ fieldset,
+:scope /deep/ form,
+:host /deep/ form,
+:scope /deep/ label,
+:host /deep/ label,
+:scope /deep/ legend,
+:host /deep/ legend,
+:scope /deep/ table,
+:host /deep/ table,
+:scope /deep/ caption,
+:host /deep/ caption,
+:scope /deep/ tbody,
+:host /deep/ tbody,
+:scope /deep/ tfoot,
+:host /deep/ tfoot,
+:scope /deep/ thead,
+:host /deep/ thead,
+:scope /deep/ tr,
+:host /deep/ tr,
+:scope /deep/ th,
+:host /deep/ th,
+:scope /deep/ td,
+:host /deep/ td,
+:scope /deep/ article,
+:host /deep/ article,
+:scope /deep/ aside,
+:host /deep/ aside,
+:scope /deep/ canvas,
+:host /deep/ canvas,
+:scope /deep/ details,
+:host /deep/ details,
+:scope /deep/ embed,
+:host /deep/ embed,
+:scope /deep/ figure,
+:host /deep/ figure,
+:scope /deep/ figcaption,
+:host /deep/ figcaption,
+:scope /deep/ footer,
+:host /deep/ footer,
+:scope /deep/ header,
+:host /deep/ header,
+:scope /deep/ hgroup,
+:host /deep/ hgroup,
+:scope /deep/ menu,
+:host /deep/ menu,
+:scope /deep/ nav,
+:host /deep/ nav,
+:scope /deep/ output,
+:host /deep/ output,
+:scope /deep/ ruby,
+:host /deep/ ruby,
+:scope /deep/ section,
+:host /deep/ section,
+:scope /deep/ summary,
+:host /deep/ summary,
+:scope /deep/ time,
+:host /deep/ time,
+:scope /deep/ mark,
+:host /deep/ mark,
+:scope /deep/ audio,
+:host /deep/ audio,
+:scope /deep/ video,
+:host /deep/ video {
   margin: 0;
   padding: 0;
   border: 0;
@@ -2721,46 +2921,40 @@ license that can be found in the LICENSE file.
   vertical-align: baseline;
 }
 
-/* @polyfill :host */
-
-:scope {
+:scope,
+:host {
   line-height: 1;
 }
 
-/* @polyfill :host /shadow-deep/ ol, :host /shadow-deep/ ul */
-
-:scope /shadow-deep/ ol,
-:scope /shadow-deep/ ul {
+:scope /deep/ ol,
+:host /deep/ ol,
+:scope /deep/ ul,
+:host /deep/ ul {
   list-style: none;
 }
 
-/* @polyfill :host /shadow-deep/ h1 */
-
-:scope /shadow-deep/ h1 {
+:scope /deep/ h1,
+:host /deep/ h1 {
   font-size: 1.75rem;
 }
 
-/* @polyfill :host /shadow-deep/ h2 */
-
-:scope /shadow-deep/ h2 {
+:scope /deep/ h2,
+:host /deep/ h2 {
   font-size: 1.25rem;
 }
 
-/* @polyfill :host /shadow-deep/ h3 */
-
-:scope /shadow-deep/ h3 {
+:scope /deep/ h3,
+:host /deep/ h3 {
   font-size: 1.125rem;
 }
 
-/* @polyfill :host /shadow-deep/ h4 */
-
-:scope /shadow-deep/ h4 {
+:scope /deep/ h4,
+:host /deep/ h4 {
   font-size: 1rem;
 }
 
-/* @polyfill :host /shadow-deep/ p */
-
-:scope /shadow-deep/ p {
+:scope /deep/ p,
+:host /deep/ p {
   font-size: 0.875rem;
 }
 
@@ -2792,15 +2986,13 @@ license that can be found in the LICENSE file.
   font-style: normal;
 }
 
-/* @polyfill :host */
-
-:scope {
+:scope,
+:host {
   font-size: 100%;
 }
 
-/* @polyfill :host */
-
-:scope {
+:scope,
+:host {
   background-color: #f0f1f2;
   font-family: "ProximaNovaSoft-Regular", Arial, sans-serif;
   color: #7e7f80;
@@ -2809,86 +3001,79 @@ license that can be found in the LICENSE file.
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-/* @polyfill :host /shadow-deep/ h1, :host /shadow-deep/ h2, :host /shadow-deep/ h3, :host /shadow-deep/ h4, :host /shadow-deep/ h5 */
-
-:scope /shadow-deep/ h1,
-:scope /shadow-deep/ h2,
-:scope /shadow-deep/ h3,
-:scope /shadow-deep/ h4,
-:scope /shadow-deep/ h5 {
+:scope /deep/ h1,
+:host /deep/ h1,
+:scope /deep/ h2,
+:host /deep/ h2,
+:scope /deep/ h3,
+:host /deep/ h3,
+:scope /deep/ h4,
+:host /deep/ h4,
+:scope /deep/ h5,
+:host /deep/ h5 {
   color: #454747;
 }
 
-/* @polyfill :host /shadow-deep/ p */
-
-:scope /shadow-deep/ p {
+:scope /deep/ p,
+:host /deep/ p {
   color: #525354;
 }
 
-/* @polyfill :host /shadow-deep/ a */
-
-:scope /shadow-deep/ a {
+:scope /deep/ a,
+:host /deep/ a {
   display: inline-block;
   text-decoration: none;
 }
 
-/* @polyfill :host /shadow-deep/ a:link */
-
-:scope /shadow-deep/ a:link {
+:scope /deep/ a:link,
+:host /deep/ a:link {
   color: #2d95d6;
 }
 
-/* @polyfill :host /shadow-deep/ a:visited */
-
-:scope /shadow-deep/ a:visited {
+:scope /deep/ a:visited,
+:host /deep/ a:visited {
   color: #2d95d6;
 }
 
-/* @polyfill :host /shadow-deep/ a:hover */
-
-:scope /shadow-deep/ a:hover {
+:scope /deep/ a:hover,
+:host /deep/ a:hover {
   color: #2584bf;
 }
 
-/* @polyfill :host /shadow-deep/ a:active */
-
-:scope /shadow-deep/ a:active {
+:scope /deep/ a:active,
+:host /deep/ a:active {
   color: #2d95d6;
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item, :host /shadow-deep/ .input-block */
-
-:scope /shadow-deep/ .sf-layout-item,
-:scope /shadow-deep/ .input-block {
+:scope /deep/ .sf-layout-item,
+:host /deep/ .sf-layout-item,
+:scope /deep/ .input-block,
+:host /deep/ .input-block {
   position: relative;
   padding-left: 0.875em;
   padding-right: 0.875em;
   margin-bottom: 0.875em;
 }
 
-/* @polyfill :host /shadow-deep/ .input-block.picklist--publisher label */
-
-:scope /shadow-deep/ .input-block.picklist--publisher label {
+:scope /deep/ .input-block.picklist--publisher label,
+:host /deep/ .input-block.picklist--publisher label {
   position: absolute;
   z-index: 2;
   padding: 0.875em;
 }
 
-/* @polyfill :host /shadow-deep/ .input-block.picklist--publisher input.input-picklist */
-
-:scope /shadow-deep/ .input-block.picklist--publisher input.input-picklist {
+:scope /deep/ .input-block.picklist--publisher input.input-picklist,
+:host /deep/ .input-block.picklist--publisher input.input-picklist {
   padding-left: 3.6em;
 }
 
-/* @polyfill :host /shadow-deep/ .input-block.poll-choice */
-
-:scope /shadow-deep/ .input-block.poll-choice {
+:scope /deep/ .input-block.poll-choice,
+:host /deep/ .input-block.poll-choice {
   padding-right: 2.5em;
 }
 
-/* @polyfill :host /shadow-deep/ .input-block.poll-choice:after */
-
-:scope /shadow-deep/ .input-block.poll-choice:after {
+:scope /deep/ .input-block.poll-choice:after,
+:host /deep/ .input-block.poll-choice:after {
   position: absolute;
   right: 8px;
   top: 13px;
@@ -2909,41 +3094,42 @@ license that can be found in the LICENSE file.
   content: 'delete';
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item-label, :host /shadow-deep/ .input-label */
-
-:scope /shadow-deep/ .sf-layout-item-label,
-:scope /shadow-deep/ .input-label {
+:scope /deep/ .sf-layout-item-label,
+:host /deep/ .sf-layout-item-label,
+:scope /deep/ .input-label,
+:host /deep/ .input-label {
   /*font-family: "ProximaNovaSoft-Regular";*/
   margin-bottom: 0.25em;
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item-label, :host /shadow-deep/ label */
-
-:scope /shadow-deep/ .sf-layout-item-label,
-:scope /shadow-deep/ label {
+:scope /deep/ .sf-layout-item-label,
+:host /deep/ .sf-layout-item-label,
+:scope /deep/ label,
+:host /deep/ label {
   color: #969899;
   font-size: 0.875rem;
 }
 
-/* @polyfill :host /shadow-deep/ label.input-label--checkbox, :host /shadow-deep/ label.input-label--radio */
-
-:scope /shadow-deep/ label.input-label--checkbox,
-:scope /shadow-deep/ label.input-label--radio {
+:scope /deep/ label.input-label--checkbox,
+:host /deep/ label.input-label--checkbox,
+:scope /deep/ label.input-label--radio,
+:host /deep/ label.input-label--radio {
   color: #525354;
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item-value */
-
-:scope /shadow-deep/ .sf-layout-item-value {
+:scope /deep/ .sf-layout-item-value,
+:host /deep/ .sf-layout-item-value {
   display: -webkit-box;
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item-value, :host /shadow-deep/ .sf-layout-item-value input, :host /shadow-deep/ .sf-layout-item-value select, :host /shadow-deep/ .sf-layout-item-value textarea */
-
-:scope /shadow-deep/ .sf-layout-item-value,
-:scope /shadow-deep/ .sf-layout-item-value input,
-:scope /shadow-deep/ .sf-layout-item-value select,
-:scope /shadow-deep/ .sf-layout-item-value textarea {
+:scope /deep/ .sf-layout-item-value,
+:host /deep/ .sf-layout-item-value,
+:scope /deep/ .sf-layout-item-value input,
+:host /deep/ .sf-layout-item-value input,
+:scope /deep/ .sf-layout-item-value select,
+:host /deep/ .sf-layout-item-value select,
+:scope /deep/ .sf-layout-item-value textarea,
+:host /deep/ .sf-layout-item-value textarea {
   display: -webkit-box;
   -webkit-box-flex: 1.0;
   margin: 0px;
@@ -2962,49 +3148,47 @@ license that can be found in the LICENSE file.
   background-color: #e9e9eb;
 }
 
-/* @polyfill :host /shadow-deep/ input:focus, :host /shadow-deep/ textarea:focus */
-
-:scope /shadow-deep/ input:focus,
-:scope /shadow-deep/ textarea:focus {
+:scope /deep/ input:focus,
+:host /deep/ input:focus,
+:scope /deep/ textarea:focus,
+:host /deep/ textarea:focus {
   background-color: white;
   border: 1px solid #b9babc;
   box-shadow: none;
   outline: none;
 }
 
-/* @polyfill :host /shadow-deep/ input[disabled], :host /shadow-deep/ textarea[disabled] */
-
-:scope /shadow-deep/ input[disabled],
-:scope /shadow-deep/ textarea[disabled] {
+:scope /deep/ input[disabled],
+:host /deep/ input[disabled],
+:scope /deep/ textarea[disabled],
+:host /deep/ textarea[disabled] {
   background-color: #e5e6e7;
   border: none;
   color: #969899;
 }
 
-/* @polyfill :host /shadow-deep/ .edit .sf-layout-item-value span */
-
-:scope /shadow-deep/ .edit .sf-layout-item-value span {
+:scope /deep/ .edit .sf-layout-item-value span,
+:host /deep/ .edit .sf-layout-item-value span {
   display: -webkit-box;
   margin: 0.1em;
 }
 
-/* @polyfill :host /shadow-deep/ .edit .sf-layout-item-value span:first-child */
-
-:scope /shadow-deep/ .edit .sf-layout-item-value span:first-child {
+:scope /deep/ .edit .sf-layout-item-value span:first-child,
+:host /deep/ .edit .sf-layout-item-value span:first-child {
   margin-left: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .edit .sf-layout-item-value span:last-child */
-
-:scope /shadow-deep/ .edit .sf-layout-item-value span:last-child {
+:scope /deep/ .edit .sf-layout-item-value span:last-child,
+:host /deep/ .edit .sf-layout-item-value span:last-child {
   -webkit-box-flex: 1.0;
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item-value, :host /shadow-deep/ input[class*="readonly"], :host /shadow-deep/ textarea[class*="readonly"] */
-
-:scope /shadow-deep/ .sf-layout-item-value,
-:scope /shadow-deep/ input[class*="readonly"],
-:scope /shadow-deep/ textarea[class*="readonly"] {
+:scope /deep/ .sf-layout-item-value,
+:host /deep/ .sf-layout-item-value,
+:scope /deep/ input[class*="readonly"],
+:host /deep/ input[class*="readonly"],
+:scope /deep/ textarea[class*="readonly"],
+:host /deep/ textarea[class*="readonly"] {
   margin: 0;
   padding: 0;
   background: none;
@@ -3015,10 +3199,10 @@ license that can be found in the LICENSE file.
   border: none;
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item-value select, :host /shadow-deep/ input[class*="picklist"] */
-
-:scope /shadow-deep/ .sf-layout-item-value select,
-:scope /shadow-deep/ input[class*="picklist"] {
+:scope /deep/ .sf-layout-item-value select,
+:host /deep/ .sf-layout-item-value select,
+:scope /deep/ input[class*="picklist"],
+:host /deep/ input[class*="picklist"] {
   background: white -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ededed), color-stop(100%, #f7f7f7));
   background: white -webkit-linear-gradient(bottom, #ededed 0%, #f7f7f7 100%);
   background: white -moz-linear-gradient(bottom, #ededed 0%, #f7f7f7 100%);
@@ -3032,10 +3216,10 @@ license that can be found in the LICENSE file.
   -webkit-appearance: none;
 }
 
-/* @polyfill :host /shadow-deep/ select:active, :host /shadow-deep/ input[class*="picklist"]:active */
-
-:scope /shadow-deep/ select:active,
-:scope /shadow-deep/ input[class*="picklist"]:active {
+:scope /deep/ select:active,
+:host /deep/ select:active,
+:scope /deep/ input[class*="picklist"]:active,
+:host /deep/ input[class*="picklist"]:active {
   border: 1px solid #dbdbdb;
   background: #e9e9e9;
   background-image: none;
@@ -3044,10 +3228,10 @@ license that can be found in the LICENSE file.
   box-shadow: none;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="checkbox"], :host /shadow-deep/ input[type="radio"] */
-
-:scope /shadow-deep/ input[type="checkbox"],
-:scope /shadow-deep/ input[type="radio"] {
+:scope /deep/ input[type="checkbox"],
+:host /deep/ input[type="checkbox"],
+:scope /deep/ input[type="radio"],
+:host /deep/ input[type="radio"] {
   position: relative;
   -webkit-appearance: none;
   display: inline-block;
@@ -3061,26 +3245,28 @@ license that can be found in the LICENSE file.
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05), inset 0 0 1px 1px white;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="checkbox"]:focus, :host /shadow-deep/ input[type="checkbox"]:active, :host /shadow-deep/ input[type="radio"]:focus, :host /shadow-deep/ input[type="radio"]:active */
-
-:scope /shadow-deep/ input[type="checkbox"]:focus,
-:scope /shadow-deep/ input[type="checkbox"]:active,
-:scope /shadow-deep/ input[type="radio"]:focus,
-:scope /shadow-deep/ input[type="radio"]:active {
+:scope /deep/ input[type="checkbox"]:focus,
+:host /deep/ input[type="checkbox"]:focus,
+:scope /deep/ input[type="checkbox"]:active,
+:host /deep/ input[type="checkbox"]:active,
+:scope /deep/ input[type="radio"]:focus,
+:host /deep/ input[type="radio"]:focus,
+:scope /deep/ input[type="radio"]:active,
+:host /deep/ input[type="radio"]:active {
   background-color: #eee;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="checkbox"][class*="disabled"], :host /shadow-deep/ input[type="radio"][class*="disabled"] */
-
-:scope /shadow-deep/ input[type="checkbox"][class*="disabled"],
-:scope /shadow-deep/ input[type="radio"][class*="disabled"] {
+:scope /deep/ input[type="checkbox"][class*="disabled"],
+:host /deep/ input[type="checkbox"][class*="disabled"],
+:scope /deep/ input[type="radio"][class*="disabled"],
+:host /deep/ input[type="radio"][class*="disabled"] {
   opacity: 0.4;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="checkbox"]:checked, :host /shadow-deep/ input[type="radio"]:checked */
-
-:scope /shadow-deep/ input[type="checkbox"]:checked,
-:scope /shadow-deep/ input[type="radio"]:checked {
+:scope /deep/ input[type="checkbox"]:checked,
+:host /deep/ input[type="checkbox"]:checked,
+:scope /deep/ input[type="radio"]:checked,
+:host /deep/ input[type="radio"]:checked {
   border: 1px solid #2c75a3;
   background-color: #3b9fdd;
   -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -3093,17 +3279,16 @@ license that can be found in the LICENSE file.
   background-image: linear-gradient(bottom, #3b9fdd 0%, #3b9fdd 100%);
 }
 
-/* @polyfill :host /shadow-deep/ input[type="checkbox"]:checked::after, :host /shadow-deep/ input[type="radio"]:checked::after */
-
-:scope /shadow-deep/ input[type="checkbox"]:checked::after,
-:scope /shadow-deep/ input[type="radio"]:checked::after {
+:scope /deep/ input[type="checkbox"]:checked::after,
+:host /deep/ input[type="checkbox"]:checked::after,
+:scope /deep/ input[type="radio"]:checked::after,
+:host /deep/ input[type="radio"]:checked::after {
   position: absolute;
   content: '';
 }
 
-/* @polyfill :host /shadow-deep/ input[type="checkbox"]:checked::after */
-
-:scope /shadow-deep/ input[type="checkbox"]:checked::after {
+:scope /deep/ input[type="checkbox"]:checked::after,
+:host /deep/ input[type="checkbox"]:checked::after {
   left: 4px;
   top: 5px;
   height: 18%;
@@ -3114,15 +3299,13 @@ license that can be found in the LICENSE file.
   -webkit-transform: rotate(-45deg);
 }
 
-/* @polyfill :host /shadow-deep/ input[type="radio"] */
-
-:scope /shadow-deep/ input[type="radio"] {
+:scope /deep/ input[type="radio"],
+:host /deep/ input[type="radio"] {
   border-radius: 11px;
 }
 
-/* @polyfill :host /shadow-deep/ input[type="radio"]:checked::after */
-
-:scope /shadow-deep/ input[type="radio"]:checked::after {
+:scope /deep/ input[type="radio"]:checked::after,
+:host /deep/ input[type="radio"]:checked::after {
   left: 6px;
   top: 6px;
   height: 10px;
@@ -3133,9 +3316,8 @@ license that can be found in the LICENSE file.
   /*box-shadow: 0 0 2px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.2);*/
 }
 
-/* @polyfill :host /shadow-deep/ .page-header--details */
-
-:scope /shadow-deep/ .page-header--details {
+:scope /deep/ .page-header--details,
+:host /deep/ .page-header--details {
   padding: 0.875em;
   margin-bottom: -15px;
   background-color: white;
@@ -3143,40 +3325,38 @@ license that can be found in the LICENSE file.
   text-align: left;
 }
 
-/* @polyfill :host /shadow-deep/ .page-header--details .item-header-details */
-
-:scope /shadow-deep/ .page-header--details .item-header-details {
+:scope /deep/ .page-header--details .item-header-details,
+:host /deep/ .page-header--details .item-header-details {
   float: none;
 }
 
-/* @polyfill :host /shadow-deep/ .page-header--details .item-header h1, :host /shadow-deep/ .page-header--details .item-header--small h1 */
-
-:scope /shadow-deep/ .page-header--details .item-header h1,
-:scope /shadow-deep/ .page-header--details .item-header--small h1 {
+:scope /deep/ .page-header--details .item-header h1,
+:host /deep/ .page-header--details .item-header h1,
+:scope /deep/ .page-header--details .item-header--small h1,
+:host /deep/ .page-header--details .item-header--small h1 {
   margin-bottom: .15em;
   font-size: 1.5em;
   font-family: 'ProximaNovaSoft-Semibold';
 }
 
-/* @polyfill :host /shadow-deep/ .page-header--details .item-header h2, :host /shadow-deep/ .page-header--details .item-header--small h2 */
-
-:scope /shadow-deep/ .page-header--details .item-header h2,
-:scope /shadow-deep/ .page-header--details .item-header--small h2 {
+:scope /deep/ .page-header--details .item-header h2,
+:host /deep/ .page-header--details .item-header h2,
+:scope /deep/ .page-header--details .item-header--small h2,
+:host /deep/ .page-header--details .item-header--small h2 {
   color: #969899;
   font-size: 1.1em;
   font-family: 'ProximaNovaSoft-Medium';
 }
 
-/* @polyfill :host /shadow-deep/ .page-header--details .item-header-details */
-
-:scope /shadow-deep/ .page-header--details .item-header-details {
+:scope /deep/ .page-header--details .item-header-details,
+:host /deep/ .page-header--details .item-header-details {
   margin: 0;
 }
 
-/* @polyfill :host /shadow-deep/ .page-header--details .item-header h1, :host /shadow-deep/ .page-header--details .item-header--small h1 */
-
-:scope /shadow-deep/ .page-header--details .item-header h1,
-:scope /shadow-deep/ .page-header--details .item-header--small h1 {
+:scope /deep/ .page-header--details .item-header h1,
+:host /deep/ .page-header--details .item-header h1,
+:scope /deep/ .page-header--details .item-header--small h1,
+:host /deep/ .page-header--details .item-header--small h1 {
   color: #454747;
 }
 
@@ -3184,16 +3364,14 @@ license that can be found in the LICENSE file.
 
 /* Localized */
 
-/* @polyfill :host /shadow-deep/ .sf-list-item */
-
-:scope /shadow-deep/ .sf-list-item {
+:scope /deep/ .sf-list-item,
+:host /deep/ .sf-list-item {
   font-family: "ProximaNovaSoft-Regular";
   color: #525354;
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-item-error */
-
-:scope /shadow-deep/ .sf-layout-item-error {
+:scope /deep/ .sf-layout-item-error,
+:host /deep/ .sf-layout-item-error {
   color: red;
   font-size: 0.9em;
   font-family: "ProximaNovaSoft-Regular";
@@ -3204,10 +3382,10 @@ license that can be found in the LICENSE file.
   word-wrap: break-word;
 }
 
-/* @polyfill :host /shadow-deep/ .ui-header, :host /shadow-deep/ .ui-footer */
-
-:scope /shadow-deep/ .ui-header,
-:scope /shadow-deep/ .ui-footer {
+:scope /deep/ .ui-header,
+:host /deep/ .ui-header,
+:scope /deep/ .ui-footer,
+:host /deep/ .ui-footer {
   background-color: #3291db;
   background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.07) 0%, rgba(255, 255, 255, 0.07) 100%);
   background-image: linear-gradient(bottom, rgba(0, 0, 0, 0.07) 0%, rgba(255, 255, 255, 0.07) 100%);
@@ -3216,31 +3394,27 @@ license that can be found in the LICENSE file.
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-/* @polyfill :host /shadow-deep/ .ui-header a */
-
-:scope /shadow-deep/ .ui-header a {
+:scope /deep/ .ui-header a,
+:host /deep/ .ui-header a {
   text-decoration: none;
   font-size: 1.3em;
   color: inherit;
 }
 
-/* @polyfill :host /shadow-deep/ .ui-header a:before */
-
-:scope /shadow-deep/ .ui-header a:before {
+:scope /deep/ .ui-header a:before,
+:host /deep/ .ui-header a:before {
   line-height: 0;
   vertical-align: -6px;
 }
 
-/* @polyfill :host /shadow-deep/ .ui-title */
-
-:scope /shadow-deep/ .ui-title {
+:scope /deep/ .ui-title,
+:host /deep/ .ui-title {
   color: white;
   font-family: "ProximaNovaSoft-Regular";
 }
 
-/* @polyfill :host /shadow-deep/ .sf-layout-section-heading */
-
-:scope /shadow-deep/ .sf-layout-section-heading {
+:scope /deep/ .sf-layout-section-heading,
+:host /deep/ .sf-layout-section-heading {
   color: rgb(156, 161, 165);
   font-size: 0.9em;
   margin: 15px 0px;
@@ -3251,16 +3425,15 @@ license that can be found in the LICENSE file.
   font-weight: bold;
 }
 
-/* @polyfill :host /shadow-deep/ .edit .ui-content, :host /shadow-deep/ #detail .ui-content */
-
-:scope /shadow-deep/ .edit .ui-content,
-:scope /shadow-deep/ #detail .ui-content {
+:scope /deep/ .edit .ui-content,
+:host /deep/ .edit .ui-content,
+:scope /deep/ #detail .ui-content,
+:host /deep/ #detail .ui-content {
   padding: 0px;
 }
 
-/* @polyfill :host /shadow-deep/ .absolute */
-
-:scope /shadow-deep/ .absolute {
+:scope /deep/ .absolute,
+:host /deep/ .absolute {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -3301,11 +3474,12 @@ license that can be found in the LICENSE file.
         <template if="{{multipage &amp;&amp; pageStack.length}}">
           <a class="icon icon-left-nav pull-left" on-click="{{navigateBack}}"></a>
         </template>
-        <content select="a.icon, a.btn, div.segmented-control, h1"></content>
+        <content select="a.icon, a.btn, div.segmented-control, h1, [header]"></content>
       </header>
     </template>
-    <content id="pages" select="*"></content>
-    <polymer-flex-layout></polymer-flex-layout>
+    <core-layout>
+      <content id="pages" select="*"></content>
+    </core-layout>
   </template>
 
   
@@ -3372,168 +3546,170 @@ license that can be found in the LICENSE file.
     
 </polymer-element>
 <!--
-Copyright 2013 The Polymer Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <!--
-/**
- * @module Polymer Elements
- */
+@group Polymer Core Elements
+
+The `<core-selection>` element is used to manage selection state. It has no
+visual appearance and is typically used in conjunction with another element.
+For example, [core-selector](../core-selector)
+use a `<core-selection>` to manage selection.
+
+To mark an item as selected, call the `select(item)` method on 
+`<core-selection>`. The item itself is an argument to this method.
+
+The `<core-selection>`element manages selection state for any given set of
+items. When an item is selected, the `core-select` event is fired.
+
+The attribute `multi` indicates if multiple items can be selected at once.
+  
+Example:
+ 
+    <polymer-element name="selection-example">
+       <template>
+         <style>
+           polyfill-next-selector { content: ':host > .selected'; }
+           ::content > .selected {
+             font-weight: bold;
+             font-style: italic;
+           }
+         </style>
+         <ul on-tap="{{itemTapAction}}">
+           <content></content>
+         </ul>
+         <core-selection id="selection" multi
+                         on-core-select="{{selectAction}}"></core-selection>
+       </template>
+       <script>
+         Polymer('selection-example', {
+           itemTapAction: function(e, detail, sender) {
+             this.$.selection.select(e.target);
+           },
+           selectAction: function(e, detail, sender) {
+             detail.item.classList.toggle('selected', detail.isSelected);
+           }
+         });
+       </script>
+    </polymer-element>
+
+    <selection-example>
+      <li>Red</li>
+      <li>Green</li>
+      <li>Blue</li>
+    </selection-example>
+ 
+@element core-selection
 -->
+
 <!--
-/**
- * The polymer-selection element is used to manage selection state. It has no
- * visual appearance and is typically used in conjuneciton with another element.
- * For example, <a href="polymer-selector.html">polymer-selector</a>
- * use a polymer-selection to manage selection.
- *
- * To mark an item as selected, call the select(item) method on 
- * polymer-selection. Notice that the item itself is an argument to this method.
- * The polymer-selection element manages selection state for any given set of
- * items. When an item is selected, the `polymer-select` event is fired.
- * The attribute "multi" indicates if multiple items can be selected at once.
- * 
- * Example:
- *
- *     <polymer-element name="selection-example">
- *        <template>
- *          <style>
- *            ::-webkit-distributed(> .selected) {
- *              font-weight: bold;
- *              font-style: italic;
- *            }
- *          </style>
- *          <ul on-tap="{{itemTapAction}}">
- *            <content></content>
- *          </ul>
- *          <polymer-selection id="selection" multi on-polymer-select="{{selectAction}}"></polymer-selection>
- *        </template>
- *        <script>
- *          Polymer('selection-example', {
- *            itemTapAction: function(e) {
- *              this.$.selection.select(e.target);
- *            },
- *            selectAction: function(e, detail) {
- *              detail.item.classList.toggle('selected', detail.isSelected);
- *            }
- *          });
- *        </script>
- *     </polymer-element>
- *
- *     <selection-example>
- *       <li>Red</li>
- *       <li>Green</li>
- *       <li>Blue</li>
- *     </selection-example>
- *
- * @class polymer-selection
- */
- /**
- * Fired when an item's selection state is changed. This event is fired both
- * when an item is selected or deselected. The `isSelected` detail property
- * contains the selection state.
- * 
- * @event polymer-select
- * @param {Object} detail
- *   @param {boolean} detail.isSelected true for selection and false for deselection
- *   @param {Object} detail.item the item element
- */
+Fired when an item's selection state is changed. This event is fired both
+when an item is selected or deselected. The `isSelected` detail property
+contains the selection state.
+
+@event core-select
+@param {Object} detail
+  @param {boolean} detail.isSelected true for selection and false for de-selection
+  @param {Object} detail.item the item element
 -->
 
 
-<polymer-element name="polymer-selection" attributes="multi" assetpath="../dependencies/Polymer/polymer-selection/">
-  <template>
+<polymer-element name="core-selection" attributes="multi" hidden assetpath="../dependencies/core-selection/">
+  
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@group Polymer Core Elements
+
+`<core-selector>` is used to manage a list of elements that can be selected.
+
+The attribute `selected` indicates which item element is being selected.
+The attribute `multi` indicates if multiple items can be selected at once.
+Tapping on the item element would fire `core-activate` event. Use
+`core-select` event to listen for selection changes.
+
+Example:
+
+    <core-selector selected="0">
+      <div>Item 1</div>
+      <div>Item 2</div>
+      <div>Item 3</div>
+    </core-selector>
+
+`<core-selector>` is not styled. Use the `core-selected` CSS class to style the selected element.
+
     <style>
-      :host {
-        display: none !important;
+      .item.core-selected {
+        background: #eee;
       }
     </style>
-  </template>
-  
-</polymer-element>
+    ...
+    <core-selector>
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+    </core-selector>
+
+@element core-selector
+@status stable
+@homepage github.io
+-->
 
 <!--
-Copyright 2013 The Polymer Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
+Fired when an item's selection state is changed. This event is fired both
+when an item is selected or deselected. The `isSelected` detail property
+contains the selection state.
+
+@event core-select
+@param {Object} detail
+  @param {boolean} detail.isSelected true for selection and false for deselection
+  @param {Object} detail.item the item element
 -->
 <!--
-/**
- * @module Polymer Elements
- */
-/**
- * polymer-selector is used to manage a list of elements that can be selected.
- * The attribute "selected" indicates which item element is being selected.
- * The attribute "multi" indicates if multiple items can be selected at once.
- * Tapping on the item element would fire "polymer-activate" event. Use
- * "polymer-select" event to listen for selection changes.
- *
- * Example:
- *
- *     <polymer-selector selected="0">
- *       <div>Item 1</div>
- *       <div>Item 2</div>
- *       <div>Item 3</div>
- *     </polymer-selector>
- *
- * polymer-selector is not styled.  So one needs to use "polymer-selected" CSS
- * class to style the selected element.
- * 
- *     <style>
- *       .item.polymer-selected {
- *         background: #eee;
- *       }
- *     </style>
- *     ...
- *     <polymer-selector>
- *       <div class="item">Item 1</div>
- *       <div class="item">Item 2</div>
- *       <div class="item">Item 3</div>
- *     </polymer-selector>
- *
- * @class polymer-selector
- * @status stable
- */
-/**
- * Fired when an item's selection state is changed. This event is fired both
- * when an item is selected or deselected. The `isSelected` detail property
- * contains the selection state.
- * 
- * @event polymer-select
- * @param {Object} detail
- *   @param {boolean} detail.isSelected true for selection and false for deselection
- *   @param {Object} detail.item the item element
- */
-/**
- * Fired when an item element is tapped.
- * 
- * @event polymer-activate
- * @param {Object} detail
- *   @param {Object} detail.item the item element
- */
+Fired when an item element is tapped.
+
+@event core-activate
+@param {Object} detail
+  @param {Object} detail.item the item element
 -->
 
 
 
-<polymer-element name="polymer-selector" attributes="selected multi valueattr selectedClass selectedProperty selectedAttribute selectedItem selectedModel selectedIndex notap target itemsSelector activateEvent" assetpath="../dependencies/Polymer/polymer-selector/">
+
+<polymer-element name="core-selector" attributes="selected multi valueattr selectedClass selectedProperty selectedAttribute selectedItem selectedModel selectedIndex notap target itemsSelector activateEvent" assetpath="../dependencies/core-selector/">
+
   <template>
-    <polymer-selection id="selection" multi="{{multi}}" on-polymer-select="{{selectionSelect}}"></polymer-selection>
+    <core-selection id="selection" multi="{{multi}}" on-core-select="{{selectionSelect}}"></core-selection>
     <content id="items" select="*"></content>
   </template>
+
   
 </polymer-element>
 
 <!--
-  force-selector-list element is an extension of polymer-selector element and provides a wrapper around force-sobject-collection element. The element acts as a base for any list UI element that also needs the selector functionality.
+  force-selector-list element is an extension of core-selector element and provides a wrapper around force-sobject-collection element. The element acts as a base for any list UI element that also needs the selector functionality.
 
-  @extends polymer-selector
+  @extends core-selector
 
   @attributes:
   sobject: (Required) Type of sobject on which you want to render a list
   query: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
   querytype: Type of query (mru, soql, sosl, cache). Required if query is specified.
-  And all the attributes of the polymer-selector element.
+  And all the attributes of the core-selector element.
 
   @properties:
   get collection: Returns an instance of Force.SObjectCollection with associated models
@@ -3544,7 +3720,7 @@ license that can be found in the LICENSE file.
 
 
 
-<polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector" assetpath="../elements/force-selector-list/">
+<polymer-element name="force-selector-list" attributes="sobject query querytype" extends="core-selector" assetpath="../elements/force-selector-list/">
   <template>
     <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}" autosync="false"></force-sobject-collection>
     <shadow></shadow>
@@ -3674,9 +3850,9 @@ license that can be found in the LICENSE file.
 
 
 <!--
-    force-selector-relatedlist element is an extension of polymer-selector element and provides a wrapper around force-sobject-collection element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+    force-selector-relatedlist element is an extension of core-selector element and provides a wrapper around force-sobject-collection element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
 
-    @extends polymer-selector
+    @extends core-selector
 
     @attributes:
     related: (Required) Object instance of each related list item from the array obtained via force-sobject-relatedlists element. The object must contain the query and querytype properties to fetch the related items..
@@ -3687,7 +3863,7 @@ license that can be found in the LICENSE file.
     @methods:
     updateModels: Updates the "models" property on the element based on the current set of models in the collection.
 -->
-<polymer-element name="force-selector-relatedlist" attributes="related" extends="polymer-selector" assetpath="../elements/force-ui-relatedlist/">
+<polymer-element name="force-selector-relatedlist" attributes="related" extends="core-selector" assetpath="../elements/force-ui-relatedlist/">
   <template>
     <shadow></shadow>
     <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}">

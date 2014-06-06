@@ -2,74 +2,19 @@
   "name": "mobile-ui-elements",
   "version": "0.0.0",
   "dependencies": {
-    "platform": "Polymer/platform#0.2.4"
+    "platform": "Polymer/platform#0.3.1"
   },
   "devDependencies": {
-    "modernizr": "~2.6.2",
-    "polymer": "Polymer/polymer#0.2.4",
-    "polymer-elements": "Polymer/polymer-elements#0.2.4",
-    "polymer-ui-elements": "Polymer/polymer-ui-elements#0.2.4",
+    "polymer": "Polymer/polymer#0.3.1",
+    "core-selector": "Polymer/core-selector#>=0.3.0",
+    "core-layout": "Polymer/core-layout#>=0.3.0",
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
     "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared#master",
-    "ratchet": "latest",
+    "ratchet": "twbs/ratchet#>=2.0.2",
     "mocha": "~1.18.2",
-    "should": "~3.3.1"
-  },
-  "exportsOverride": {
-    "modernizr": {
-      ".": "modernizr*.js"
-    },
-    "jquery": {
-      ".": "dist/*"
-    },
-    "backbone": {
-      ".": "backbone*.js"
-    },
-    "underscore": {
-      ".": "underscore*.js"
-    },
-    "mobilesdk-shared": {
-      ".": [
-        "libs/*js",
-        "test/Mock*.js"
-      ]
-    },
-    "mocha": {
-      ".": [
-        "*.js",
-        "*.css"
-      ]
-    },
-    "platform": {
-      ".": [
-        "platform.js",
-        "platform.js.map"
-      ]
-    },
-    "polymer": {
-      "Polymer/.": [
-        "polymer.js",
-        "polymer.js.map",
-        "polymer.html",
-        "polymer-body.html"
-      ]
-    },
-    "polymer-*": {
-      "Polymer/.": "."
-    },
-    "ratchet": {
-      ".": "dist/."
-    },
-    "should": {
-      ".": "*.js"
-    },
-    "web-animations-js": {
-      "Polymer/.": "web-animations.js"
-    }
-  },
-  "resolutions": {
-    "polymer": "0.2.4"
+    "should": "~3.3.1",
+    "core-icon": "Polymer/core-icon#~0.3.1"
   }
 }

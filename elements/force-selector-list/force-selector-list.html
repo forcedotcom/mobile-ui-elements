@@ -1,13 +1,13 @@
 <!--
-  force-selector-list element is an extension of polymer-selector element and provides a wrapper around force-sobject-collection element. The element acts as a base for any list UI element that also needs the selector functionality.
+  force-selector-list element is an extension of core-selector element and provides a wrapper around force-sobject-collection element. The element acts as a base for any list UI element that also needs the selector functionality.
 
-  @extends polymer-selector
+  @extends core-selector
 
   @attributes:
   sobject: (Required) Type of sobject on which you want to render a list
   query: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
   querytype: Type of query (mru, soql, sosl, cache). Required if query is specified.
-  And all the attributes of the polymer-selector element.
+  And all the attributes of the core-selector element.
 
   @properties:
   get collection: Returns an instance of Force.SObjectCollection with associated models
@@ -15,10 +15,10 @@
   @methods:
   fetch: Executes a fetch request on the underlying collection object based on the current config.
 -->
-<link rel="import" href="../../dependencies/Polymer/polymer/polymer.html">
+<link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
-<link rel="import" href="../../dependencies/Polymer/polymer-selector/polymer-selector.html">
-<polymer-element name="force-selector-list" attributes="sobject query querytype" extends="polymer-selector">
+<link rel="import" href="../../dependencies/core-selector/core-selector.html">
+<polymer-element name="force-selector-list" attributes="sobject query querytype" extends="core-selector">
   <template>
     <force-sobject-collection id="listsource" sobject="{{sobject}}" querytype="{{querytype}}" query="{{query}}" autosync="false"></force-sobject-collection>
     <shadow></shadow>

@@ -1,12 +1,12 @@
-<link rel="import" href="../../dependencies/Polymer/polymer/polymer.html">
+<link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
-<link rel="import" href="../../dependencies/Polymer/polymer-selector/polymer-selector.html">
+<link rel="import" href="../../dependencies/core-selector/core-selector.html">
 <!--
-    force-selector-relatedlist element is an extension of polymer-selector element and provides a wrapper around force-sobject-collection element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+    force-selector-relatedlist element is an extension of core-selector element and provides a wrapper around force-sobject-collection element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
 
-    @extends polymer-selector
+    @extends core-selector
 
     @attributes:
     related: (Required) Object instance of each related list item from the array obtained via force-sobject-relatedlists element. The object must contain the query and querytype properties to fetch the related items..
@@ -17,7 +17,7 @@
     @methods:
     updateModels: Updates the "models" property on the element based on the current set of models in the collection.
 -->
-<polymer-element name="force-selector-relatedlist" attributes="related" extends="polymer-selector">
+<polymer-element name="force-selector-relatedlist" attributes="related" extends="core-selector">
   <template>
     <shadow></shadow>
     <force-sobject-collection id="force_sobjects" sobject="{{related.sobject}}" querytype="{{related.querytype}}" query="{{related.query}}" on-sync="{{updateModels}}">
