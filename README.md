@@ -35,6 +35,7 @@ and then open Terminal:
     $ git clone https://github.com/ForceDotComLabs/mobile-ui-elements.git
     $ cd mobile-ui-elements
     $ npm install
+    $ bower install
 
 To build the project and fetch all the dependencies, execute:
 

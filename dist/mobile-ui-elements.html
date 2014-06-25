@@ -237,7 +237,7 @@ html /deep/ [block] {
 
 /* ie support for hidden */
 html /deep/ [hidden] {
-  display: none;
+  display: none !important;
 }
 
 html /deep/ [relative] {
@@ -3474,7 +3474,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template if="{{multipage &amp;&amp; pageStack.length}}">
           <a class="icon icon-left-nav pull-left" on-click="{{navigateBack}}"></a>
         </template>
-        <content select="a.icon, a.btn, div.segmented-control, h1, [header]"></content>
+        <content select="a.icon, a.btn, div.segmented-control, h1"></content>
       </header>
     </template>
     <core-layout>
