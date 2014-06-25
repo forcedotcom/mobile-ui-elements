@@ -1,5 +1,5 @@
 <!--
-    force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element also contains the core-layout element to enable flexible sections on the page, esp. in single page view with split view panels.
+    force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page, esp. in single page view with split view panels.
     Why: a) Manages all the UI stylesheets.
     b) Provides simple header and content location for the app.
     c) Provides way to create splitview or multipage app with built-in navigation.
@@ -29,17 +29,13 @@
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
-<link rel="import" href="../../dependencies/core-layout/core-layout.html">
-<!--link rel="import" href="../../dependencies/core-animation/core-translate.html"-->
 <polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader">
-  <script src="../js/jq-slide.js"></script>
   <template>
     <link rel="stylesheet" href="../../dependencies/ratchet/dist/css/ratchet.shim.css"/>
     <link rel="stylesheet" href="../css/responsive.shim.css"/>
     <link rel="stylesheet" href="../css/styles.shim.css"/>
     <style>
-      /* @polyfill :host */
-      :scope {
+      :host {
         display: block;
         min-height: 200px;
         min-width: 200px;
@@ -52,18 +48,17 @@
         position: absolute;
         top: 0; left: 0;
       }
-      /* @polyfill :host .splitview ^^ .content */
-      :scope .splitview ^^ .content {
+      :host header[class*="bar-"] {
+        position: absolute;
+      }
+      polyfill-next-selector { content: ':host(.splitview) .content'; }
+      :host(.splitview) ::content .content {
         position: static;
         margin-top: 44px;
       }
-      /* @polyfill :host header[class*="bar-"], :host ^^ .content */
-      :scope header[class*="bar-"], :scope ^^ .content {
-        position: absolute;
-      }
-      /* @polyfill :host ^^ .content */
-      :scope ^^ .content {
-        padding-top: 44px;
+      polyfill-next-selector { content: ':host .content'; }
+      ::content .content {
+        margin-top: 44px;
       }
     </style>
     <template if="{{!hideheader}}">
@@ -74,11 +69,11 @@
         <content select="a.icon, a.btn, div.segmented-control, h1"></content>
       </header>
     </template>
-    <core-layout>
+    <div layout horizontal>
       <content id="pages" select="*"></content>
-    </core-layout>
+    </div>
   </template>
-
+  <script src="../js/jq-slide.js"></script>
   <script>
     (function() {
       Polymer('force-ui-app', {
@@ -141,38 +136,7 @@
           var $source = $(source);
           var $target = $(target);
           var width = $(parent).width();
-/*
-          var sourceAnimation = document.createElement('polymer-translate');
-          sourceAnimation.fromX = 0;
-          sourceAnimation.toX = reverse ? width : -1*width;
-          sourceAnimation.duration = 0.3;
-          //sourceAnimation.autoplay = true;
-          sourceAnimation.target = source;
 
-          $(sourceAnimation).appendTo(parent.shadowRoot)
-          .one('polymer-animation-end', function() {
-            $source.hide();
-            this.parentNode.removeChild(this);
-          });
-
-          var targetAnimation = document.createElement('polymer-translate');
-          targetAnimation.fromX = reverse ? -1*width : width;
-          targetAnimation.toX = 0;
-          targetAnimation.duration = 0.3;
-          //targetAnimation.autoplay = true;
-          targetAnimation.target = target;
-
-          $(targetAnimation).appendTo(parent.shadowRoot)
-          .one('polymer-animation-end', function() {
-            this.parentNode.removeChild(this);
-            parent.fire('force-navigation-end', eventDetails);
-          });
-
-          parent.async(function() {
-            sourceAnimation.play();
-            targetAnimation.play();
-          });
-*/
           var sourceFinalPos = (reverse ? 1 : -1) * $source.parent().width();
           $source.slideOut('X', sourceFinalPos, function() {
             $source.hide();
@@ -183,7 +147,6 @@
             parent.fire('navigation-end', eventDetails);
           });
           $target[0].style.display = "block";
-          //$source.changePage($target.show(), reverse, function() { $source.hide(); });
         }
     })();
   </script>

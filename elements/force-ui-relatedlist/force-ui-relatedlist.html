@@ -4,7 +4,7 @@
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
 <link rel="import" href="../../dependencies/core-selector/core-selector.html">
 <!--
-    force-selector-relatedlist element is an extension of core-selector element and provides a wrapper around force-sobject-collection element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+    force-selector-relatedlist element is an extension of `core-selector` element and fetches the records of related sobject using a `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
 
     @extends core-selector
 
@@ -91,7 +91,7 @@
 </polymer-element>
 
 <!--
-    force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It extends the force-sobject-layout element to fetch the related lists configuraton from the page layout settings.
+    force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It embeds the force-sobject-layout element to fetch the related lists configuraton from the page layout settings.
     Why: a) Parses the related lists configuration for a particular sobject type.
     b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
 

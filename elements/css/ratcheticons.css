@@ -1,0 +1,7 @@
+@font-face {
+  font-family: Ratchicons;
+  font-style: normal;
+  font-weight: normal;
+  src: url("../../dependencies/ratchet/dist/fonts/ratchicons.eot");
+  src: url("../../dependencies/ratchet/dist/fonts/ratchicons.eot?#iefix") format("embedded-opentype"), url("../../dependencies/ratchet/dist/fonts/ratchicons.woff") format("woff"), url("../../dependencies/ratchet/dist/fonts/ratchicons.ttf") format("truetype"), url("../../dependencies/ratchet/dist/fonts/ratchicons.svg#svgFontName") format("svg");
+}

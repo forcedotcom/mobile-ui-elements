@@ -37,7 +37,7 @@ and then open Terminal:
     $ npm install
     $ bower install
 
-To build the project and fetch all the dependencies, execute:
+To build the project, execute:
 
     $ grunt
 
@@ -45,12 +45,12 @@ To build the project for distribution, execute (all assets will be generated in 
 
     $ grunt dist
 
-To run the sample app in Safari:
+This repo contains two sample webapps, `simple.html` and `index.html`. To run the sample app in Safari:
 
 ```
-1. Open index.html in an editor
-2. At line 55, plug in the salesforce session Id. You can use salesforce debugshell to get the session Id.
-3. At line 56, plug in the instance url of the org. Eg. https://na1.salesforce.com
+1. Open index.html or simple.html in an editor
+2. At the bottom of the page, replace `<session_id>` with salesforce session Id. To obtain the salesforce session Id, follow the instructions below.
+3. Also replace the `<instance>` with the instance of the org. Eg. https://na1.salesforce.com
 4. Open index.html in Safari and you should be able to browse a simple list and detail of an account.
 ```
 
@@ -63,7 +63,7 @@ Obtaining salesforce session Id for running the sample app:
 ```
 
 ## Available UI Elements ##
-1. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element also contains the `polymer-flex-layout` element to enable flexible sections on the page, esp. in single page view with split view panels.
+1. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page. This is useful in single page view with split view panels. All the children of the main section must have the class "content" specified on them to apply the right styles.
 
 	Supported attributes include:
 	- `multipage`: (Optional) Default: false. When true, force-ui-app shows only one direct child, with class="page", at a time and allows navigation to other child elements.
@@ -76,7 +76,7 @@ Obtaining salesforce session Id for running the sample app:
 	<force-ui-app multipage="true"></force-ui-app>
 	```
 
-2. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of `force-ui-app` element.
+2. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of `force-ui-app` element to inherit the appropriate styles.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to render a list.
@@ -89,7 +89,7 @@ Obtaining salesforce session Id for running the sample app:
 	<force-ui-list sobject="Account" querytype="mru"></force-ui-list>
 	```
 
-3. __force-ui-detail__: force-ui-detail element enables the rendering of full view of a salesforce record. It extends the `force-sobject-layout` to fetch the page layout for the record. This element also embeds a `force-sobject` element to allow all the CRUD operations on an SObject. This element should always be a child of `force-ui-app` element.
+3. __force-ui-detail__: force-ui-detail element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a `force-sobject` element to allow all the CRUD operations on an SObject. This element should always be a child of `force-ui-app` element to inherit the default styles.
 
 	Supported attributes include:
 	- All attributes of `force-sobject-layout` element.
@@ -102,10 +102,10 @@ Obtaining salesforce session Id for running the sample app:
 	<force-ui-detail sobject="Account" recordid="001000000000AAA"></force-ui-detail>
 	```
 
-4. __force-selector-list__: force-selector-list is an extension of polymer-selector element and provides a wrapper around `force-sobject-collection` element. The element acts as a base for any list UI element that also needs the selector functionality. It automatically updates the selected attribute when a row has been clicked on.
+4. __force-selector-list__: force-selector-list is an extension of core-selector element and provides a wrapper around `force-sobject-collection` element. The element acts as a base for any list UI element that also needs the selector functionality. It automatically updates the selected attribute when a row has been clicked on.
 
 	Supported attributes include:
-	- All the attributes of the `polymer-selector` element.
+	- All the attributes of the `core-selector` element.
 	- `sobject`: (Required) Type of sobject on which you want to render a list
 	- `query`: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
 	- `querytype`: Type of query (mru, soql, sosl, cache). Required if query is specified.
@@ -207,8 +207,7 @@ Obtaining salesforce session Id for running the sample app:
 	- `hasrecordtypes`: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
 	- `recordtypeid`: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
 	- `recordid`: (Optional) Default: null. Id of the record for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordtypeid" is not provided.
-	- `idfield`: (Optional) Default: ID. Name of the ID field, required especially for the cases of External Object.
-
+	
 	Methods:
 	- `whenDetailSections`: Initiate the fetching of layout's detail view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all detail sections.
 	- `whenEditSections`: Initiate the fetching of layout's edit view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all edit sections.
@@ -220,7 +219,7 @@ Obtaining salesforce session Id for running the sample app:
 	<force-sobject-layout sobject="Account"></force-sobject-layout>
 	```
 
-9. __force-sobject-relatedlists__: force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It extends the `force-sobject-layout` element to fetch the related lists configuraton from the page layout settings. a) Parses the related lists configuration for a particular sobject type, and b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
+9. __force-sobject-relatedlists__: force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It embeds the `force-sobject-layout` element to fetch the related lists configuraton from the page layout settings. a) Parses the related lists configuration for a particular sobject type, and b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
 
     Supported attributes include:
     - All attributes of force-sobject-layout
@@ -235,7 +234,7 @@ Obtaining salesforce session Id for running the sample app:
 	<force-sobject-relatedlists sobject="Account" recordid="001000000000AAA"></force-sobject-relatedlists>
 	```
 
-10. __force-selector-relatedlist__: force-selector-relatedlist element is an extension of p`olymer-selector` element and provides a wrapper around `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+10. __force-selector-relatedlist__: force-selector-relatedlist element is an extension of `core-selector` element and fetches the records of related sobject using a `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
 
 	Supported attributes include:
 	- `related`: (Required) Object instance of each related list item from the array obtained via force-sobject-relatedlists element. The object must contain the query and querytype properties to fetch the related items
@@ -252,7 +251,7 @@ Obtaining salesforce session Id for running the sample app:
 	<force-selector-relatedlist related="{{related}}"></force-selector-relatedlist>
 	```
 
-11. __force-ui-relatedlist__: force-ui-relatedlist element is an extension of `force-selector-relatedlist` element and renders a list of related records to an sobject record.
+11. __force-ui-relatedlist__: force-ui-relatedlist element is an extension of `force-selector-relatedlist` element and renders a list of related records to an sobject record. This element should always be a child of `force-ui-app` element to inherit the default styles.
 
 	Supported attributes include:
     - All attributes of force-selector-relatedlist
@@ -291,14 +290,14 @@ This library makes use of a number of third-party components:
 - [jQuery](http://jquery.com), the JavaScript library to make it easy to write javascript.
 - [Backbonejs](http://backbonejs.org), a JavaScript library providing the model–view–presenter (MVP) application design paradigm.
 - [Underscorejs](http://underscorejs.org/), a utility-belt library for JavaScript.
-- [Ratchet](http://maker.github.io/ratchet), Prototype iPhone apps with simple HTML, CSS, and JS components.
+- [Ratchet](http://goratchet.com), Prototype iPhone apps with simple HTML, CSS, and JS components.
 
 
 ## FAQ ##
 
-__Polymer is still "pre-alpha" project. How should I use it?__
+__Polymer is still "alpha" project. How should I use it?__
 
-Polymer as an overall project is still a work in progress. We feel that the underlying platform code leveraged for UI Elements is stable enough to start creating new apps for learning and prototyping purposes. Polymer will continue to be tweaked as the Web Components standard reaches its final stage. In the near future, a lot of Polymer features will be natively available in Chrome.
+Polymer as an overall project is still a work in progress. We feel that the underlying platform code leveraged for UI Elements is stable enough to start creating new apps for learning and prototyping purposes. Polymer will continue to be tweaked as the Web Components standard reaches its final stage. Various building blocks of Web Components, including Shadow DOM, are now natively supported in Chrome. This enables better performance for your mobile applications.
 
 __Polymer doesn't work inside the WebView on Android below 4.4__
 

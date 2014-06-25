@@ -14,6 +14,9 @@
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
         <link rel="import" href="dependencies/core-icons/core-icons.html">
+
+        <!-- Font-face imports. Bug in chrome -->
+        <link rel="stylesheet" href="elements/css/ratcheticons.css">
     </head>
     <body>
         <polymer-element name="mobile-app">
@@ -58,7 +61,7 @@
         <script>
             document.addEventListener('WebComponentsReady', function() {
                 SFDC.launch({
-                    accessToken: '',
+                    accessToken: '<session_id>',
                     instanceUrl: 'https://<instance>.salesforce.com'
                 });
             });
