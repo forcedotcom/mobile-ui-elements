@@ -2,17 +2,16 @@
   "name": "mobile-ui-elements",
   "version": "0.0.0",
   "dependencies": {
-    "platform": "Polymer/platform#~0.3.3"
-  },
-  "devDependencies": {
+    "platform": "Polymer/platform#~0.3.3",
     "polymer": "Polymer/polymer#~0.3.3",
     "core-selector": "Polymer/core-selector#>=0.3.0 <1.0.0",
-    "core-layout": "Polymer/core-layout#>=0.3.0 <1.0.0",
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
     "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared#master",
-    "ratchet": "twbs/ratchet#>=2.0.2",
+    "ratchet": "twbs/ratchet#>=2.0.2"
+  },
+  "devDependencies": {
     "mocha": "~1.18.2",
     "should": "~3.3.1",
     "core-icon": "Polymer/core-icon#>=0.3.0 <1.0.0"
