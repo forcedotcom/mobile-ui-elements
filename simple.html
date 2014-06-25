@@ -13,7 +13,7 @@
         <template is="core-bind">
             <force-ui-app id="force_app">
                 <h1 class="title">Accounts</h1>
-                <force-ui-list id="force_ui_list" sobject="Account" selected="{{recordid}}" class="page content" on-core-activate="{{showDetail}}"></force-ui-list>
+                <force-ui-list id="force_ui_list" sobject="Account" selected="{{recordid}}" class="page content"></force-ui-list>
                 <force-ui-detail flex id="force_ui_detail" sobject="Account" recordid="{{recordid}}" class="page content"></force-ui-detail>
             </force-ui-app>
         </template>
