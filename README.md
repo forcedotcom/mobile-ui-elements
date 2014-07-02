@@ -47,13 +47,17 @@ To build the project for distribution, execute (all assets will be generated in 
 
     $ grunt dist
 
+Run a local node server:
+
+	$ node proxy.js	
+
 This repo contains two sample webapps, `simple.html` and `index.html`. To run the sample app in Safari:
 
 ```
 1. Open index.html or simple.html in an editor
 2. At the bottom of the page, replace `<session_id>` with salesforce session Id. To obtain the salesforce session Id, follow the instructions below.
 3. Also replace the `<instance>` with the instance of the org. Eg. https://na1.salesforce.com
-4. Open index.html in Safari and you should be able to browse a simple list and detail of an account.
+4. Open http://localhost:9000/index.html and you should be able to browse a simple list and detail of an account.
 ```
 
 Obtaining salesforce session Id for running the sample app:

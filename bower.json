@@ -8,7 +8,7 @@
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
-    "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared#master",
+    "mobilesdk-shared": "akhileshgupta/SalesforceMobileSDK-Shared#8fd59192c1b8ad438e29e961d88a65781506b60d",
     "ratchet": "twbs/ratchet#>=2.0.2"
   },
   "devDependencies": {

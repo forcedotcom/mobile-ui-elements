@@ -1,7 +1,10 @@
 {
   "name": "polymer2",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "express": "latest",
+    "http-proxy": "latest"
+  },
   "devDependencies": {
     "cheerio": "~0.11.0",
     "grunt": "~0.4.1",
