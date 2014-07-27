@@ -309,498 +309,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-The `core-layout` element is a helper for using
-[CSS3 Flexible Boxes](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes).
-A `core-layout` element enables a set of css selectors for easy flexbox styling.
-
-Example:
-
-    <core-layout>
-      <div>Left</div>
-      <div core-flex>Main</div>
-      <div>Right</div>
-    </core-layout>
-
- Renders something like this:
-
-    ---------------------------------
-    |-------------------------------|
-    ||Left|       Main       |Right||
-    |-------------------------------|
-    ---------------------------------
-
-__Note__: the `core-layout` element applies layout to itself if it has children or to
-its parent element, if it does not. This feature allows you to apply layout to an
-arbitrary parent.
-
-Elements can layout horizontally, such that their items stack
-left to right or vertically, such that their items stack top to bottom. The
-default is horizontal. Set `vertical` to true to layout the elements vertically.
-
-To make a particular child _flexible_, use the `core-flex` attribute.
-You can control flexibility from 1 to 3 by giving the attribute a
-corresponding value. For other values, apply the css manually.
-
-It's common in flexbox parlance to hear the terms _main axis_ and _cross axis_.
-For a horizontal layout the main axis is horizontal and the cross axis is vertical.
-These are exchanged for a vertical layout.
-
-To effect alignment in the main axis, use the `justify` attribute. The 
-supported values are `start`, `center`, `end`, and `between`.
-
-To effect alignment in the cross axis, use the `align` attribute. The
-supported values are `start`, `center`, and `end`.
-
-Note, it's also possible to include the `core-layout.css` stylesheet separate
-from the `core-layout` element. Including the element automatically includes
-the stylesheet. To use the stylesheet independent of the element, css classes 
-should be used of the following form: `core-h`, `core-v`, `core-flex`, 
-`core-justify-start`, and `core-align-start`.
-
-The `core-layout` and css file also provide a few commonly needed layout
-behaviors. Apply the `core-fit` class to fit an element to its container. To 
-ensure a container will contain an element inside it with the `core-fit` class
-give it the `core-relative` class.
-
-More examples:
-
-    <core-layout vertical>
-
-      <div>Header</div>
-      <div core-flex>Body</div>
-      <div>Footer</div>
-
-    </core-layout>
-
-    ----------
-    ||------||
-    ||Header||
-    ||------||
-    ||Body  ||
-    ||      ||
-    ||      ||
-    ||      ||
-    ||      ||
-    ||      ||
-    ||      ||
-    ||------||
-    ||Footer||
-    ||------||
-    ----------
-
-Justify:
-
-    <core-layout justify="end">
-      <div core-flex>Left</div>
-      <div>Main</div>
-      <div>Right</div>
-    </core-layout>
-
-    ---------------------------------
-    |-------------------------------|
-    ||              Left|Main|Right||
-    |-------------------------------|
-    ---------------------------------
-
-Align:
-
-    <core-layout align="center">
-      <div>Left</div>
-      <div core-flex>Main</div>
-      <div>Right</div>
-    </core-layout>
-
-    ---------------------------------
-    |-------------------------------|
-    ||    |                  |     ||
-    ||Left|       Main       |Right||
-    ||    |                  |     ||
-    |-------------------------------|
-    ---------------------------------
-
-
-To layout contents of a parent element, place a `core-layout` inside of it:
-
-    <some-element>
-      <core-layout></core-layout>
-      <div>Left</div>
-      <div core-flex>Main</div>
-      <div>Right</div>
-    <some-element>
-
-    ---------------------------------
-    |-------------------------------|
-    ||Left|       Main       |Right||
-    |-------------------------------|
-    ---------------------------------
-
-You may also use the `core-layout` stylesheet directly:
-
-    <link rel="stylesheet" href="../core-layout/core-layout.css">
-    <div class="core-h core-justify-end">
-      <div core-flex>Left</div>
-      <div>Main</div>
-      <div>Right</div>  
-    </div>
-
-    ---------------------------------
-    |-------------------------------|
-    ||              Left|Main|Right||
-    |-------------------------------|
-    ---------------------------------
-
-@group Polymer Core Elements
-@element core-layout
-
--->
-
-
-<polymer-element name="core-layout" attributes="vertical justify align isContainer reverse" assetpath="../dependencies/core-layout/">
-  
-  <template>
-  
-    <style no-shim="">/*
-Copyright 2013 The Polymer Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
-*/
-
-.core-h, .core-v {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: -moz-flex !important;
-  display: -webkit-flex !important;
-  display: flex !important;
-}
-
-.core-h {
-  -webkit-box-orient: horizontal;
-  -ms-flex-direction: row;
-  -moz-flex-direction: row;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-}
-
-.core-h.core-reverse {
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: row-reverse;
-  -moz-flex-direction: row-reverse;
-  -webkit-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-}
-
-.core-v {
-  -webkit-box-orient: vertical;
-  -ms-flex-direction: column;
-  -moz-flex-direction: column;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-}
-
-.core-v.core-reverse {
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: column-reverse;
-  -moz-flex-direction: column-reverse;
-  -webkit-flex-direction: column-reverse;
-  flex-direction: column-reverse;
-}
-
-.core-relative {
-  position: relative;
-}
-
-.core-fit {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
-
-body.core-fit {
-  margin: 0;
-}
-
-.core-flex, [core-flex] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  -moz-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
-}
-
-.core-flex-auto, [core-flex-auto] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 auto;
-  -moz-flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
-
-.core-flex-none, [core-flex-none] {
-  -webkit-box-flex: none;
-  -ms-flex: none;
-  -moz-flex: none;
-  -webkit-flex: none;
-  flex: none;
-}
-
-.core-flex1, [core-flex=1] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  -moz-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
-}
-
-.core-flex2, [core-flex=2] {
-  -webkit-box-flex: 2;
-  -ms-flex: 2;
-  -moz-flex: 2;
-  -webkit-flex: 2;
-  flex: 2;
-}
-
-.core-flex3, [core-flex=3] {
-  -webkit-box-flex: 3;
-  -ms-flex: 3;
-  -moz-flex: 3;
-  -webkit-flex: 3;
-  flex: 3;
-}
-
-/* distributed elements */
-::content > .core-flex, ::content > [core-flex] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  -moz-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
-}
-
-::content > .core-flex-auto, ::content > [core-flex-auto] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 auto;
-  -moz-flex: 1 1 auto;
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
-
-::content > .core-flex-none, ::content > [core-flex-none] {
-  -webkit-box-flex: none;
-  -ms-flex: none;
-  -moz-flex: none;
-  -webkit-flex: none;
-  flex: none;
-}
-
-::content > .core-flex1, ::content > [core-flex=1] {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  -moz-flex: 1;
-  -webkit-flex: 1;
-  flex: 1;
-}
-
-::content > .core-flex2, ::content > [core-flex=2] {
-  -webkit-box-flex: 2;
-  -ms-flex: 2;
-  -moz-flex: 2;
-  -webkit-flex: 2;
-  flex: 2;
-}
-
-::content > .core-flex3, ::content > [core-flex=3] {
-  -webkit-box-flex: 3;
-  -ms-flex: 3;
-  -moz-flex: 3;
-  -webkit-flex: 3;
-  flex: 3;
-}
-
-/* alignment in main axis */
-.core-justify-start {
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -moz-justify-content: flex-start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-}
-
-.core-justify-center {
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-.core-justify-end {
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -moz-justify-content: flex-end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-}
-
-.core-justify-between {
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  -moz-justify-content: space-between;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-/* alignment in cross axis */
-.core-align-start {
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  -moz-align-items: flex-start;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
-}
-
-.core-align-center {
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-
-.core-align-end {
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  -moz-align-items: flex-end;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
-}
-</style>
-    <style no-shim="">/*
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-*/
-
-:host {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: -moz-flex !important;
-  display: -webkit-flex !important;
-  display: flex !important;
-}
-  
-:host(.core-h) {
-  -webkit-box-orient: horizontal;
-  -ms-flex-direction: row;
-  -moz-flex-direction: row;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-}
-  
-:host(.core-v) {
-  -webkit-box-orient: vertical;
-  -ms-flex-direction: column;
-  -moz-flex-direction: column;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-}
-
-:host(.core-h.core-reverse) {
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: row-reverse;
-  -moz-flex-direction: row-reverse;
-  -webkit-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-}
-  
-:host(.core-v.core-reverse) {
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: column-reverse;
-  -moz-flex-direction: column-reverse;
-  -webkit-flex-direction: column-reverse;
-  flex-direction: column-reverse;
-}
-
-/* alignment in main axis */
-:host(.core-justify-start) {
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  -moz-justify-content: flex-start;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
-}
-
-:host(.core-justify-center) {
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -moz-justify-content: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-:host(.core-justify-end) {
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  -moz-justify-content: flex-end;
-  -webkit-justify-content: flex-end;
-  justify-content: flex-end;
-}
-
-:host(.core-justify-between) {
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  -moz-justify-content: space-between;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-}
-
-/* alignment in cross axis */
-:host(.core-align-start) {
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  -moz-align-items: flex-start;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
-}
-
-:host(.core-align-center) {
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  -moz-align-items: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-  
-:host(.core-align-end) {
-  -webkit-box-align: end;
-  -ms-flex-align: end;
-  -moz-align-items: flex-end;
-  -webkit-align-items: flex-end;
-  align-items: flex-end;
-}
-</style>
-  
-  </template>
-  
-  
-
-</polymer-element>
-
-<!--
-    force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element also contains the core-layout element to enable flexible sections on the page, esp. in single page view with split view panels.
+    force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page, esp. in single page view with split view panels.
     Why: a) Manages all the UI stylesheets.
     b) Provides simple header and content location for the app.
     c) Provides way to create splitview or multipage app with built-in navigation.
@@ -830,10 +339,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 
-
-<!--link rel="import" href="../../dependencies/core-animation/core-translate.html"-->
 <polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader" assetpath="../elements/force-ui-app/">
-  
   <template>
     <style>/*!
  * =====================================================
@@ -847,119 +353,208 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 
-:scope,
+polyfill-next-selector {
+  content: ':host';
+}
+
 :host {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
 
-:scope,
+polyfill-next-selector {
+  content: ':host';
+}
+
 :host {
   margin: 0;
 }
 
-:scope /deep/ article,
+polyfill-next-selector {
+  content: ':host /deep/ article,:host /deep/ aside,:host /deep/ details,:host /deep/ figcaption,:host /deep/ figure,:host /deep/ footer,:host /deep/ header,:host /deep/ hgroup,:host /deep/ main,:host /deep/ nav,:host /deep/ section,:host /deep/ summary';
+}
+
+::content article,
+::content>* /deep/ article,
 :host /deep/ article,
-:scope /deep/ aside,
+::content aside,
+::content>* /deep/ aside,
 :host /deep/ aside,
-:scope /deep/ details,
+::content details,
+::content>* /deep/ details,
 :host /deep/ details,
-:scope /deep/ figcaption,
+::content figcaption,
+::content>* /deep/ figcaption,
 :host /deep/ figcaption,
-:scope /deep/ figure,
+::content figure,
+::content>* /deep/ figure,
 :host /deep/ figure,
-:scope /deep/ footer,
+::content footer,
+::content>* /deep/ footer,
 :host /deep/ footer,
-:scope /deep/ header,
+::content header,
+::content>* /deep/ header,
 :host /deep/ header,
-:scope /deep/ hgroup,
+::content hgroup,
+::content>* /deep/ hgroup,
 :host /deep/ hgroup,
-:scope /deep/ main,
+::content main,
+::content>* /deep/ main,
 :host /deep/ main,
-:scope /deep/ nav,
+::content nav,
+::content>* /deep/ nav,
 :host /deep/ nav,
-:scope /deep/ section,
+::content section,
+::content>* /deep/ section,
 :host /deep/ section,
-:scope /deep/ summary,
+::content summary,
+::content>* /deep/ summary,
 :host /deep/ summary {
   display: block;
 }
 
-:scope /deep/ audio,
+polyfill-next-selector {
+  content: ':host /deep/ audio,:host /deep/ canvas,:host /deep/ progress,:host /deep/ video';
+}
+
+::content audio,
+::content>* /deep/ audio,
 :host /deep/ audio,
-:scope /deep/ canvas,
+::content canvas,
+::content>* /deep/ canvas,
 :host /deep/ canvas,
-:scope /deep/ progress,
+::content progress,
+::content>* /deep/ progress,
 :host /deep/ progress,
-:scope /deep/ video,
+::content video,
+::content>* /deep/ video,
 :host /deep/ video {
   display: inline-block;
   vertical-align: baseline;
 }
 
-:scope /deep/ audio:not([controls]),
+polyfill-next-selector {
+  content: ':host /deep/ audio:not([controls])';
+}
+
+::content audio:not([controls]),
+::content>* /deep/ audio:not([controls]),
 :host /deep/ audio:not([controls]) {
   display: none;
   height: 0;
 }
 
-:scope /deep/ [hidden],
+polyfill-next-selector {
+  content: ':host /deep/ [hidden],:host /deep/ template';
+}
+
+::content [hidden],
+::content>* /deep/ [hidden],
 :host /deep/ [hidden],
-:scope /deep/ template,
+::content template,
+::content>* /deep/ template,
 :host /deep/ template {
   display: none;
 }
 
-:scope /deep/ a,
+polyfill-next-selector {
+  content: ':host /deep/ a';
+}
+
+::content a,
+::content>* /deep/ a,
 :host /deep/ a {
   background: transparent;
 }
 
-:scope /deep/ a:active,
+polyfill-next-selector {
+  content: ':host /deep/ a:active,:host /deep/ a:hover';
+}
+
+::content a:active,
+::content>* /deep/ a:active,
 :host /deep/ a:active,
-:scope /deep/ a:hover,
+::content a:hover,
+::content>* /deep/ a:hover,
 :host /deep/ a:hover {
   outline: 0;
 }
 
-:scope /deep/ abbr[title],
+polyfill-next-selector {
+  content: ':host /deep/ abbr[title]';
+}
+
+::content abbr[title],
+::content>* /deep/ abbr[title],
 :host /deep/ abbr[title] {
   border-bottom: 1px dotted;
 }
 
-:scope /deep/ b,
+polyfill-next-selector {
+  content: ':host /deep/ b,:host /deep/ strong';
+}
+
+::content b,
+::content>* /deep/ b,
 :host /deep/ b,
-:scope /deep/ strong,
+::content strong,
+::content>* /deep/ strong,
 :host /deep/ strong {
   font-weight: bold;
 }
 
-:scope /deep/ dfn,
+polyfill-next-selector {
+  content: ':host /deep/ dfn';
+}
+
+::content dfn,
+::content>* /deep/ dfn,
 :host /deep/ dfn {
   font-style: italic;
 }
 
-:scope /deep/ h1,
+polyfill-next-selector {
+  content: ':host /deep/ h1';
+}
+
+::content h1,
+::content>* /deep/ h1,
 :host /deep/ h1 {
   margin: .67em 0;
   font-size: 2em;
 }
 
-:scope /deep/ mark,
+polyfill-next-selector {
+  content: ':host /deep/ mark';
+}
+
+::content mark,
+::content>* /deep/ mark,
 :host /deep/ mark {
   color: #000;
   background: #ff0;
 }
 
-:scope /deep/ small,
+polyfill-next-selector {
+  content: ':host /deep/ small';
+}
+
+::content small,
+::content>* /deep/ small,
 :host /deep/ small {
   font-size: 80%;
 }
 
-:scope /deep/ sub,
+polyfill-next-selector {
+  content: ':host /deep/ sub,:host /deep/ sup';
+}
+
+::content sub,
+::content>* /deep/ sub,
 :host /deep/ sub,
-:scope /deep/ sup,
+::content sup,
+::content>* /deep/ sup,
 :host /deep/ sup {
   position: relative;
   font-size: 75%;
@@ -967,130 +562,235 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   vertical-align: baseline;
 }
 
-:scope /deep/ sup,
+polyfill-next-selector {
+  content: ':host /deep/ sup';
+}
+
+::content sup,
+::content>* /deep/ sup,
 :host /deep/ sup {
   top: -.5em;
 }
 
-:scope /deep/ sub,
+polyfill-next-selector {
+  content: ':host /deep/ sub';
+}
+
+::content sub,
+::content>* /deep/ sub,
 :host /deep/ sub {
   bottom: -.25em;
 }
 
-:scope /deep/ img,
+polyfill-next-selector {
+  content: ':host /deep/ img';
+}
+
+::content img,
+::content>* /deep/ img,
 :host /deep/ img {
   border: 0;
 }
 
-:scope /deep/ svg:not(:root),
+polyfill-next-selector {
+  content: ':host /deep/ svg:not(:root)';
+}
+
+::content svg:not(:root),
+::content>* /deep/ svg:not(:root),
 :host /deep/ svg:not(:root) {
   overflow: hidden;
 }
 
-:scope /deep/ figure,
+polyfill-next-selector {
+  content: ':host /deep/ figure';
+}
+
+::content figure,
+::content>* /deep/ figure,
 :host /deep/ figure {
   margin: 1em 40px;
 }
 
-:scope /deep/ hr,
+polyfill-next-selector {
+  content: ':host /deep/ hr';
+}
+
+::content hr,
+::content>* /deep/ hr,
 :host /deep/ hr {
   height: 0;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 
-:scope /deep/ pre,
+polyfill-next-selector {
+  content: ':host /deep/ pre';
+}
+
+::content pre,
+::content>* /deep/ pre,
 :host /deep/ pre {
   overflow: auto;
 }
 
-:scope /deep/ code,
+polyfill-next-selector {
+  content: ':host /deep/ code,:host /deep/ kbd,:host /deep/ pre,:host /deep/ samp';
+}
+
+::content code,
+::content>* /deep/ code,
 :host /deep/ code,
-:scope /deep/ kbd,
+::content kbd,
+::content>* /deep/ kbd,
 :host /deep/ kbd,
-:scope /deep/ pre,
+::content pre,
+::content>* /deep/ pre,
 :host /deep/ pre,
-:scope /deep/ samp,
+::content samp,
+::content>* /deep/ samp,
 :host /deep/ samp {
   font-family: monospace, monospace;
   font-size: 1em;
 }
 
-:scope /deep/ button,
+polyfill-next-selector {
+  content: ':host /deep/ button,:host /deep/ input,:host /deep/ optgroup,:host /deep/ select,:host /deep/ textarea';
+}
+
+::content button,
+::content>* /deep/ button,
 :host /deep/ button,
-:scope /deep/ input,
+::content input,
+::content>* /deep/ input,
 :host /deep/ input,
-:scope /deep/ optgroup,
+::content optgroup,
+::content>* /deep/ optgroup,
 :host /deep/ optgroup,
-:scope /deep/ select,
+::content select,
+::content>* /deep/ select,
 :host /deep/ select,
-:scope /deep/ textarea,
+::content textarea,
+::content>* /deep/ textarea,
 :host /deep/ textarea {
   margin: 0;
   font: inherit;
   color: inherit;
 }
 
-:scope /deep/ button,
+polyfill-next-selector {
+  content: ':host /deep/ button';
+}
+
+::content button,
+::content>* /deep/ button,
 :host /deep/ button {
   overflow: visible;
 }
 
-:scope /deep/ button,
+polyfill-next-selector {
+  content: ':host /deep/ button,:host /deep/ select';
+}
+
+::content button,
+::content>* /deep/ button,
 :host /deep/ button,
-:scope /deep/ select,
+::content select,
+::content>* /deep/ select,
 :host /deep/ select {
   text-transform: none;
 }
 
-:scope /deep/ button,
+polyfill-next-selector {
+  content: ':host /deep/ button,:host /deep/ html input[type="button"],:host /deep/ input[type="reset"],:host /deep/ input[type="submit"]';
+}
+
+::content button,
+::content>* /deep/ button,
 :host /deep/ button,
-:scope /deep/ html input[type="button"],
+::content html input[type="button"],
+::content>* /deep/ html input[type="button"],
 :host /deep/ html input[type="button"],
-:scope /deep/ input[type="reset"],
+::content input[type="reset"],
+::content>* /deep/ input[type="reset"],
 :host /deep/ input[type="reset"],
-:scope /deep/ input[type="submit"],
+::content input[type="submit"],
+::content>* /deep/ input[type="submit"],
 :host /deep/ input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer;
 }
 
-:scope /deep/ button[disabled],
+polyfill-next-selector {
+  content: ':host /deep/ button[disabled],:host /deep/ html input[disabled]';
+}
+
+::content button[disabled],
+::content>* /deep/ button[disabled],
 :host /deep/ button[disabled],
-:scope /deep/ html input[disabled],
+::content html input[disabled],
+::content>* /deep/ html input[disabled],
 :host /deep/ html input[disabled] {
   cursor: default;
 }
 
-:scope /deep/ button::-moz-focus-inner,
+polyfill-next-selector {
+  content: ':host /deep/ button::-moz-focus-inner,:host /deep/ input::-moz-focus-inner';
+}
+
+::content button::-moz-focus-inner,
+::content>* /deep/ button::-moz-focus-inner,
 :host /deep/ button::-moz-focus-inner,
-:scope /deep/ input::-moz-focus-inner,
+::content input::-moz-focus-inner,
+::content>* /deep/ input::-moz-focus-inner,
 :host /deep/ input::-moz-focus-inner {
   padding: 0;
   border: 0;
 }
 
-:scope /deep/ input,
+polyfill-next-selector {
+  content: ':host /deep/ input';
+}
+
+::content input,
+::content>* /deep/ input,
 :host /deep/ input {
   line-height: normal;
 }
 
-:scope /deep/ input[type="checkbox"],
+polyfill-next-selector {
+  content: ':host /deep/ input[type="checkbox"],:host /deep/ input[type="radio"]';
+}
+
+::content input[type="checkbox"],
+::content>* /deep/ input[type="checkbox"],
 :host /deep/ input[type="checkbox"],
-:scope /deep/ input[type="radio"],
+::content input[type="radio"],
+::content>* /deep/ input[type="radio"],
 :host /deep/ input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-:scope /deep/ input[type="number"]::-webkit-inner-spin-button,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="number"]::-webkit-inner-spin-button,:host /deep/ input[type="number"]::-webkit-outer-spin-button';
+}
+
+::content input[type="number"]::-webkit-inner-spin-button,
+::content>* /deep/ input[type="number"]::-webkit-inner-spin-button,
 :host /deep/ input[type="number"]::-webkit-inner-spin-button,
-:scope /deep/ input[type="number"]::-webkit-outer-spin-button,
+::content input[type="number"]::-webkit-outer-spin-button,
+::content>* /deep/ input[type="number"]::-webkit-outer-spin-button,
 :host /deep/ input[type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
 
-:scope /deep/ input[type="search"],
+polyfill-next-selector {
+  content: ':host /deep/ input[type="search"]';
+}
+
+::content input[type="search"],
+::content>* /deep/ input[type="search"],
 :host /deep/ input[type="search"] {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
@@ -1098,57 +798,102 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   -webkit-appearance: textfield;
 }
 
-:scope /deep/ input[type="search"]::-webkit-search-cancel-button,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="search"]::-webkit-search-cancel-button,:host /deep/ input[type="search"]::-webkit-search-decoration';
+}
+
+::content input[type="search"]::-webkit-search-cancel-button,
+::content>* /deep/ input[type="search"]::-webkit-search-cancel-button,
 :host /deep/ input[type="search"]::-webkit-search-cancel-button,
-:scope /deep/ input[type="search"]::-webkit-search-decoration,
+::content input[type="search"]::-webkit-search-decoration,
+::content>* /deep/ input[type="search"]::-webkit-search-decoration,
 :host /deep/ input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-:scope /deep/ fieldset,
+polyfill-next-selector {
+  content: ':host /deep/ fieldset';
+}
+
+::content fieldset,
+::content>* /deep/ fieldset,
 :host /deep/ fieldset {
   padding: .35em .625em .75em;
   margin: 0 2px;
   border: 1px solid #c0c0c0;
 }
 
-:scope /deep/ legend,
+polyfill-next-selector {
+  content: ':host /deep/ legend';
+}
+
+::content legend,
+::content>* /deep/ legend,
 :host /deep/ legend {
   padding: 0;
   border: 0;
 }
 
-:scope /deep/ textarea,
+polyfill-next-selector {
+  content: ':host /deep/ textarea';
+}
+
+::content textarea,
+::content>* /deep/ textarea,
 :host /deep/ textarea {
   overflow: auto;
 }
 
-:scope /deep/ optgroup,
+polyfill-next-selector {
+  content: ':host /deep/ optgroup';
+}
+
+::content optgroup,
+::content>* /deep/ optgroup,
 :host /deep/ optgroup {
   font-weight: bold;
 }
 
-:scope /deep/ table,
+polyfill-next-selector {
+  content: ':host /deep/ table';
+}
+
+::content table,
+::content>* /deep/ table,
 :host /deep/ table {
   border-spacing: 0;
   border-collapse: collapse;
 }
 
-:scope /deep/ td,
+polyfill-next-selector {
+  content: ':host /deep/ td,:host /deep/ th';
+}
+
+::content td,
+::content>* /deep/ td,
 :host /deep/ td,
-:scope /deep/ th,
+::content th,
+::content>* /deep/ th,
 :host /deep/ th {
   padding: 0;
 }
 
-:scope /deep/ *,
+polyfill-next-selector {
+  content: ':host /deep/ *';
+}
+
+::content *,
+::content>* /deep/ *,
 :host /deep/ * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-:scope,
+polyfill-next-selector {
+  content: ':host';
+}
+
 :host {
   position: fixed;
   top: 0;
@@ -1162,19 +907,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   background-color: #fff;
 }
 
-:scope /deep/ a,
+polyfill-next-selector {
+  content: ':host /deep/ a';
+}
+
+::content a,
+::content>* /deep/ a,
 :host /deep/ a {
   color: #428bca;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-:scope /deep/ a:active,
+polyfill-next-selector {
+  content: ':host /deep/ a:active';
+}
+
+::content a:active,
+::content>* /deep/ a:active,
 :host /deep/ a:active {
   color: #3071a9;
 }
 
-:scope /deep/ .content,
+polyfill-next-selector {
+  content: ':host /deep/ .content';
+}
+
+::content .content,
+::content>* /deep/ .content,
 :host /deep/ .content {
   position: absolute;
   top: 0;
@@ -1186,133 +946,245 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   background-color: #fff;
 }
 
-:scope /deep/ .content > *,
+polyfill-next-selector {
+  content: ':host /deep/ .content > *';
+}
+
+::content .content > *,
+::content>* /deep/ .content > *,
 :host /deep/ .content > * {
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
 }
 
-:scope /deep/ .bar-nav ~ .content,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-nav ~ .content';
+}
+
+::content .bar-nav ~ .content,
+::content>* /deep/ .bar-nav ~ .content,
 :host /deep/ .bar-nav ~ .content {
   padding-top: 44px;
 }
 
-:scope /deep/ .bar-header-secondary ~ .content,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-header-secondary ~ .content';
+}
+
+::content .bar-header-secondary ~ .content,
+::content>* /deep/ .bar-header-secondary ~ .content,
 :host /deep/ .bar-header-secondary ~ .content {
   padding-top: 88px;
 }
 
-:scope /deep/ .bar-footer ~ .content,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-footer ~ .content';
+}
+
+::content .bar-footer ~ .content,
+::content>* /deep/ .bar-footer ~ .content,
 :host /deep/ .bar-footer ~ .content {
   padding-bottom: 44px;
 }
 
-:scope /deep/ .bar-footer-secondary ~ .content,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-footer-secondary ~ .content';
+}
+
+::content .bar-footer-secondary ~ .content,
+::content>* /deep/ .bar-footer-secondary ~ .content,
 :host /deep/ .bar-footer-secondary ~ .content {
   padding-bottom: 88px;
 }
 
-:scope /deep/ .bar-tab ~ .content,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-tab ~ .content';
+}
+
+::content .bar-tab ~ .content,
+::content>* /deep/ .bar-tab ~ .content,
 :host /deep/ .bar-tab ~ .content {
   padding-bottom: 50px;
 }
 
-:scope /deep/ .bar-footer-secondary-tab ~ .content,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-footer-secondary-tab ~ .content';
+}
+
+::content .bar-footer-secondary-tab ~ .content,
+::content>* /deep/ .bar-footer-secondary-tab ~ .content,
 :host /deep/ .bar-footer-secondary-tab ~ .content {
   padding-bottom: 94px;
 }
 
-:scope /deep/ .content-padded,
+polyfill-next-selector {
+  content: ':host /deep/ .content-padded';
+}
+
+::content .content-padded,
+::content>* /deep/ .content-padded,
 :host /deep/ .content-padded {
   margin: 10px;
 }
 
-:scope /deep/ .pull-left,
+polyfill-next-selector {
+  content: ':host /deep/ .pull-left';
+}
+
+::content .pull-left,
+::content>* /deep/ .pull-left,
 :host /deep/ .pull-left {
   float: left;
 }
 
-:scope /deep/ .pull-right,
+polyfill-next-selector {
+  content: ':host /deep/ .pull-right';
+}
+
+::content .pull-right,
+::content>* /deep/ .pull-right,
 :host /deep/ .pull-right {
   float: right;
 }
 
-:scope /deep/ .clearfix:before,
+polyfill-next-selector {
+  content: ':host /deep/ .clearfix:before,:host /deep/ .clearfix:after';
+}
+
+::content .clearfix:before,
+::content>* /deep/ .clearfix:before,
 :host /deep/ .clearfix:before,
-:scope /deep/ .clearfix:after,
+::content .clearfix:after,
+::content>* /deep/ .clearfix:after,
 :host /deep/ .clearfix:after {
   display: table;
   content: " ";
 }
 
-:scope /deep/ .clearfix:after,
+polyfill-next-selector {
+  content: ':host /deep/ .clearfix:after';
+}
+
+::content .clearfix:after,
+::content>* /deep/ .clearfix:after,
 :host /deep/ .clearfix:after {
   clear: both;
 }
 
-:scope /deep/ h1,
+polyfill-next-selector {
+  content: ':host /deep/ h1,:host /deep/ h2,:host /deep/ h3,:host /deep/ h4,:host /deep/ h5,:host /deep/ h6';
+}
+
+::content h1,
+::content>* /deep/ h1,
 :host /deep/ h1,
-:scope /deep/ h2,
+::content h2,
+::content>* /deep/ h2,
 :host /deep/ h2,
-:scope /deep/ h3,
+::content h3,
+::content>* /deep/ h3,
 :host /deep/ h3,
-:scope /deep/ h4,
+::content h4,
+::content>* /deep/ h4,
 :host /deep/ h4,
-:scope /deep/ h5,
+::content h5,
+::content>* /deep/ h5,
 :host /deep/ h5,
-:scope /deep/ h6,
+::content h6,
+::content>* /deep/ h6,
 :host /deep/ h6 {
   margin-top: 0;
   margin-bottom: 10px;
   line-height: 1;
 }
 
-:scope /deep/ h1,
+polyfill-next-selector {
+  content: ':host /deep/ h1,:host /deep/ .h1';
+}
+
+::content h1,
+::content>* /deep/ h1,
 :host /deep/ h1,
-:scope /deep/ .h1,
+::content .h1,
+::content>* /deep/ .h1,
 :host /deep/ .h1 {
   font-size: 36px;
 }
 
-:scope /deep/ h2,
+polyfill-next-selector {
+  content: ':host /deep/ h2,:host /deep/ .h2';
+}
+
+::content h2,
+::content>* /deep/ h2,
 :host /deep/ h2,
-:scope /deep/ .h2,
+::content .h2,
+::content>* /deep/ .h2,
 :host /deep/ .h2 {
   font-size: 30px;
 }
 
-:scope /deep/ h3,
+polyfill-next-selector {
+  content: ':host /deep/ h3,:host /deep/ .h3';
+}
+
+::content h3,
+::content>* /deep/ h3,
 :host /deep/ h3,
-:scope /deep/ .h3,
+::content .h3,
+::content>* /deep/ .h3,
 :host /deep/ .h3 {
   font-size: 24px;
 }
 
-:scope /deep/ h4,
+polyfill-next-selector {
+  content: ':host /deep/ h4,:host /deep/ .h4';
+}
+
+::content h4,
+::content>* /deep/ h4,
 :host /deep/ h4,
-:scope /deep/ .h4,
+::content .h4,
+::content>* /deep/ .h4,
 :host /deep/ .h4 {
   font-size: 18px;
 }
 
-:scope /deep/ h5,
+polyfill-next-selector {
+  content: ':host /deep/ h5,:host /deep/ .h5';
+}
+
+::content h5,
+::content>* /deep/ h5,
 :host /deep/ h5,
-:scope /deep/ .h5,
+::content .h5,
+::content>* /deep/ .h5,
 :host /deep/ .h5 {
   margin-top: 20px;
   font-size: 14px;
 }
 
-:scope /deep/ h6,
+polyfill-next-selector {
+  content: ':host /deep/ h6,:host /deep/ .h6';
+}
+
+::content h6,
+::content>* /deep/ h6,
 :host /deep/ h6,
-:scope /deep/ .h6,
+::content .h6,
+::content>* /deep/ .h6,
 :host /deep/ .h6 {
   margin-top: 20px;
   font-size: 12px;
 }
 
-:scope /deep/ p,
+polyfill-next-selector {
+  content: ':host /deep/ p';
+}
+
+::content p,
+::content>* /deep/ p,
 :host /deep/ p {
   margin-top: 0;
   margin-bottom: 10px;
@@ -1320,7 +1192,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   color: #777;
 }
 
-:scope /deep/ .btn,
+polyfill-next-selector {
+  content: ':host /deep/ .btn';
+}
+
+::content .btn,
+::content>* /deep/ .btn,
 :host /deep/ .btn {
   position: relative;
   display: inline-block;
@@ -1339,99 +1216,176 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-radius: 3px;
 }
 
-:scope /deep/ .btn:active,
+polyfill-next-selector {
+  content: ':host /deep/ .btn:active,:host /deep/ .btn.active';
+}
+
+::content .btn:active,
+::content>* /deep/ .btn:active,
 :host /deep/ .btn:active,
-:scope /deep/ .btn.active,
+::content .btn.active,
+::content>* /deep/ .btn.active,
 :host /deep/ .btn.active {
   color: inherit;
   background-color: #ccc;
 }
 
-:scope /deep/ .btn:disabled,
+polyfill-next-selector {
+  content: ':host /deep/ .btn:disabled,:host /deep/ .btn.disabled';
+}
+
+::content .btn:disabled,
+::content>* /deep/ .btn:disabled,
 :host /deep/ .btn:disabled,
-:scope /deep/ .btn.disabled,
+::content .btn.disabled,
+::content>* /deep/ .btn.disabled,
 :host /deep/ .btn.disabled {
   opacity: .6;
 }
 
-:scope /deep/ .btn-primary,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-primary';
+}
+
+::content .btn-primary,
+::content>* /deep/ .btn-primary,
 :host /deep/ .btn-primary {
   color: #fff;
   background-color: #428bca;
   border: 1px solid #428bca;
 }
 
-:scope /deep/ .btn-primary:active,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-primary:active,:host /deep/ .btn-primary.active';
+}
+
+::content .btn-primary:active,
+::content>* /deep/ .btn-primary:active,
 :host /deep/ .btn-primary:active,
-:scope /deep/ .btn-primary.active,
+::content .btn-primary.active,
+::content>* /deep/ .btn-primary.active,
 :host /deep/ .btn-primary.active {
   color: #fff;
   background-color: #3071a9;
   border: 1px solid #3071a9;
 }
 
-:scope /deep/ .btn-positive,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-positive';
+}
+
+::content .btn-positive,
+::content>* /deep/ .btn-positive,
 :host /deep/ .btn-positive {
   color: #fff;
   background-color: #5cb85c;
   border: 1px solid #5cb85c;
 }
 
-:scope /deep/ .btn-positive:active,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-positive:active,:host /deep/ .btn-positive.active';
+}
+
+::content .btn-positive:active,
+::content>* /deep/ .btn-positive:active,
 :host /deep/ .btn-positive:active,
-:scope /deep/ .btn-positive.active,
+::content .btn-positive.active,
+::content>* /deep/ .btn-positive.active,
 :host /deep/ .btn-positive.active {
   color: #fff;
   background-color: #449d44;
   border: 1px solid #449d44;
 }
 
-:scope /deep/ .btn-negative,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-negative';
+}
+
+::content .btn-negative,
+::content>* /deep/ .btn-negative,
 :host /deep/ .btn-negative {
   color: #fff;
   background-color: #d9534f;
   border: 1px solid #d9534f;
 }
 
-:scope /deep/ .btn-negative:active,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-negative:active,:host /deep/ .btn-negative.active';
+}
+
+::content .btn-negative:active,
+::content>* /deep/ .btn-negative:active,
 :host /deep/ .btn-negative:active,
-:scope /deep/ .btn-negative.active,
+::content .btn-negative.active,
+::content>* /deep/ .btn-negative.active,
 :host /deep/ .btn-negative.active {
   color: #fff;
   background-color: #c9302c;
   border: 1px solid #c9302c;
 }
 
-:scope /deep/ .btn-outlined,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-outlined';
+}
+
+::content .btn-outlined,
+::content>* /deep/ .btn-outlined,
 :host /deep/ .btn-outlined {
   background-color: transparent;
 }
 
-:scope /deep/ .btn-outlined.btn-primary,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-outlined.btn-primary';
+}
+
+::content .btn-outlined.btn-primary,
+::content>* /deep/ .btn-outlined.btn-primary,
 :host /deep/ .btn-outlined.btn-primary {
   color: #428bca;
 }
 
-:scope /deep/ .btn-outlined.btn-positive,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-outlined.btn-positive';
+}
+
+::content .btn-outlined.btn-positive,
+::content>* /deep/ .btn-outlined.btn-positive,
 :host /deep/ .btn-outlined.btn-positive {
   color: #5cb85c;
 }
 
-:scope /deep/ .btn-outlined.btn-negative,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-outlined.btn-negative';
+}
+
+::content .btn-outlined.btn-negative,
+::content>* /deep/ .btn-outlined.btn-negative,
 :host /deep/ .btn-outlined.btn-negative {
   color: #d9534f;
 }
 
-:scope /deep/ .btn-outlined.btn-primary:active,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-outlined.btn-primary:active,:host /deep/ .btn-outlined.btn-positive:active,:host /deep/ .btn-outlined.btn-negative:active';
+}
+
+::content .btn-outlined.btn-primary:active,
+::content>* /deep/ .btn-outlined.btn-primary:active,
 :host /deep/ .btn-outlined.btn-primary:active,
-:scope /deep/ .btn-outlined.btn-positive:active,
+::content .btn-outlined.btn-positive:active,
+::content>* /deep/ .btn-outlined.btn-positive:active,
 :host /deep/ .btn-outlined.btn-positive:active,
-:scope /deep/ .btn-outlined.btn-negative:active,
+::content .btn-outlined.btn-negative:active,
+::content>* /deep/ .btn-outlined.btn-negative:active,
 :host /deep/ .btn-outlined.btn-negative:active {
   color: #fff;
 }
 
-:scope /deep/ .btn-link,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-link';
+}
+
+::content .btn-link,
+::content>* /deep/ .btn-link,
 :host /deep/ .btn-link {
   padding-top: 6px;
   padding-bottom: 6px;
@@ -1440,15 +1394,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border: 0;
 }
 
-:scope /deep/ .btn-link:active,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-link:active,:host /deep/ .btn-link.active';
+}
+
+::content .btn-link:active,
+::content>* /deep/ .btn-link:active,
 :host /deep/ .btn-link:active,
-:scope /deep/ .btn-link.active,
+::content .btn-link.active,
+::content>* /deep/ .btn-link.active,
 :host /deep/ .btn-link.active {
   color: #3071a9;
   background-color: transparent;
 }
 
-:scope /deep/ .btn-block,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-block';
+}
+
+::content .btn-block,
+::content>* /deep/ .btn-block,
 :host /deep/ .btn-block {
   display: block;
   width: 100%;
@@ -1457,51 +1422,91 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   font-size: 18px;
 }
 
-:scope /deep/ input[type="submit"],
+polyfill-next-selector {
+  content: ':host /deep/ input[type="submit"],:host /deep/ input[type="reset"],:host /deep/ input[type="button"]';
+}
+
+::content input[type="submit"],
+::content>* /deep/ input[type="submit"],
 :host /deep/ input[type="submit"],
-:scope /deep/ input[type="reset"],
+::content input[type="reset"],
+::content>* /deep/ input[type="reset"],
 :host /deep/ input[type="reset"],
-:scope /deep/ input[type="button"],
+::content input[type="button"],
+::content>* /deep/ input[type="button"],
 :host /deep/ input[type="button"] {
   width: 100%;
 }
 
-:scope /deep/ .btn .badge,
+polyfill-next-selector {
+  content: ':host /deep/ .btn .badge';
+}
+
+::content .btn .badge,
+::content>* /deep/ .btn .badge,
 :host /deep/ .btn .badge {
   margin: -2px -4px -2px 4px;
   font-size: 12px;
   background-color: rgba(0, 0, 0, .15);
 }
 
-:scope /deep/ .btn .badge-inverted,
+polyfill-next-selector {
+  content: ':host /deep/ .btn .badge-inverted,:host /deep/ .btn:active .badge-inverted';
+}
+
+::content .btn .badge-inverted,
+::content>* /deep/ .btn .badge-inverted,
 :host /deep/ .btn .badge-inverted,
-:scope /deep/ .btn:active .badge-inverted,
+::content .btn:active .badge-inverted,
+::content>* /deep/ .btn:active .badge-inverted,
 :host /deep/ .btn:active .badge-inverted {
   background-color: transparent;
 }
 
-:scope /deep/ .btn-primary:active .badge-inverted,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-primary:active .badge-inverted,:host /deep/ .btn-positive:active .badge-inverted,:host /deep/ .btn-negative:active .badge-inverted';
+}
+
+::content .btn-primary:active .badge-inverted,
+::content>* /deep/ .btn-primary:active .badge-inverted,
 :host /deep/ .btn-primary:active .badge-inverted,
-:scope /deep/ .btn-positive:active .badge-inverted,
+::content .btn-positive:active .badge-inverted,
+::content>* /deep/ .btn-positive:active .badge-inverted,
 :host /deep/ .btn-positive:active .badge-inverted,
-:scope /deep/ .btn-negative:active .badge-inverted,
+::content .btn-negative:active .badge-inverted,
+::content>* /deep/ .btn-negative:active .badge-inverted,
 :host /deep/ .btn-negative:active .badge-inverted {
   color: #fff;
 }
 
-:scope /deep/ .btn-block .badge,
+polyfill-next-selector {
+  content: ':host /deep/ .btn-block .badge';
+}
+
+::content .btn-block .badge,
+::content>* /deep/ .btn-block .badge,
 :host /deep/ .btn-block .badge {
   position: absolute;
   right: 0;
   margin-right: 10px;
 }
 
-:scope /deep/ .btn .icon,
+polyfill-next-selector {
+  content: ':host /deep/ .btn .icon';
+}
+
+::content .btn .icon,
+::content>* /deep/ .btn .icon,
 :host /deep/ .btn .icon {
   font-size: inherit;
 }
 
-:scope /deep/ .bar,
+polyfill-next-selector {
+  content: ':host /deep/ .bar';
+}
+
+::content .bar,
+::content>* /deep/ .bar,
 :host /deep/ .bar {
   position: fixed;
   right: 0;
@@ -1516,42 +1521,79 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   backface-visibility: hidden;
 }
 
-:scope /deep/ .bar-header-secondary,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-header-secondary';
+}
+
+::content .bar-header-secondary,
+::content>* /deep/ .bar-header-secondary,
 :host /deep/ .bar-header-secondary {
   top: 44px;
 }
 
-:scope /deep/ .bar-footer,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-footer';
+}
+
+::content .bar-footer,
+::content>* /deep/ .bar-footer,
 :host /deep/ .bar-footer {
   bottom: 0;
 }
 
-:scope /deep/ .bar-footer-secondary,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-footer-secondary';
+}
+
+::content .bar-footer-secondary,
+::content>* /deep/ .bar-footer-secondary,
 :host /deep/ .bar-footer-secondary {
   bottom: 44px;
 }
 
-:scope /deep/ .bar-footer-secondary-tab,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-footer-secondary-tab';
+}
+
+::content .bar-footer-secondary-tab,
+::content>* /deep/ .bar-footer-secondary-tab,
 :host /deep/ .bar-footer-secondary-tab {
   bottom: 50px;
 }
 
-:scope /deep/ .bar-footer,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-footer,:host /deep/ .bar-footer-secondary,:host /deep/ .bar-footer-secondary-tab';
+}
+
+::content .bar-footer,
+::content>* /deep/ .bar-footer,
 :host /deep/ .bar-footer,
-:scope /deep/ .bar-footer-secondary,
+::content .bar-footer-secondary,
+::content>* /deep/ .bar-footer-secondary,
 :host /deep/ .bar-footer-secondary,
-:scope /deep/ .bar-footer-secondary-tab,
+::content .bar-footer-secondary-tab,
+::content>* /deep/ .bar-footer-secondary-tab,
 :host /deep/ .bar-footer-secondary-tab {
   border-top: 1px solid #ddd;
   border-bottom: 0;
 }
 
-:scope /deep/ .bar-nav,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-nav';
+}
+
+::content .bar-nav,
+::content>* /deep/ .bar-nav,
 :host /deep/ .bar-nav {
   top: 0;
 }
 
-:scope /deep/ .title,
+polyfill-next-selector {
+  content: ':host /deep/ .title';
+}
+
+::content .title,
+::content>* /deep/ .title,
 :host /deep/ .title {
   position: absolute;
   display: block;
@@ -1566,12 +1608,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   white-space: nowrap;
 }
 
-:scope /deep/ .title a,
+polyfill-next-selector {
+  content: ':host /deep/ .title a';
+}
+
+::content .title a,
+::content>* /deep/ .title a,
 :host /deep/ .title a {
   color: inherit;
 }
 
-:scope /deep/ .bar-tab,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-tab';
+}
+
+::content .bar-tab,
+::content>* /deep/ .bar-tab,
 :host /deep/ .bar-tab {
   bottom: 0;
   display: table;
@@ -1583,7 +1635,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-bottom: 0;
 }
 
-:scope /deep/ .bar-tab .tab-item,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-tab .tab-item';
+}
+
+::content .bar-tab .tab-item,
+::content>* /deep/ .bar-tab .tab-item,
 :host /deep/ .bar-tab .tab-item {
   display: table-cell;
   width: 1%;
@@ -1593,14 +1650,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   vertical-align: middle;
 }
 
-:scope /deep/ .bar-tab .tab-item.active,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-tab .tab-item.active,:host /deep/ .bar-tab .tab-item:active';
+}
+
+::content .bar-tab .tab-item.active,
+::content>* /deep/ .bar-tab .tab-item.active,
 :host /deep/ .bar-tab .tab-item.active,
-:scope /deep/ .bar-tab .tab-item:active,
+::content .bar-tab .tab-item:active,
+::content>* /deep/ .bar-tab .tab-item:active,
 :host /deep/ .bar-tab .tab-item:active {
   color: #428bca;
 }
 
-:scope /deep/ .bar-tab .tab-item .icon,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-tab .tab-item .icon';
+}
+
+::content .bar-tab .tab-item .icon,
+::content>* /deep/ .bar-tab .tab-item .icon,
 :host /deep/ .bar-tab .tab-item .icon {
   top: 3px;
   width: 24px;
@@ -1609,13 +1677,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   padding-bottom: 0;
 }
 
-:scope /deep/ .bar-tab .tab-item .icon ~ .tab-label,
+polyfill-next-selector {
+  content: ':host /deep/ .bar-tab .tab-item .icon ~ .tab-label';
+}
+
+::content .bar-tab .tab-item .icon ~ .tab-label,
+::content>* /deep/ .bar-tab .tab-item .icon ~ .tab-label,
 :host /deep/ .bar-tab .tab-item .icon ~ .tab-label {
   display: block;
   font-size: 11px;
 }
 
-:scope /deep/ .bar .btn,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn';
+}
+
+::content .bar .btn,
+::content>* /deep/ .bar .btn,
 :host /deep/ .bar .btn {
   position: relative;
   top: 7px;
@@ -1625,17 +1703,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   font-weight: 400;
 }
 
-:scope /deep/ .bar .btn.pull-right,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn.pull-right';
+}
+
+::content .bar .btn.pull-right,
+::content>* /deep/ .bar .btn.pull-right,
 :host /deep/ .bar .btn.pull-right {
   margin-left: 10px;
 }
 
-:scope /deep/ .bar .btn.pull-left,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn.pull-left';
+}
+
+::content .bar .btn.pull-left,
+::content>* /deep/ .bar .btn.pull-left,
 :host /deep/ .bar .btn.pull-left {
   margin-right: 10px;
 }
 
-:scope /deep/ .bar .btn-link,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn-link';
+}
+
+::content .bar .btn-link,
+::content>* /deep/ .bar .btn-link,
 :host /deep/ .bar .btn-link {
   top: 0;
   padding: 0;
@@ -1645,14 +1738,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border: 0;
 }
 
-:scope /deep/ .bar .btn-link:active,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn-link:active,:host /deep/ .bar .btn-link.active';
+}
+
+::content .bar .btn-link:active,
+::content>* /deep/ .bar .btn-link:active,
 :host /deep/ .bar .btn-link:active,
-:scope /deep/ .bar .btn-link.active,
+::content .bar .btn-link.active,
+::content>* /deep/ .bar .btn-link.active,
 :host /deep/ .bar .btn-link.active {
   color: #3071a9;
 }
 
-:scope /deep/ .bar .btn-block,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn-block';
+}
+
+::content .bar .btn-block,
+::content>* /deep/ .bar .btn-block,
 :host /deep/ .bar .btn-block {
   top: 6px;
   padding: 7px 0;
@@ -1660,27 +1764,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   font-size: 16px;
 }
 
-:scope /deep/ .bar .btn-nav.pull-left,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn-nav.pull-left';
+}
+
+::content .bar .btn-nav.pull-left,
+::content>* /deep/ .bar .btn-nav.pull-left,
 :host /deep/ .bar .btn-nav.pull-left {
   margin-left: -5px;
 }
 
-:scope /deep/ .bar .btn-nav.pull-left .icon-left-nav,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn-nav.pull-left .icon-left-nav';
+}
+
+::content .bar .btn-nav.pull-left .icon-left-nav,
+::content>* /deep/ .bar .btn-nav.pull-left .icon-left-nav,
 :host /deep/ .bar .btn-nav.pull-left .icon-left-nav {
   margin-right: -3px;
 }
 
-:scope /deep/ .bar .btn-nav.pull-right,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn-nav.pull-right';
+}
+
+::content .bar .btn-nav.pull-right,
+::content>* /deep/ .bar .btn-nav.pull-right,
 :host /deep/ .bar .btn-nav.pull-right {
   margin-right: -5px;
 }
 
-:scope /deep/ .bar .btn-nav.pull-right .icon-right-nav,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn-nav.pull-right .icon-right-nav';
+}
+
+::content .bar .btn-nav.pull-right .icon-right-nav,
+::content>* /deep/ .bar .btn-nav.pull-right .icon-right-nav,
 :host /deep/ .bar .btn-nav.pull-right .icon-right-nav {
   margin-left: -3px;
 }
 
-:scope /deep/ .bar .icon,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .icon';
+}
+
+::content .bar .icon,
+::content>* /deep/ .bar .icon,
 :host /deep/ .bar .icon {
   position: relative;
   z-index: 20;
@@ -1689,36 +1818,66 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   font-size: 24px;
 }
 
-:scope /deep/ .bar .btn .icon,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .btn .icon';
+}
+
+::content .bar .btn .icon,
+::content>* /deep/ .bar .btn .icon,
 :host /deep/ .bar .btn .icon {
   top: 3px;
   padding: 0;
 }
 
-:scope /deep/ .bar .title .icon,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .title .icon';
+}
+
+::content .bar .title .icon,
+::content>* /deep/ .bar .title .icon,
 :host /deep/ .bar .title .icon {
   padding: 0;
 }
 
-:scope /deep/ .bar .title .icon.icon-caret,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .title .icon.icon-caret';
+}
+
+::content .bar .title .icon.icon-caret,
+::content>* /deep/ .bar .title .icon.icon-caret,
 :host /deep/ .bar .title .icon.icon-caret {
   top: 4px;
   margin-left: -5px;
 }
 
-:scope /deep/ .bar input[type="search"],
+polyfill-next-selector {
+  content: ':host /deep/ .bar input[type="search"]';
+}
+
+::content .bar input[type="search"],
+::content>* /deep/ .bar input[type="search"],
 :host /deep/ .bar input[type="search"] {
   height: 29px;
   margin: 6px 0;
 }
 
-:scope /deep/ .bar .segmented-control,
+polyfill-next-selector {
+  content: ':host /deep/ .bar .segmented-control';
+}
+
+::content .bar .segmented-control,
+::content>* /deep/ .bar .segmented-control,
 :host /deep/ .bar .segmented-control {
   top: 7px;
   margin: 0 auto;
 }
 
-:scope /deep/ .badge,
+polyfill-next-selector {
+  content: ':host /deep/ .badge';
+}
+
+::content .badge,
+::content>* /deep/ .badge,
 :host /deep/ .badge {
   display: inline-block;
   padding: 2px 9px 3px;
@@ -1729,46 +1888,86 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-radius: 100px;
 }
 
-:scope /deep/ .badge.badge-inverted,
+polyfill-next-selector {
+  content: ':host /deep/ .badge.badge-inverted';
+}
+
+::content .badge.badge-inverted,
+::content>* /deep/ .badge.badge-inverted,
 :host /deep/ .badge.badge-inverted {
   padding: 0 5px 0 0;
   background-color: transparent;
 }
 
-:scope /deep/ .badge-primary,
+polyfill-next-selector {
+  content: ':host /deep/ .badge-primary';
+}
+
+::content .badge-primary,
+::content>* /deep/ .badge-primary,
 :host /deep/ .badge-primary {
   color: #fff;
   background-color: #428bca;
 }
 
-:scope /deep/ .badge-primary.badge-inverted,
+polyfill-next-selector {
+  content: ':host /deep/ .badge-primary.badge-inverted';
+}
+
+::content .badge-primary.badge-inverted,
+::content>* /deep/ .badge-primary.badge-inverted,
 :host /deep/ .badge-primary.badge-inverted {
   color: #428bca;
 }
 
-:scope /deep/ .badge-positive,
+polyfill-next-selector {
+  content: ':host /deep/ .badge-positive';
+}
+
+::content .badge-positive,
+::content>* /deep/ .badge-positive,
 :host /deep/ .badge-positive {
   color: #fff;
   background-color: #5cb85c;
 }
 
-:scope /deep/ .badge-positive.badge-inverted,
+polyfill-next-selector {
+  content: ':host /deep/ .badge-positive.badge-inverted';
+}
+
+::content .badge-positive.badge-inverted,
+::content>* /deep/ .badge-positive.badge-inverted,
 :host /deep/ .badge-positive.badge-inverted {
   color: #5cb85c;
 }
 
-:scope /deep/ .badge-negative,
+polyfill-next-selector {
+  content: ':host /deep/ .badge-negative';
+}
+
+::content .badge-negative,
+::content>* /deep/ .badge-negative,
 :host /deep/ .badge-negative {
   color: #fff;
   background-color: #d9534f;
 }
 
-:scope /deep/ .badge-negative.badge-inverted,
+polyfill-next-selector {
+  content: ':host /deep/ .badge-negative.badge-inverted';
+}
+
+::content .badge-negative.badge-inverted,
+::content>* /deep/ .badge-negative.badge-inverted,
 :host /deep/ .badge-negative.badge-inverted {
   color: #d9534f;
 }
 
-:scope /deep/ .card,
+polyfill-next-selector {
+  content: ':host /deep/ .card';
+}
+
+::content .card,
+::content>* /deep/ .card,
 :host /deep/ .card {
   margin: 10px;
   overflow: hidden;
@@ -1777,32 +1976,57 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-radius: 6px;
 }
 
-:scope /deep/ .card .table-view,
+polyfill-next-selector {
+  content: ':host /deep/ .card .table-view';
+}
+
+::content .card .table-view,
+::content>* /deep/ .card .table-view,
 :host /deep/ .card .table-view {
   margin-bottom: 0;
   border-top: 0;
   border-bottom: 0;
 }
 
-:scope /deep/ .card .table-view .table-view-divider:first-child,
+polyfill-next-selector {
+  content: ':host /deep/ .card .table-view .table-view-divider:first-child';
+}
+
+::content .card .table-view .table-view-divider:first-child,
+::content>* /deep/ .card .table-view .table-view-divider:first-child,
 :host /deep/ .card .table-view .table-view-divider:first-child {
   top: 0;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
 
-:scope /deep/ .card .table-view .table-view-divider:last-child,
+polyfill-next-selector {
+  content: ':host /deep/ .card .table-view .table-view-divider:last-child';
+}
+
+::content .card .table-view .table-view-divider:last-child,
+::content>* /deep/ .card .table-view .table-view-divider:last-child,
 :host /deep/ .card .table-view .table-view-divider:last-child {
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
 }
 
-:scope /deep/ .card .table-view-cell:last-child,
+polyfill-next-selector {
+  content: ':host /deep/ .card .table-view-cell:last-child';
+}
+
+::content .card .table-view-cell:last-child,
+::content>* /deep/ .card .table-view-cell:last-child,
 :host /deep/ .card .table-view-cell:last-child {
   border-bottom: 0;
 }
 
-:scope /deep/ .table-view,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view';
+}
+
+::content .table-view,
+::content>* /deep/ .table-view,
 :host /deep/ .table-view {
   padding-left: 0;
   margin-top: 0;
@@ -1813,7 +2037,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-bottom: 1px solid #ddd;
 }
 
-:scope /deep/ .table-view-cell,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-cell';
+}
+
+::content .table-view-cell,
+::content>* /deep/ .table-view-cell,
 :host /deep/ .table-view-cell {
   position: relative;
   padding: 11px 65px 11px 15px;
@@ -1821,12 +2050,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-bottom: 1px solid #ddd;
 }
 
-:scope /deep/ .table-view-cell:last-child,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-cell:last-child';
+}
+
+::content .table-view-cell:last-child,
+::content>* /deep/ .table-view-cell:last-child,
 :host /deep/ .table-view-cell:last-child {
   border-bottom: 0;
 }
 
-:scope /deep/ .table-view-cell > a:not(.btn),
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-cell > a:not(.btn)';
+}
+
+::content .table-view-cell > a:not(.btn),
+::content>* /deep/ .table-view-cell > a:not(.btn),
 :host /deep/ .table-view-cell > a:not(.btn) {
   position: relative;
   display: block;
@@ -1836,17 +2075,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   color: inherit;
 }
 
-:scope /deep/ .table-view-cell > a:not(.btn):active,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-cell > a:not(.btn):active';
+}
+
+::content .table-view-cell > a:not(.btn):active,
+::content>* /deep/ .table-view-cell > a:not(.btn):active,
 :host /deep/ .table-view-cell > a:not(.btn):active {
   background-color: #eee;
 }
 
-:scope /deep/ .table-view-cell p,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-cell p';
+}
+
+::content .table-view-cell p,
+::content>* /deep/ .table-view-cell p,
 :host /deep/ .table-view-cell p {
   margin-bottom: 0;
 }
 
-:scope /deep/ .table-view-divider,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-divider';
+}
+
+::content .table-view-divider,
+::content>* /deep/ .table-view-divider,
 :host /deep/ .table-view-divider {
   padding-top: 6px;
   padding-bottom: 6px;
@@ -1860,34 +2114,60 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-bottom: 1px solid #ddd;
 }
 
-:scope /deep/ .table-view .media,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view .media,:host /deep/ .table-view .media-body';
+}
+
+::content .table-view .media,
+::content>* /deep/ .table-view .media,
 :host /deep/ .table-view .media,
-:scope /deep/ .table-view .media-body,
+::content .table-view .media-body,
+::content>* /deep/ .table-view .media-body,
 :host /deep/ .table-view .media-body {
   overflow: hidden;
 }
 
-:scope /deep/ .table-view .media-object.pull-left,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view .media-object.pull-left';
+}
+
+::content .table-view .media-object.pull-left,
+::content>* /deep/ .table-view .media-object.pull-left,
 :host /deep/ .table-view .media-object.pull-left {
   margin-right: 10px;
 }
 
-:scope /deep/ .table-view .media-object.pull-right,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view .media-object.pull-right';
+}
+
+::content .table-view .media-object.pull-right,
+::content>* /deep/ .table-view .media-object.pull-right,
 :host /deep/ .table-view .media-object.pull-right {
   margin-left: 10px;
 }
 
-:scope /deep/ .table-view-cell > .btn,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-cell > .btn,:host /deep/ .table-view-cell > .badge,:host /deep/ .table-view-cell > .toggle,:host /deep/ .table-view-cell > a > .btn,:host /deep/ .table-view-cell > a > .badge,:host /deep/ .table-view-cell > a > .toggle';
+}
+
+::content .table-view-cell > .btn,
+::content>* /deep/ .table-view-cell > .btn,
 :host /deep/ .table-view-cell > .btn,
-:scope /deep/ .table-view-cell > .badge,
+::content .table-view-cell > .badge,
+::content>* /deep/ .table-view-cell > .badge,
 :host /deep/ .table-view-cell > .badge,
-:scope /deep/ .table-view-cell > .toggle,
+::content .table-view-cell > .toggle,
+::content>* /deep/ .table-view-cell > .toggle,
 :host /deep/ .table-view-cell > .toggle,
-:scope /deep/ .table-view-cell > a > .btn,
+::content .table-view-cell > a > .btn,
+::content>* /deep/ .table-view-cell > a > .btn,
 :host /deep/ .table-view-cell > a > .btn,
-:scope /deep/ .table-view-cell > a > .badge,
+::content .table-view-cell > a > .badge,
+::content>* /deep/ .table-view-cell > a > .badge,
 :host /deep/ .table-view-cell > a > .badge,
-:scope /deep/ .table-view-cell > a > .toggle,
+::content .table-view-cell > a > .toggle,
+::content>* /deep/ .table-view-cell > a > .toggle,
 :host /deep/ .table-view-cell > a > .toggle {
   position: absolute;
   top: 50%;
@@ -1897,105 +2177,166 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translateY(-50%);
 }
 
-:scope /deep/ .table-view-cell .navigate-left > .btn,
+polyfill-next-selector {
+  content: ':host /deep/ .table-view-cell .navigate-left > .btn,:host /deep/ .table-view-cell .navigate-left > .badge,:host /deep/ .table-view-cell .navigate-left > .toggle,:host /deep/ .table-view-cell .navigate-right > .btn,:host /deep/ .table-view-cell .navigate-right > .badge,:host /deep/ .table-view-cell .navigate-right > .toggle,:host /deep/ .table-view-cell .push-left > .btn,:host /deep/ .table-view-cell .push-left > .badge,:host /deep/ .table-view-cell .push-left > .toggle,:host /deep/ .table-view-cell .push-right > .btn,:host /deep/ .table-view-cell .push-right > .badge,:host /deep/ .table-view-cell .push-right > .toggle,:host /deep/ .table-view-cell > a .navigate-left > .btn,:host /deep/ .table-view-cell > a .navigate-left > .badge,:host /deep/ .table-view-cell > a .navigate-left > .toggle,:host /deep/ .table-view-cell > a .navigate-right > .btn,:host /deep/ .table-view-cell > a .navigate-right > .badge,:host /deep/ .table-view-cell > a .navigate-right > .toggle,:host /deep/ .table-view-cell > a .push-left > .btn,:host /deep/ .table-view-cell > a .push-left > .badge,:host /deep/ .table-view-cell > a .push-left > .toggle,:host /deep/ .table-view-cell > a .push-right > .btn,:host /deep/ .table-view-cell > a .push-right > .badge,:host /deep/ .table-view-cell > a .push-right > .toggle';
+}
+
+::content .table-view-cell .navigate-left > .btn,
+::content>* /deep/ .table-view-cell .navigate-left > .btn,
 :host /deep/ .table-view-cell .navigate-left > .btn,
-:scope /deep/ .table-view-cell .navigate-left > .badge,
+::content .table-view-cell .navigate-left > .badge,
+::content>* /deep/ .table-view-cell .navigate-left > .badge,
 :host /deep/ .table-view-cell .navigate-left > .badge,
-:scope /deep/ .table-view-cell .navigate-left > .toggle,
+::content .table-view-cell .navigate-left > .toggle,
+::content>* /deep/ .table-view-cell .navigate-left > .toggle,
 :host /deep/ .table-view-cell .navigate-left > .toggle,
-:scope /deep/ .table-view-cell .navigate-right > .btn,
+::content .table-view-cell .navigate-right > .btn,
+::content>* /deep/ .table-view-cell .navigate-right > .btn,
 :host /deep/ .table-view-cell .navigate-right > .btn,
-:scope /deep/ .table-view-cell .navigate-right > .badge,
+::content .table-view-cell .navigate-right > .badge,
+::content>* /deep/ .table-view-cell .navigate-right > .badge,
 :host /deep/ .table-view-cell .navigate-right > .badge,
-:scope /deep/ .table-view-cell .navigate-right > .toggle,
+::content .table-view-cell .navigate-right > .toggle,
+::content>* /deep/ .table-view-cell .navigate-right > .toggle,
 :host /deep/ .table-view-cell .navigate-right > .toggle,
-:scope /deep/ .table-view-cell .push-left > .btn,
+::content .table-view-cell .push-left > .btn,
+::content>* /deep/ .table-view-cell .push-left > .btn,
 :host /deep/ .table-view-cell .push-left > .btn,
-:scope /deep/ .table-view-cell .push-left > .badge,
+::content .table-view-cell .push-left > .badge,
+::content>* /deep/ .table-view-cell .push-left > .badge,
 :host /deep/ .table-view-cell .push-left > .badge,
-:scope /deep/ .table-view-cell .push-left > .toggle,
+::content .table-view-cell .push-left > .toggle,
+::content>* /deep/ .table-view-cell .push-left > .toggle,
 :host /deep/ .table-view-cell .push-left > .toggle,
-:scope /deep/ .table-view-cell .push-right > .btn,
+::content .table-view-cell .push-right > .btn,
+::content>* /deep/ .table-view-cell .push-right > .btn,
 :host /deep/ .table-view-cell .push-right > .btn,
-:scope /deep/ .table-view-cell .push-right > .badge,
+::content .table-view-cell .push-right > .badge,
+::content>* /deep/ .table-view-cell .push-right > .badge,
 :host /deep/ .table-view-cell .push-right > .badge,
-:scope /deep/ .table-view-cell .push-right > .toggle,
+::content .table-view-cell .push-right > .toggle,
+::content>* /deep/ .table-view-cell .push-right > .toggle,
 :host /deep/ .table-view-cell .push-right > .toggle,
-:scope /deep/ .table-view-cell > a .navigate-left > .btn,
+::content .table-view-cell > a .navigate-left > .btn,
+::content>* /deep/ .table-view-cell > a .navigate-left > .btn,
 :host /deep/ .table-view-cell > a .navigate-left > .btn,
-:scope /deep/ .table-view-cell > a .navigate-left > .badge,
+::content .table-view-cell > a .navigate-left > .badge,
+::content>* /deep/ .table-view-cell > a .navigate-left > .badge,
 :host /deep/ .table-view-cell > a .navigate-left > .badge,
-:scope /deep/ .table-view-cell > a .navigate-left > .toggle,
+::content .table-view-cell > a .navigate-left > .toggle,
+::content>* /deep/ .table-view-cell > a .navigate-left > .toggle,
 :host /deep/ .table-view-cell > a .navigate-left > .toggle,
-:scope /deep/ .table-view-cell > a .navigate-right > .btn,
+::content .table-view-cell > a .navigate-right > .btn,
+::content>* /deep/ .table-view-cell > a .navigate-right > .btn,
 :host /deep/ .table-view-cell > a .navigate-right > .btn,
-:scope /deep/ .table-view-cell > a .navigate-right > .badge,
+::content .table-view-cell > a .navigate-right > .badge,
+::content>* /deep/ .table-view-cell > a .navigate-right > .badge,
 :host /deep/ .table-view-cell > a .navigate-right > .badge,
-:scope /deep/ .table-view-cell > a .navigate-right > .toggle,
+::content .table-view-cell > a .navigate-right > .toggle,
+::content>* /deep/ .table-view-cell > a .navigate-right > .toggle,
 :host /deep/ .table-view-cell > a .navigate-right > .toggle,
-:scope /deep/ .table-view-cell > a .push-left > .btn,
+::content .table-view-cell > a .push-left > .btn,
+::content>* /deep/ .table-view-cell > a .push-left > .btn,
 :host /deep/ .table-view-cell > a .push-left > .btn,
-:scope /deep/ .table-view-cell > a .push-left > .badge,
+::content .table-view-cell > a .push-left > .badge,
+::content>* /deep/ .table-view-cell > a .push-left > .badge,
 :host /deep/ .table-view-cell > a .push-left > .badge,
-:scope /deep/ .table-view-cell > a .push-left > .toggle,
+::content .table-view-cell > a .push-left > .toggle,
+::content>* /deep/ .table-view-cell > a .push-left > .toggle,
 :host /deep/ .table-view-cell > a .push-left > .toggle,
-:scope /deep/ .table-view-cell > a .push-right > .btn,
+::content .table-view-cell > a .push-right > .btn,
+::content>* /deep/ .table-view-cell > a .push-right > .btn,
 :host /deep/ .table-view-cell > a .push-right > .btn,
-:scope /deep/ .table-view-cell > a .push-right > .badge,
+::content .table-view-cell > a .push-right > .badge,
+::content>* /deep/ .table-view-cell > a .push-right > .badge,
 :host /deep/ .table-view-cell > a .push-right > .badge,
-:scope /deep/ .table-view-cell > a .push-right > .toggle,
+::content .table-view-cell > a .push-right > .toggle,
+::content>* /deep/ .table-view-cell > a .push-right > .toggle,
 :host /deep/ .table-view-cell > a .push-right > .toggle {
   right: 35px;
 }
 
-:scope /deep/ .content > .table-view:first-child,
+polyfill-next-selector {
+  content: ':host /deep/ .content > .table-view:first-child';
+}
+
+::content .content > .table-view:first-child,
+::content>* /deep/ .content > .table-view:first-child,
 :host /deep/ .content > .table-view:first-child {
   margin-top: 15px;
 }
 
-:scope /deep/ input,
+polyfill-next-selector {
+  content: ':host /deep/ input,:host /deep/ textarea,:host /deep/ button,:host /deep/ select';
+}
+
+::content input,
+::content>* /deep/ input,
 :host /deep/ input,
-:scope /deep/ textarea,
+::content textarea,
+::content>* /deep/ textarea,
 :host /deep/ textarea,
-:scope /deep/ button,
+::content button,
+::content>* /deep/ button,
 :host /deep/ button,
-:scope /deep/ select,
+::content select,
+::content>* /deep/ select,
 :host /deep/ select {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   font-size: 17px;
 }
 
-:scope /deep/ select,
+polyfill-next-selector {
+  content: ':host /deep/ select,:host /deep/ textarea,:host /deep/ input[type="text"],:host /deep/ input[type="search"],:host /deep/ input[type="password"],:host /deep/ input[type="datetime"],:host /deep/ input[type="datetime-local"],:host /deep/ input[type="date"],:host /deep/ input[type="month"],:host /deep/ input[type="time"],:host /deep/ input[type="week"],:host /deep/ input[type="number"],:host /deep/ input[type="email"],:host /deep/ input[type="url"],:host /deep/ input[type="tel"],:host /deep/ input[type="color"]';
+}
+
+::content select,
+::content>* /deep/ select,
 :host /deep/ select,
-:scope /deep/ textarea,
+::content textarea,
+::content>* /deep/ textarea,
 :host /deep/ textarea,
-:scope /deep/ input[type="text"],
+::content input[type="text"],
+::content>* /deep/ input[type="text"],
 :host /deep/ input[type="text"],
-:scope /deep/ input[type="search"],
+::content input[type="search"],
+::content>* /deep/ input[type="search"],
 :host /deep/ input[type="search"],
-:scope /deep/ input[type="password"],
+::content input[type="password"],
+::content>* /deep/ input[type="password"],
 :host /deep/ input[type="password"],
-:scope /deep/ input[type="datetime"],
+::content input[type="datetime"],
+::content>* /deep/ input[type="datetime"],
 :host /deep/ input[type="datetime"],
-:scope /deep/ input[type="datetime-local"],
+::content input[type="datetime-local"],
+::content>* /deep/ input[type="datetime-local"],
 :host /deep/ input[type="datetime-local"],
-:scope /deep/ input[type="date"],
+::content input[type="date"],
+::content>* /deep/ input[type="date"],
 :host /deep/ input[type="date"],
-:scope /deep/ input[type="month"],
+::content input[type="month"],
+::content>* /deep/ input[type="month"],
 :host /deep/ input[type="month"],
-:scope /deep/ input[type="time"],
+::content input[type="time"],
+::content>* /deep/ input[type="time"],
 :host /deep/ input[type="time"],
-:scope /deep/ input[type="week"],
+::content input[type="week"],
+::content>* /deep/ input[type="week"],
 :host /deep/ input[type="week"],
-:scope /deep/ input[type="number"],
+::content input[type="number"],
+::content>* /deep/ input[type="number"],
 :host /deep/ input[type="number"],
-:scope /deep/ input[type="email"],
+::content input[type="email"],
+::content>* /deep/ input[type="email"],
 :host /deep/ input[type="email"],
-:scope /deep/ input[type="url"],
+::content input[type="url"],
+::content>* /deep/ input[type="url"],
 :host /deep/ input[type="url"],
-:scope /deep/ input[type="tel"],
+::content input[type="tel"],
+::content>* /deep/ input[type="tel"],
 :host /deep/ input[type="tel"],
-:scope /deep/ input[type="color"],
+::content input[type="color"],
+::content>* /deep/ input[type="color"],
 :host /deep/ input[type="color"] {
   width: 100%;
   height: 35px;
@@ -2009,7 +2350,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   outline: none;
 }
 
-:scope /deep/ input[type="search"],
+polyfill-next-selector {
+  content: ':host /deep/ input[type="search"]';
+}
+
+::content input[type="search"],
+::content>* /deep/ input[type="search"],
 :host /deep/ input[type="search"] {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -2019,17 +2365,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-radius: 20px;
 }
 
-:scope /deep/ input[type="search"]:focus,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="search"]:focus';
+}
+
+::content input[type="search"]:focus,
+::content>* /deep/ input[type="search"]:focus,
 :host /deep/ input[type="search"]:focus {
   text-align: left;
 }
 
-:scope /deep/ textarea,
+polyfill-next-selector {
+  content: ':host /deep/ textarea';
+}
+
+::content textarea,
+::content>* /deep/ textarea,
 :host /deep/ textarea {
   height: auto;
 }
 
-:scope /deep/ select,
+polyfill-next-selector {
+  content: ':host /deep/ select';
+}
+
+::content select,
+::content>* /deep/ select,
 :host /deep/ select {
   height: auto;
   font-size: 14px;
@@ -2038,14 +2399,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
 }
 
-:scope /deep/ .input-group,
+polyfill-next-selector {
+  content: ':host /deep/ .input-group';
+}
+
+::content .input-group,
+::content>* /deep/ .input-group,
 :host /deep/ .input-group {
   background-color: #fff;
 }
 
-:scope /deep/ .input-group input,
+polyfill-next-selector {
+  content: ':host /deep/ .input-group input,:host /deep/ .input-group textarea';
+}
+
+::content .input-group input,
+::content>* /deep/ .input-group input,
 :host /deep/ .input-group input,
-:scope /deep/ .input-group textarea,
+::content .input-group textarea,
+::content>* /deep/ .input-group textarea,
 :host /deep/ .input-group textarea {
   margin-bottom: 0;
   background-color: transparent;
@@ -2057,14 +2429,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   box-shadow: none;
 }
 
-:scope /deep/ .input-row,
+polyfill-next-selector {
+  content: ':host /deep/ .input-row';
+}
+
+::content .input-row,
+::content>* /deep/ .input-row,
 :host /deep/ .input-row {
   height: 35px;
   overflow: hidden;
   border-bottom: 1px solid #ddd;
 }
 
-:scope /deep/ .input-row label,
+polyfill-next-selector {
+  content: ':host /deep/ .input-row label';
+}
+
+::content .input-row label,
+::content>* /deep/ .input-row label,
 :host /deep/ .input-row label {
   float: left;
   width: 35%;
@@ -2073,7 +2455,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   line-height: 1.1;
 }
 
-:scope /deep/ .input-row input,
+polyfill-next-selector {
+  content: ':host /deep/ .input-row input';
+}
+
+::content .input-row input,
+::content>* /deep/ .input-row input,
 :host /deep/ .input-row input {
   float: right;
   width: 65%;
@@ -2082,7 +2469,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border: 0;
 }
 
-:scope /deep/ .segmented-control,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control';
+}
+
+::content .segmented-control,
+::content>* /deep/ .segmented-control,
 :host /deep/ .segmented-control {
   position: relative;
   display: table;
@@ -2094,7 +2486,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-radius: 3px;
 }
 
-:scope /deep/ .segmented-control .control-item,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control .control-item';
+}
+
+::content .segmented-control .control-item,
+::content>* /deep/ .segmented-control .control-item,
 :host /deep/ .segmented-control .control-item {
   display: table-cell;
   width: 1%;
@@ -2109,98 +2506,188 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-left: 1px solid #ccc;
 }
 
-:scope /deep/ .segmented-control .control-item:first-child,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control .control-item:first-child';
+}
+
+::content .segmented-control .control-item:first-child,
+::content>* /deep/ .segmented-control .control-item:first-child,
 :host /deep/ .segmented-control .control-item:first-child {
   border-left-width: 0;
 }
 
-:scope /deep/ .segmented-control .control-item:active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control .control-item:active';
+}
+
+::content .segmented-control .control-item:active,
+::content>* /deep/ .segmented-control .control-item:active,
 :host /deep/ .segmented-control .control-item:active {
   background-color: #eee;
 }
 
-:scope /deep/ .segmented-control .control-item.active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control .control-item.active';
+}
+
+::content .segmented-control .control-item.active,
+::content>* /deep/ .segmented-control .control-item.active,
 :host /deep/ .segmented-control .control-item.active {
   background-color: #ccc;
 }
 
-:scope /deep/ .segmented-control-primary,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-primary';
+}
+
+::content .segmented-control-primary,
+::content>* /deep/ .segmented-control-primary,
 :host /deep/ .segmented-control-primary {
   border-color: #428bca;
 }
 
-:scope /deep/ .segmented-control-primary .control-item,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-primary .control-item';
+}
+
+::content .segmented-control-primary .control-item,
+::content>* /deep/ .segmented-control-primary .control-item,
 :host /deep/ .segmented-control-primary .control-item {
   color: #428bca;
   border-color: inherit;
 }
 
-:scope /deep/ .segmented-control-primary .control-item:active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-primary .control-item:active';
+}
+
+::content .segmented-control-primary .control-item:active,
+::content>* /deep/ .segmented-control-primary .control-item:active,
 :host /deep/ .segmented-control-primary .control-item:active {
   background-color: #cde1f1;
 }
 
-:scope /deep/ .segmented-control-primary .control-item.active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-primary .control-item.active';
+}
+
+::content .segmented-control-primary .control-item.active,
+::content>* /deep/ .segmented-control-primary .control-item.active,
 :host /deep/ .segmented-control-primary .control-item.active {
   color: #fff;
   background-color: #428bca;
 }
 
-:scope /deep/ .segmented-control-positive,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-positive';
+}
+
+::content .segmented-control-positive,
+::content>* /deep/ .segmented-control-positive,
 :host /deep/ .segmented-control-positive {
   border-color: #5cb85c;
 }
 
-:scope /deep/ .segmented-control-positive .control-item,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-positive .control-item';
+}
+
+::content .segmented-control-positive .control-item,
+::content>* /deep/ .segmented-control-positive .control-item,
 :host /deep/ .segmented-control-positive .control-item {
   color: #5cb85c;
   border-color: inherit;
 }
 
-:scope /deep/ .segmented-control-positive .control-item:active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-positive .control-item:active';
+}
+
+::content .segmented-control-positive .control-item:active,
+::content>* /deep/ .segmented-control-positive .control-item:active,
 :host /deep/ .segmented-control-positive .control-item:active {
   background-color: #d8eed8;
 }
 
-:scope /deep/ .segmented-control-positive .control-item.active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-positive .control-item.active';
+}
+
+::content .segmented-control-positive .control-item.active,
+::content>* /deep/ .segmented-control-positive .control-item.active,
 :host /deep/ .segmented-control-positive .control-item.active {
   color: #fff;
   background-color: #5cb85c;
 }
 
-:scope /deep/ .segmented-control-negative,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-negative';
+}
+
+::content .segmented-control-negative,
+::content>* /deep/ .segmented-control-negative,
 :host /deep/ .segmented-control-negative {
   border-color: #d9534f;
 }
 
-:scope /deep/ .segmented-control-negative .control-item,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-negative .control-item';
+}
+
+::content .segmented-control-negative .control-item,
+::content>* /deep/ .segmented-control-negative .control-item,
 :host /deep/ .segmented-control-negative .control-item {
   color: #d9534f;
   border-color: inherit;
 }
 
-:scope /deep/ .segmented-control-negative .control-item:active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-negative .control-item:active';
+}
+
+::content .segmented-control-negative .control-item:active,
+::content>* /deep/ .segmented-control-negative .control-item:active,
 :host /deep/ .segmented-control-negative .control-item:active {
   background-color: #f9e2e2;
 }
 
-:scope /deep/ .segmented-control-negative .control-item.active,
+polyfill-next-selector {
+  content: ':host /deep/ .segmented-control-negative .control-item.active';
+}
+
+::content .segmented-control-negative .control-item.active,
+::content>* /deep/ .segmented-control-negative .control-item.active,
 :host /deep/ .segmented-control-negative .control-item.active {
   color: #fff;
   background-color: #d9534f;
 }
 
-:scope /deep/ .control-content,
+polyfill-next-selector {
+  content: ':host /deep/ .control-content';
+}
+
+::content .control-content,
+::content>* /deep/ .control-content,
 :host /deep/ .control-content {
   display: none;
 }
 
-:scope /deep/ .control-content.active,
+polyfill-next-selector {
+  content: ':host /deep/ .control-content.active';
+}
+
+::content .control-content.active,
+::content>* /deep/ .control-content.active,
 :host /deep/ .control-content.active {
   display: block;
 }
 
-:scope /deep/ .popover,
+polyfill-next-selector {
+  content: ':host /deep/ .popover';
+}
+
+::content .popover,
+::content>* /deep/ .popover,
 :host /deep/ .popover {
   position: fixed;
   top: 55px;
@@ -2222,7 +2709,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(0, -15px, 0);
 }
 
-:scope /deep/ .popover:before,
+polyfill-next-selector {
+  content: ':host /deep/ .popover:before';
+}
+
+::content .popover:before,
+::content>* /deep/ .popover:before,
 :host /deep/ .popover:before {
   position: absolute;
   top: -15px;
@@ -2236,7 +2728,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-left: 15px solid transparent;
 }
 
-:scope /deep/ .popover.visible,
+polyfill-next-selector {
+  content: ':host /deep/ .popover.visible';
+}
+
+::content .popover.visible,
+::content>* /deep/ .popover.visible,
 :host /deep/ .popover.visible {
   opacity: 1;
   -webkit-transform: translate3d(0, 0, 0);
@@ -2244,12 +2741,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(0, 0, 0);
 }
 
-:scope /deep/ .popover .bar ~ .table-view,
+polyfill-next-selector {
+  content: ':host /deep/ .popover .bar ~ .table-view';
+}
+
+::content .popover .bar ~ .table-view,
+::content>* /deep/ .popover .bar ~ .table-view,
 :host /deep/ .popover .bar ~ .table-view {
   padding-top: 44px;
 }
 
-:scope /deep/ .backdrop,
+polyfill-next-selector {
+  content: ':host /deep/ .backdrop';
+}
+
+::content .backdrop,
+::content>* /deep/ .backdrop,
 :host /deep/ .backdrop {
   position: fixed;
   top: 0;
@@ -2260,17 +2767,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   background-color: rgba(0, 0, 0, .3);
 }
 
-:scope /deep/ .popover .btn-block,
+polyfill-next-selector {
+  content: ':host /deep/ .popover .btn-block';
+}
+
+::content .popover .btn-block,
+::content>* /deep/ .popover .btn-block,
 :host /deep/ .popover .btn-block {
   margin-bottom: 5px;
 }
 
-:scope /deep/ .popover .btn-block:last-child,
+polyfill-next-selector {
+  content: ':host /deep/ .popover .btn-block:last-child';
+}
+
+::content .popover .btn-block:last-child,
+::content>* /deep/ .popover .btn-block:last-child,
 :host /deep/ .popover .btn-block:last-child {
   margin-bottom: 0;
 }
 
-:scope /deep/ .popover .bar-nav,
+polyfill-next-selector {
+  content: ':host /deep/ .popover .bar-nav';
+}
+
+::content .popover .bar-nav,
+::content>* /deep/ .popover .bar-nav,
 :host /deep/ .popover .bar-nav {
   border-bottom: 1px solid #ddd;
   border-top-left-radius: 12px;
@@ -2279,7 +2801,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   box-shadow: none;
 }
 
-:scope /deep/ .popover .table-view,
+polyfill-next-selector {
+  content: ':host /deep/ .popover .table-view';
+}
+
+::content .popover .table-view,
+::content>* /deep/ .popover .table-view,
 :host /deep/ .popover .table-view {
   max-height: 300px;
   margin-bottom: 0;
@@ -2291,7 +2818,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border-radius: 6px;
 }
 
-:scope /deep/ .modal,
+polyfill-next-selector {
+  content: ':host /deep/ .modal';
+}
+
+::content .modal,
+::content>* /deep/ .modal,
 :host /deep/ .modal {
   position: fixed;
   top: 0;
@@ -2309,7 +2841,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(0, 100%, 0);
 }
 
-:scope /deep/ .modal.active,
+polyfill-next-selector {
+  content: ':host /deep/ .modal.active';
+}
+
+::content .modal.active,
+::content>* /deep/ .modal.active,
 :host /deep/ .modal.active {
   height: 100%;
   opacity: 1;
@@ -2321,18 +2858,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(0, 0, 0);
 }
 
-:scope /deep/ .slider,
+polyfill-next-selector {
+  content: ':host /deep/ .slider';
+}
+
+::content .slider,
+::content>* /deep/ .slider,
 :host /deep/ .slider {
   width: 100%;
 }
 
-:scope /deep/ .slider,
+polyfill-next-selector {
+  content: ':host /deep/ .slider';
+}
+
+::content .slider,
+::content>* /deep/ .slider,
 :host /deep/ .slider {
   overflow: hidden;
   background-color: #000;
 }
 
-:scope /deep/ .slider .slide-group,
+polyfill-next-selector {
+  content: ':host /deep/ .slider .slide-group';
+}
+
+::content .slider .slide-group,
+::content>* /deep/ .slider .slide-group,
 :host /deep/ .slider .slide-group {
   position: relative;
   font-size: 0;
@@ -2342,7 +2894,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transition: all 0s linear;
 }
 
-:scope /deep/ .slider .slide-group .slide,
+polyfill-next-selector {
+  content: ':host /deep/ .slider .slide-group .slide';
+}
+
+::content .slider .slide-group .slide,
+::content>* /deep/ .slider .slide-group .slide,
 :host /deep/ .slider .slide-group .slide {
   display: inline-block;
   width: 100%;
@@ -2351,7 +2908,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   vertical-align: top;
 }
 
-:scope /deep/ .toggle,
+polyfill-next-selector {
+  content: ':host /deep/ .toggle';
+}
+
+::content .toggle,
+::content>* /deep/ .toggle,
 :host /deep/ .toggle {
   position: relative;
   display: block;
@@ -2368,7 +2930,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transition-property: background-color, border;
 }
 
-:scope /deep/ .toggle .toggle-handle,
+polyfill-next-selector {
+  content: ':host /deep/ .toggle .toggle-handle';
+}
+
+::content .toggle .toggle-handle,
+::content>* /deep/ .toggle .toggle-handle,
 :host /deep/ .toggle .toggle-handle {
   position: absolute;
   top: -1px;
@@ -2387,7 +2954,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transition-property: transform, border, width;
 }
 
-:scope /deep/ .toggle:before,
+polyfill-next-selector {
+  content: ':host /deep/ .toggle:before';
+}
+
+::content .toggle:before,
+::content>* /deep/ .toggle:before,
 :host /deep/ .toggle:before {
   position: absolute;
   top: 3px;
@@ -2398,13 +2970,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   content: "Off";
 }
 
-:scope /deep/ .toggle.active,
+polyfill-next-selector {
+  content: ':host /deep/ .toggle.active';
+}
+
+::content .toggle.active,
+::content>* /deep/ .toggle.active,
 :host /deep/ .toggle.active {
   background-color: #5cb85c;
   border: 2px solid #5cb85c;
 }
 
-:scope /deep/ .toggle.active .toggle-handle,
+polyfill-next-selector {
+  content: ':host /deep/ .toggle.active .toggle-handle';
+}
+
+::content .toggle.active .toggle-handle,
+::content>* /deep/ .toggle.active .toggle-handle,
 :host /deep/ .toggle.active .toggle-handle {
   border-color: #5cb85c;
   -webkit-transform: translate3d(44px, 0, 0);
@@ -2412,7 +2994,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(44px, 0, 0);
 }
 
-:scope /deep/ .toggle.active:before,
+polyfill-next-selector {
+  content: ':host /deep/ .toggle.active:before';
+}
+
+::content .toggle.active:before,
+::content>* /deep/ .toggle.active:before,
 :host /deep/ .toggle.active:before {
   right: auto;
   left: 15px;
@@ -2420,23 +3007,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   content: "On";
 }
 
-:scope /deep/ .toggle input[type="checkbox"],
+polyfill-next-selector {
+  content: ':host /deep/ .toggle input[type="checkbox"]';
+}
+
+::content .toggle input[type="checkbox"],
+::content>* /deep/ .toggle input[type="checkbox"],
 :host /deep/ .toggle input[type="checkbox"] {
   display: none;
 }
 
-:scope /deep/ .content.fade,
+polyfill-next-selector {
+  content: ':host /deep/ .content.fade';
+}
+
+::content .content.fade,
+::content>* /deep/ .content.fade,
 :host /deep/ .content.fade {
   left: 0;
   opacity: 0;
 }
 
-:scope /deep/ .content.fade.in,
+polyfill-next-selector {
+  content: ':host /deep/ .content.fade.in';
+}
+
+::content .content.fade.in,
+::content>* /deep/ .content.fade.in,
 :host /deep/ .content.fade.in {
   opacity: 1;
 }
 
-:scope /deep/ .content.sliding,
+polyfill-next-selector {
+  content: ':host /deep/ .content.sliding';
+}
+
+::content .content.sliding,
+::content>* /deep/ .content.sliding,
 :host /deep/ .content.sliding {
   z-index: 2;
   -webkit-transition: -webkit-transform .4s;
@@ -2447,7 +3054,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(0, 0, 0);
 }
 
-:scope /deep/ .content.sliding.left,
+polyfill-next-selector {
+  content: ':host /deep/ .content.sliding.left';
+}
+
+::content .content.sliding.left,
+::content>* /deep/ .content.sliding.left,
 :host /deep/ .content.sliding.left {
   z-index: 1;
   -webkit-transform: translate3d(-100%, 0, 0);
@@ -2455,7 +3067,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(-100%, 0, 0);
 }
 
-:scope /deep/ .content.sliding.right,
+polyfill-next-selector {
+  content: ':host /deep/ .content.sliding.right';
+}
+
+::content .content.sliding.right,
+::content>* /deep/ .content.sliding.right,
 :host /deep/ .content.sliding.right {
   z-index: 3;
   -webkit-transform: translate3d(100%, 0, 0);
@@ -2463,13 +3080,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   transform: translate3d(100%, 0, 0);
 }
 
-:scope /deep/ .navigate-left:after,
+polyfill-next-selector {
+  content: ':host /deep/ .navigate-left:after,:host /deep/ .navigate-right:after,:host /deep/ .push-left:after,:host /deep/ .push-right:after';
+}
+
+::content .navigate-left:after,
+::content>* /deep/ .navigate-left:after,
 :host /deep/ .navigate-left:after,
-:scope /deep/ .navigate-right:after,
+::content .navigate-right:after,
+::content>* /deep/ .navigate-right:after,
 :host /deep/ .navigate-right:after,
-:scope /deep/ .push-left:after,
+::content .push-left:after,
+::content>* /deep/ .push-left:after,
 :host /deep/ .push-left:after,
-:scope /deep/ .push-right:after,
+::content .push-right:after,
+::content>* /deep/ .push-right:after,
 :host /deep/ .push-right:after {
   position: absolute;
   top: 50%;
@@ -2485,17 +3110,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   -webkit-font-smoothing: antialiased;
 }
 
-:scope /deep/ .navigate-left:after,
+polyfill-next-selector {
+  content: ':host /deep/ .navigate-left:after,:host /deep/ .push-left:after';
+}
+
+::content .navigate-left:after,
+::content>* /deep/ .navigate-left:after,
 :host /deep/ .navigate-left:after,
-:scope /deep/ .push-left:after,
+::content .push-left:after,
+::content>* /deep/ .push-left:after,
 :host /deep/ .push-left:after {
   left: 15px;
   content: '\e822';
 }
 
-:scope /deep/ .navigate-right:after,
+polyfill-next-selector {
+  content: ':host /deep/ .navigate-right:after,:host /deep/ .push-right:after';
+}
+
+::content .navigate-right:after,
+::content>* /deep/ .navigate-right:after,
 :host /deep/ .navigate-right:after,
-:scope /deep/ .push-right:after,
+::content .push-right:after,
+::content>* /deep/ .push-right:after,
 :host /deep/ .push-right:after {
   right: 15px;
   content: '\e826';
@@ -2509,7 +3146,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   src: url(../dependencies/ratchet/dist/fonts/ratchicons.eot?#iefix) format("embedded-opentype"), url(../dependencies/ratchet/dist/fonts/ratchicons.woff) format("woff"), url(../dependencies/ratchet/dist/fonts/ratchicons.ttf) format("truetype"), url(../dependencies/ratchet/dist/fonts/ratchicons.svg#svgFontName) format("svg");
 }
 
-:scope /deep/ .icon,
+polyfill-next-selector {
+  content: ':host /deep/ .icon';
+}
+
+::content .icon,
+::content>* /deep/ .icon,
 :host /deep/ .icon {
   display: inline-block;
   font-family: Ratchicons;
@@ -2519,216 +3161,431 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   -webkit-font-smoothing: antialiased;
 }
 
-:scope /deep/ .icon-back:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-back:before';
+}
+
+::content .icon-back:before,
+::content>* /deep/ .icon-back:before,
 :host /deep/ .icon-back:before {
   content: '\e80a';
 }
 
-:scope /deep/ .icon-bars:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-bars:before';
+}
+
+::content .icon-bars:before,
+::content>* /deep/ .icon-bars:before,
 :host /deep/ .icon-bars:before {
   content: '\e80e';
 }
 
-:scope /deep/ .icon-caret:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-caret:before';
+}
+
+::content .icon-caret:before,
+::content>* /deep/ .icon-caret:before,
 :host /deep/ .icon-caret:before {
   content: '\e80f';
 }
 
-:scope /deep/ .icon-check:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-check:before';
+}
+
+::content .icon-check:before,
+::content>* /deep/ .icon-check:before,
 :host /deep/ .icon-check:before {
   content: '\e810';
 }
 
-:scope /deep/ .icon-close:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-close:before';
+}
+
+::content .icon-close:before,
+::content>* /deep/ .icon-close:before,
 :host /deep/ .icon-close:before {
   content: '\e811';
 }
 
-:scope /deep/ .icon-code:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-code:before';
+}
+
+::content .icon-code:before,
+::content>* /deep/ .icon-code:before,
 :host /deep/ .icon-code:before {
   content: '\e812';
 }
 
-:scope /deep/ .icon-compose:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-compose:before';
+}
+
+::content .icon-compose:before,
+::content>* /deep/ .icon-compose:before,
 :host /deep/ .icon-compose:before {
   content: '\e813';
 }
 
-:scope /deep/ .icon-download:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-download:before';
+}
+
+::content .icon-download:before,
+::content>* /deep/ .icon-download:before,
 :host /deep/ .icon-download:before {
   content: '\e815';
 }
 
-:scope /deep/ .icon-edit:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-edit:before';
+}
+
+::content .icon-edit:before,
+::content>* /deep/ .icon-edit:before,
 :host /deep/ .icon-edit:before {
   content: '\e829';
 }
 
-:scope /deep/ .icon-forward:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-forward:before';
+}
+
+::content .icon-forward:before,
+::content>* /deep/ .icon-forward:before,
 :host /deep/ .icon-forward:before {
   content: '\e82a';
 }
 
-:scope /deep/ .icon-gear:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-gear:before';
+}
+
+::content .icon-gear:before,
+::content>* /deep/ .icon-gear:before,
 :host /deep/ .icon-gear:before {
   content: '\e821';
 }
 
-:scope /deep/ .icon-home:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-home:before';
+}
+
+::content .icon-home:before,
+::content>* /deep/ .icon-home:before,
 :host /deep/ .icon-home:before {
   content: '\e82b';
 }
 
-:scope /deep/ .icon-info:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-info:before';
+}
+
+::content .icon-info:before,
+::content>* /deep/ .icon-info:before,
 :host /deep/ .icon-info:before {
   content: '\e82c';
 }
 
-:scope /deep/ .icon-list:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-list:before';
+}
+
+::content .icon-list:before,
+::content>* /deep/ .icon-list:before,
 :host /deep/ .icon-list:before {
   content: '\e823';
 }
 
-:scope /deep/ .icon-more-vertical:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-more-vertical:before';
+}
+
+::content .icon-more-vertical:before,
+::content>* /deep/ .icon-more-vertical:before,
 :host /deep/ .icon-more-vertical:before {
   content: '\e82e';
 }
 
-:scope /deep/ .icon-more:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-more:before';
+}
+
+::content .icon-more:before,
+::content>* /deep/ .icon-more:before,
 :host /deep/ .icon-more:before {
   content: '\e82f';
 }
 
-:scope /deep/ .icon-pages:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-pages:before';
+}
+
+::content .icon-pages:before,
+::content>* /deep/ .icon-pages:before,
 :host /deep/ .icon-pages:before {
   content: '\e824';
 }
 
-:scope /deep/ .icon-pause:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-pause:before';
+}
+
+::content .icon-pause:before,
+::content>* /deep/ .icon-pause:before,
 :host /deep/ .icon-pause:before {
   content: '\e830';
 }
 
-:scope /deep/ .icon-person:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-person:before';
+}
+
+::content .icon-person:before,
+::content>* /deep/ .icon-person:before,
 :host /deep/ .icon-person:before {
   content: '\e832';
 }
 
-:scope /deep/ .icon-play:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-play:before';
+}
+
+::content .icon-play:before,
+::content>* /deep/ .icon-play:before,
 :host /deep/ .icon-play:before {
   content: '\e816';
 }
 
-:scope /deep/ .icon-plus:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-plus:before';
+}
+
+::content .icon-plus:before,
+::content>* /deep/ .icon-plus:before,
 :host /deep/ .icon-plus:before {
   content: '\e817';
 }
 
-:scope /deep/ .icon-refresh:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-refresh:before';
+}
+
+::content .icon-refresh:before,
+::content>* /deep/ .icon-refresh:before,
 :host /deep/ .icon-refresh:before {
   content: '\e825';
 }
 
-:scope /deep/ .icon-search:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-search:before';
+}
+
+::content .icon-search:before,
+::content>* /deep/ .icon-search:before,
 :host /deep/ .icon-search:before {
   content: '\e819';
 }
 
-:scope /deep/ .icon-share:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-share:before';
+}
+
+::content .icon-share:before,
+::content>* /deep/ .icon-share:before,
 :host /deep/ .icon-share:before {
   content: '\e81a';
 }
 
-:scope /deep/ .icon-sound:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-sound:before';
+}
+
+::content .icon-sound:before,
+::content>* /deep/ .icon-sound:before,
 :host /deep/ .icon-sound:before {
   content: '\e827';
 }
 
-:scope /deep/ .icon-sound2:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-sound2:before';
+}
+
+::content .icon-sound2:before,
+::content>* /deep/ .icon-sound2:before,
 :host /deep/ .icon-sound2:before {
   content: '\e828';
 }
 
-:scope /deep/ .icon-sound3:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-sound3:before';
+}
+
+::content .icon-sound3:before,
+::content>* /deep/ .icon-sound3:before,
 :host /deep/ .icon-sound3:before {
   content: '\e80b';
 }
 
-:scope /deep/ .icon-sound4:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-sound4:before';
+}
+
+::content .icon-sound4:before,
+::content>* /deep/ .icon-sound4:before,
 :host /deep/ .icon-sound4:before {
   content: '\e80c';
 }
 
-:scope /deep/ .icon-star-filled:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-star-filled:before';
+}
+
+::content .icon-star-filled:before,
+::content>* /deep/ .icon-star-filled:before,
 :host /deep/ .icon-star-filled:before {
   content: '\e81b';
 }
 
-:scope /deep/ .icon-star:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-star:before';
+}
+
+::content .icon-star:before,
+::content>* /deep/ .icon-star:before,
 :host /deep/ .icon-star:before {
   content: '\e81c';
 }
 
-:scope /deep/ .icon-stop:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-stop:before';
+}
+
+::content .icon-stop:before,
+::content>* /deep/ .icon-stop:before,
 :host /deep/ .icon-stop:before {
   content: '\e81d';
 }
 
-:scope /deep/ .icon-trash:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-trash:before';
+}
+
+::content .icon-trash:before,
+::content>* /deep/ .icon-trash:before,
 :host /deep/ .icon-trash:before {
   content: '\e81e';
 }
 
-:scope /deep/ .icon-up-nav:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-up-nav:before';
+}
+
+::content .icon-up-nav:before,
+::content>* /deep/ .icon-up-nav:before,
 :host /deep/ .icon-up-nav:before {
   content: '\e81f';
 }
 
-:scope /deep/ .icon-up:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-up:before';
+}
+
+::content .icon-up:before,
+::content>* /deep/ .icon-up:before,
 :host /deep/ .icon-up:before {
   content: '\e80d';
 }
 
-:scope /deep/ .icon-right-nav:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-right-nav:before';
+}
+
+::content .icon-right-nav:before,
+::content>* /deep/ .icon-right-nav:before,
 :host /deep/ .icon-right-nav:before {
   content: '\e818';
 }
 
-:scope /deep/ .icon-right:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-right:before';
+}
+
+::content .icon-right:before,
+::content>* /deep/ .icon-right:before,
 :host /deep/ .icon-right:before {
   content: '\e826';
 }
 
-:scope /deep/ .icon-down-nav:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-down-nav:before';
+}
+
+::content .icon-down-nav:before,
+::content>* /deep/ .icon-down-nav:before,
 :host /deep/ .icon-down-nav:before {
   content: '\e814';
 }
 
-:scope /deep/ .icon-down:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-down:before';
+}
+
+::content .icon-down:before,
+::content>* /deep/ .icon-down:before,
 :host /deep/ .icon-down:before {
   content: '\e820';
 }
 
-:scope /deep/ .icon-left-nav:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-left-nav:before';
+}
+
+::content .icon-left-nav:before,
+::content>* /deep/ .icon-left-nav:before,
 :host /deep/ .icon-left-nav:before {
   content: '\e82d';
 }
 
-:scope /deep/ .icon-left:before,
+polyfill-next-selector {
+  content: ':host /deep/ .icon-left:before';
+}
+
+::content .icon-left:before,
+::content>* /deep/ .icon-left:before,
 :host /deep/ .icon-left:before {
   content: '\e822';
 }</style>
-    <style>:scope /deep/ .ui-responsive,
+    <style>polyfill-next-selector {
+  content: ':host /deep/ .ui-responsive';
+}
+
+::content .ui-responsive,
+::content>* /deep/ .ui-responsive,
 :host /deep/ .ui-responsive {
   overflow: hidden;
 }
 
-:scope /deep/ .ui-responsive .ui-block:first,
+polyfill-next-selector {
+  content: ':host /deep/ .ui-responsive .ui-block:first';
+}
+
+::content .ui-responsive .ui-block:first,
+::content>* /deep/ .ui-responsive .ui-block:first,
 :host /deep/ .ui-responsive .ui-block:first {
   clear: left;
 }
 
-:scope /deep/ .ui-block,
+polyfill-next-selector {
+  content: ':host /deep/ .ui-block';
+}
+
+::content .ui-block,
+::content>* /deep/ .ui-block,
 :host /deep/ .ui-block {
   width: 50%;
   margin: 0;
@@ -2745,173 +3602,259 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /* preset breakpoint to switch to stacked grid styles below 35em (560px) */
 
 @media all and (max-width: 35em) {
-  :scope /deep/ .ui-responsive .ui-block,
+  polyfill-next-selector {
+    content: ':host /deep/ .ui-responsive .ui-block';
+  }
+
+  ::content .ui-responsive .ui-block,
+  ::content>* /deep/ .ui-responsive .ui-block,
   :host /deep/ .ui-responsive .ui-block {
     width: 100%;
     float: none;
   }
 }</style>
-    <style>:scope,
+    <style>polyfill-next-selector {
+  content: ':host,:host,:host /deep/ div,:host /deep/ span,:host /deep/ applet,:host /deep/ object,:host /deep/ iframe,:host /deep/ h1,:host /deep/ h2,:host /deep/ h3,:host /deep/ h4,:host /deep/ h5,:host /deep/ h6,:host /deep/ p,:host /deep/ blockquote,:host /deep/ pre,:host /deep/ a,:host /deep/ abbr,:host /deep/ acronym,:host /deep/ address,:host /deep/ big,:host /deep/ cite,:host /deep/ code,:host /deep/ del,:host /deep/ dfn,:host /deep/ em,:host /deep/ img,:host /deep/ ins,:host /deep/ kbd,:host /deep/ q,:host /deep/ s,:host /deep/ samp,:host /deep/ small,:host /deep/ strike,:host /deep/ strong,:host /deep/ sub,:host /deep/ sup,:host /deep/ tt,:host /deep/ var,:host /deep/ b,:host /deep/ u,:host /deep/ i,:host /deep/ center,:host /deep/ dl,:host /deep/ dt,:host /deep/ dd,:host /deep/ ol,:host /deep/ ul,:host /deep/ li,:host /deep/ fieldset,:host /deep/ form,:host /deep/ label,:host /deep/ legend,:host /deep/ table,:host /deep/ caption,:host /deep/ tbody,:host /deep/ tfoot,:host /deep/ thead,:host /deep/ tr,:host /deep/ th,:host /deep/ td,:host /deep/ article,:host /deep/ aside,:host /deep/ canvas,:host /deep/ details,:host /deep/ embed,:host /deep/ figure,:host /deep/ figcaption,:host /deep/ footer,:host /deep/ header,:host /deep/ hgroup,:host /deep/ menu,:host /deep/ nav,:host /deep/ output,:host /deep/ ruby,:host /deep/ section,:host /deep/ summary,:host /deep/ time,:host /deep/ mark,:host /deep/ audio,:host /deep/ video';
+}
+
 :host,
-:scope,
 :host,
-:scope /deep/ div,
+::content div,
+::content>* /deep/ div,
 :host /deep/ div,
-:scope /deep/ span,
+::content span,
+::content>* /deep/ span,
 :host /deep/ span,
-:scope /deep/ applet,
+::content applet,
+::content>* /deep/ applet,
 :host /deep/ applet,
-:scope /deep/ object,
+::content object,
+::content>* /deep/ object,
 :host /deep/ object,
-:scope /deep/ iframe,
+::content iframe,
+::content>* /deep/ iframe,
 :host /deep/ iframe,
-:scope /deep/ h1,
+::content h1,
+::content>* /deep/ h1,
 :host /deep/ h1,
-:scope /deep/ h2,
+::content h2,
+::content>* /deep/ h2,
 :host /deep/ h2,
-:scope /deep/ h3,
+::content h3,
+::content>* /deep/ h3,
 :host /deep/ h3,
-:scope /deep/ h4,
+::content h4,
+::content>* /deep/ h4,
 :host /deep/ h4,
-:scope /deep/ h5,
+::content h5,
+::content>* /deep/ h5,
 :host /deep/ h5,
-:scope /deep/ h6,
+::content h6,
+::content>* /deep/ h6,
 :host /deep/ h6,
-:scope /deep/ p,
+::content p,
+::content>* /deep/ p,
 :host /deep/ p,
-:scope /deep/ blockquote,
+::content blockquote,
+::content>* /deep/ blockquote,
 :host /deep/ blockquote,
-:scope /deep/ pre,
+::content pre,
+::content>* /deep/ pre,
 :host /deep/ pre,
-:scope /deep/ a,
+::content a,
+::content>* /deep/ a,
 :host /deep/ a,
-:scope /deep/ abbr,
+::content abbr,
+::content>* /deep/ abbr,
 :host /deep/ abbr,
-:scope /deep/ acronym,
+::content acronym,
+::content>* /deep/ acronym,
 :host /deep/ acronym,
-:scope /deep/ address,
+::content address,
+::content>* /deep/ address,
 :host /deep/ address,
-:scope /deep/ big,
+::content big,
+::content>* /deep/ big,
 :host /deep/ big,
-:scope /deep/ cite,
+::content cite,
+::content>* /deep/ cite,
 :host /deep/ cite,
-:scope /deep/ code,
+::content code,
+::content>* /deep/ code,
 :host /deep/ code,
-:scope /deep/ del,
+::content del,
+::content>* /deep/ del,
 :host /deep/ del,
-:scope /deep/ dfn,
+::content dfn,
+::content>* /deep/ dfn,
 :host /deep/ dfn,
-:scope /deep/ em,
+::content em,
+::content>* /deep/ em,
 :host /deep/ em,
-:scope /deep/ img,
+::content img,
+::content>* /deep/ img,
 :host /deep/ img,
-:scope /deep/ ins,
+::content ins,
+::content>* /deep/ ins,
 :host /deep/ ins,
-:scope /deep/ kbd,
+::content kbd,
+::content>* /deep/ kbd,
 :host /deep/ kbd,
-:scope /deep/ q,
+::content q,
+::content>* /deep/ q,
 :host /deep/ q,
-:scope /deep/ s,
+::content s,
+::content>* /deep/ s,
 :host /deep/ s,
-:scope /deep/ samp,
+::content samp,
+::content>* /deep/ samp,
 :host /deep/ samp,
-:scope /deep/ small,
+::content small,
+::content>* /deep/ small,
 :host /deep/ small,
-:scope /deep/ strike,
+::content strike,
+::content>* /deep/ strike,
 :host /deep/ strike,
-:scope /deep/ strong,
+::content strong,
+::content>* /deep/ strong,
 :host /deep/ strong,
-:scope /deep/ sub,
+::content sub,
+::content>* /deep/ sub,
 :host /deep/ sub,
-:scope /deep/ sup,
+::content sup,
+::content>* /deep/ sup,
 :host /deep/ sup,
-:scope /deep/ tt,
+::content tt,
+::content>* /deep/ tt,
 :host /deep/ tt,
-:scope /deep/ var,
+::content var,
+::content>* /deep/ var,
 :host /deep/ var,
-:scope /deep/ b,
+::content b,
+::content>* /deep/ b,
 :host /deep/ b,
-:scope /deep/ u,
+::content u,
+::content>* /deep/ u,
 :host /deep/ u,
-:scope /deep/ i,
+::content i,
+::content>* /deep/ i,
 :host /deep/ i,
-:scope /deep/ center,
+::content center,
+::content>* /deep/ center,
 :host /deep/ center,
-:scope /deep/ dl,
+::content dl,
+::content>* /deep/ dl,
 :host /deep/ dl,
-:scope /deep/ dt,
+::content dt,
+::content>* /deep/ dt,
 :host /deep/ dt,
-:scope /deep/ dd,
+::content dd,
+::content>* /deep/ dd,
 :host /deep/ dd,
-:scope /deep/ ol,
+::content ol,
+::content>* /deep/ ol,
 :host /deep/ ol,
-:scope /deep/ ul,
+::content ul,
+::content>* /deep/ ul,
 :host /deep/ ul,
-:scope /deep/ li,
+::content li,
+::content>* /deep/ li,
 :host /deep/ li,
-:scope /deep/ fieldset,
+::content fieldset,
+::content>* /deep/ fieldset,
 :host /deep/ fieldset,
-:scope /deep/ form,
+::content form,
+::content>* /deep/ form,
 :host /deep/ form,
-:scope /deep/ label,
+::content label,
+::content>* /deep/ label,
 :host /deep/ label,
-:scope /deep/ legend,
+::content legend,
+::content>* /deep/ legend,
 :host /deep/ legend,
-:scope /deep/ table,
+::content table,
+::content>* /deep/ table,
 :host /deep/ table,
-:scope /deep/ caption,
+::content caption,
+::content>* /deep/ caption,
 :host /deep/ caption,
-:scope /deep/ tbody,
+::content tbody,
+::content>* /deep/ tbody,
 :host /deep/ tbody,
-:scope /deep/ tfoot,
+::content tfoot,
+::content>* /deep/ tfoot,
 :host /deep/ tfoot,
-:scope /deep/ thead,
+::content thead,
+::content>* /deep/ thead,
 :host /deep/ thead,
-:scope /deep/ tr,
+::content tr,
+::content>* /deep/ tr,
 :host /deep/ tr,
-:scope /deep/ th,
+::content th,
+::content>* /deep/ th,
 :host /deep/ th,
-:scope /deep/ td,
+::content td,
+::content>* /deep/ td,
 :host /deep/ td,
-:scope /deep/ article,
+::content article,
+::content>* /deep/ article,
 :host /deep/ article,
-:scope /deep/ aside,
+::content aside,
+::content>* /deep/ aside,
 :host /deep/ aside,
-:scope /deep/ canvas,
+::content canvas,
+::content>* /deep/ canvas,
 :host /deep/ canvas,
-:scope /deep/ details,
+::content details,
+::content>* /deep/ details,
 :host /deep/ details,
-:scope /deep/ embed,
+::content embed,
+::content>* /deep/ embed,
 :host /deep/ embed,
-:scope /deep/ figure,
+::content figure,
+::content>* /deep/ figure,
 :host /deep/ figure,
-:scope /deep/ figcaption,
+::content figcaption,
+::content>* /deep/ figcaption,
 :host /deep/ figcaption,
-:scope /deep/ footer,
+::content footer,
+::content>* /deep/ footer,
 :host /deep/ footer,
-:scope /deep/ header,
+::content header,
+::content>* /deep/ header,
 :host /deep/ header,
-:scope /deep/ hgroup,
+::content hgroup,
+::content>* /deep/ hgroup,
 :host /deep/ hgroup,
-:scope /deep/ menu,
+::content menu,
+::content>* /deep/ menu,
 :host /deep/ menu,
-:scope /deep/ nav,
+::content nav,
+::content>* /deep/ nav,
 :host /deep/ nav,
-:scope /deep/ output,
+::content output,
+::content>* /deep/ output,
 :host /deep/ output,
-:scope /deep/ ruby,
+::content ruby,
+::content>* /deep/ ruby,
 :host /deep/ ruby,
-:scope /deep/ section,
+::content section,
+::content>* /deep/ section,
 :host /deep/ section,
-:scope /deep/ summary,
+::content summary,
+::content>* /deep/ summary,
 :host /deep/ summary,
-:scope /deep/ time,
+::content time,
+::content>* /deep/ time,
 :host /deep/ time,
-:scope /deep/ mark,
+::content mark,
+::content>* /deep/ mark,
 :host /deep/ mark,
-:scope /deep/ audio,
+::content audio,
+::content>* /deep/ audio,
 :host /deep/ audio,
-:scope /deep/ video,
+::content video,
+::content>* /deep/ video,
 :host /deep/ video {
   margin: 0;
   padding: 0;
@@ -2921,39 +3864,73 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   vertical-align: baseline;
 }
 
-:scope,
+polyfill-next-selector {
+  content: ':host';
+}
+
 :host {
   line-height: 1;
 }
 
-:scope /deep/ ol,
+polyfill-next-selector {
+  content: ':host /deep/ ol,:host /deep/ ul';
+}
+
+::content ol,
+::content>* /deep/ ol,
 :host /deep/ ol,
-:scope /deep/ ul,
+::content ul,
+::content>* /deep/ ul,
 :host /deep/ ul {
   list-style: none;
 }
 
-:scope /deep/ h1,
+polyfill-next-selector {
+  content: ':host /deep/ h1';
+}
+
+::content h1,
+::content>* /deep/ h1,
 :host /deep/ h1 {
   font-size: 1.75rem;
 }
 
-:scope /deep/ h2,
+polyfill-next-selector {
+  content: ':host /deep/ h2';
+}
+
+::content h2,
+::content>* /deep/ h2,
 :host /deep/ h2 {
   font-size: 1.25rem;
 }
 
-:scope /deep/ h3,
+polyfill-next-selector {
+  content: ':host /deep/ h3';
+}
+
+::content h3,
+::content>* /deep/ h3,
 :host /deep/ h3 {
   font-size: 1.125rem;
 }
 
-:scope /deep/ h4,
+polyfill-next-selector {
+  content: ':host /deep/ h4';
+}
+
+::content h4,
+::content>* /deep/ h4,
 :host /deep/ h4 {
   font-size: 1rem;
 }
 
-:scope /deep/ p,
+polyfill-next-selector {
+  content: ':host /deep/ p';
+}
+
+::content p,
+::content>* /deep/ p,
 :host /deep/ p {
   font-size: 0.875rem;
 }
@@ -2986,14 +3963,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   font-style: normal;
 }
 
-:scope,
+polyfill-next-selector {
+  content: ':host';
+}
+
 :host {
   font-size: 100%;
 }
 
-:scope,
+polyfill-next-selector {
+  content: ':host';
+}
+
 :host {
-  background-color: #f0f1f2;
   font-family: "ProximaNovaSoft-Regular", Arial, sans-serif;
   color: #7e7f80;
   -webkit-font-smoothing: antialiased;
@@ -3001,53 +3983,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-:scope /deep/ h1,
+polyfill-next-selector {
+  content: ':host /deep/ h1,:host /deep/ h2,:host /deep/ h3,:host /deep/ h4,:host /deep/ h5';
+}
+
+::content h1,
+::content>* /deep/ h1,
 :host /deep/ h1,
-:scope /deep/ h2,
+::content h2,
+::content>* /deep/ h2,
 :host /deep/ h2,
-:scope /deep/ h3,
+::content h3,
+::content>* /deep/ h3,
 :host /deep/ h3,
-:scope /deep/ h4,
+::content h4,
+::content>* /deep/ h4,
 :host /deep/ h4,
-:scope /deep/ h5,
+::content h5,
+::content>* /deep/ h5,
 :host /deep/ h5 {
   color: #454747;
 }
 
-:scope /deep/ p,
+polyfill-next-selector {
+  content: ':host /deep/ p';
+}
+
+::content p,
+::content>* /deep/ p,
 :host /deep/ p {
   color: #525354;
 }
 
-:scope /deep/ a,
+polyfill-next-selector {
+  content: ':host /deep/ a';
+}
+
+::content a,
+::content>* /deep/ a,
 :host /deep/ a {
   display: inline-block;
   text-decoration: none;
 }
 
-:scope /deep/ a:link,
+polyfill-next-selector {
+  content: ':host /deep/ a:link';
+}
+
+::content a:link,
+::content>* /deep/ a:link,
 :host /deep/ a:link {
   color: #2d95d6;
 }
 
-:scope /deep/ a:visited,
+polyfill-next-selector {
+  content: ':host /deep/ a:visited';
+}
+
+::content a:visited,
+::content>* /deep/ a:visited,
 :host /deep/ a:visited {
   color: #2d95d6;
 }
 
-:scope /deep/ a:hover,
+polyfill-next-selector {
+  content: ':host /deep/ a:hover';
+}
+
+::content a:hover,
+::content>* /deep/ a:hover,
 :host /deep/ a:hover {
   color: #2584bf;
 }
 
-:scope /deep/ a:active,
+polyfill-next-selector {
+  content: ':host /deep/ a:active';
+}
+
+::content a:active,
+::content>* /deep/ a:active,
 :host /deep/ a:active {
   color: #2d95d6;
 }
 
-:scope /deep/ .sf-layout-item,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item,:host /deep/ .input-block';
+}
+
+::content .sf-layout-item,
+::content>* /deep/ .sf-layout-item,
 :host /deep/ .sf-layout-item,
-:scope /deep/ .input-block,
+::content .input-block,
+::content>* /deep/ .input-block,
 :host /deep/ .input-block {
   position: relative;
   padding-left: 0.875em;
@@ -3055,24 +4082,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   margin-bottom: 0.875em;
 }
 
-:scope /deep/ .input-block.picklist--publisher label,
+polyfill-next-selector {
+  content: ':host /deep/ .input-block.picklist--publisher label';
+}
+
+::content .input-block.picklist--publisher label,
+::content>* /deep/ .input-block.picklist--publisher label,
 :host /deep/ .input-block.picklist--publisher label {
   position: absolute;
   z-index: 2;
   padding: 0.875em;
 }
 
-:scope /deep/ .input-block.picklist--publisher input.input-picklist,
+polyfill-next-selector {
+  content: ':host /deep/ .input-block.picklist--publisher input.input-picklist';
+}
+
+::content .input-block.picklist--publisher input.input-picklist,
+::content>* /deep/ .input-block.picklist--publisher input.input-picklist,
 :host /deep/ .input-block.picklist--publisher input.input-picklist {
   padding-left: 3.6em;
 }
 
-:scope /deep/ .input-block.poll-choice,
+polyfill-next-selector {
+  content: ':host /deep/ .input-block.poll-choice';
+}
+
+::content .input-block.poll-choice,
+::content>* /deep/ .input-block.poll-choice,
 :host /deep/ .input-block.poll-choice {
   padding-right: 2.5em;
 }
 
-:scope /deep/ .input-block.poll-choice:after,
+polyfill-next-selector {
+  content: ':host /deep/ .input-block.poll-choice:after';
+}
+
+::content .input-block.poll-choice:after,
+::content>* /deep/ .input-block.poll-choice:after,
 :host /deep/ .input-block.poll-choice:after {
   position: absolute;
   right: 8px;
@@ -3094,41 +4141,72 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   content: 'delete';
 }
 
-:scope /deep/ .sf-layout-item-label,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item-label,:host /deep/ .input-label';
+}
+
+::content .sf-layout-item-label,
+::content>* /deep/ .sf-layout-item-label,
 :host /deep/ .sf-layout-item-label,
-:scope /deep/ .input-label,
+::content .input-label,
+::content>* /deep/ .input-label,
 :host /deep/ .input-label {
   /*font-family: "ProximaNovaSoft-Regular";*/
   margin-bottom: 0.25em;
 }
 
-:scope /deep/ .sf-layout-item-label,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item-label,:host /deep/ label';
+}
+
+::content .sf-layout-item-label,
+::content>* /deep/ .sf-layout-item-label,
 :host /deep/ .sf-layout-item-label,
-:scope /deep/ label,
+::content label,
+::content>* /deep/ label,
 :host /deep/ label {
   color: #969899;
   font-size: 0.875rem;
 }
 
-:scope /deep/ label.input-label--checkbox,
+polyfill-next-selector {
+  content: ':host /deep/ label.input-label--checkbox,:host /deep/ label.input-label--radio';
+}
+
+::content label.input-label--checkbox,
+::content>* /deep/ label.input-label--checkbox,
 :host /deep/ label.input-label--checkbox,
-:scope /deep/ label.input-label--radio,
+::content label.input-label--radio,
+::content>* /deep/ label.input-label--radio,
 :host /deep/ label.input-label--radio {
   color: #525354;
 }
 
-:scope /deep/ .sf-layout-item-value,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item-value';
+}
+
+::content .sf-layout-item-value,
+::content>* /deep/ .sf-layout-item-value,
 :host /deep/ .sf-layout-item-value {
   display: -webkit-box;
 }
 
-:scope /deep/ .sf-layout-item-value,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item-value,:host /deep/ .sf-layout-item-value input,:host /deep/ .sf-layout-item-value select,:host /deep/ .sf-layout-item-value textarea';
+}
+
+::content .sf-layout-item-value,
+::content>* /deep/ .sf-layout-item-value,
 :host /deep/ .sf-layout-item-value,
-:scope /deep/ .sf-layout-item-value input,
+::content .sf-layout-item-value input,
+::content>* /deep/ .sf-layout-item-value input,
 :host /deep/ .sf-layout-item-value input,
-:scope /deep/ .sf-layout-item-value select,
+::content .sf-layout-item-value select,
+::content>* /deep/ .sf-layout-item-value select,
 :host /deep/ .sf-layout-item-value select,
-:scope /deep/ .sf-layout-item-value textarea,
+::content .sf-layout-item-value textarea,
+::content>* /deep/ .sf-layout-item-value textarea,
 :host /deep/ .sf-layout-item-value textarea {
   display: -webkit-box;
   -webkit-box-flex: 1.0;
@@ -3148,9 +4226,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   background-color: #e9e9eb;
 }
 
-:scope /deep/ input:focus,
+polyfill-next-selector {
+  content: ':host /deep/ input:focus,:host /deep/ textarea:focus';
+}
+
+::content input:focus,
+::content>* /deep/ input:focus,
 :host /deep/ input:focus,
-:scope /deep/ textarea:focus,
+::content textarea:focus,
+::content>* /deep/ textarea:focus,
 :host /deep/ textarea:focus {
   background-color: white;
   border: 1px solid #b9babc;
@@ -3158,36 +4242,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   outline: none;
 }
 
-:scope /deep/ input[disabled],
+polyfill-next-selector {
+  content: ':host /deep/ input[disabled],:host /deep/ textarea[disabled]';
+}
+
+::content input[disabled],
+::content>* /deep/ input[disabled],
 :host /deep/ input[disabled],
-:scope /deep/ textarea[disabled],
+::content textarea[disabled],
+::content>* /deep/ textarea[disabled],
 :host /deep/ textarea[disabled] {
   background-color: #e5e6e7;
   border: none;
   color: #969899;
 }
 
-:scope /deep/ .edit .sf-layout-item-value span,
+polyfill-next-selector {
+  content: ':host /deep/ .edit .sf-layout-item-value span';
+}
+
+::content .edit .sf-layout-item-value span,
+::content>* /deep/ .edit .sf-layout-item-value span,
 :host /deep/ .edit .sf-layout-item-value span {
   display: -webkit-box;
   margin: 0.1em;
 }
 
-:scope /deep/ .edit .sf-layout-item-value span:first-child,
+polyfill-next-selector {
+  content: ':host /deep/ .edit .sf-layout-item-value span:first-child';
+}
+
+::content .edit .sf-layout-item-value span:first-child,
+::content>* /deep/ .edit .sf-layout-item-value span:first-child,
 :host /deep/ .edit .sf-layout-item-value span:first-child {
   margin-left: 0;
 }
 
-:scope /deep/ .edit .sf-layout-item-value span:last-child,
+polyfill-next-selector {
+  content: ':host /deep/ .edit .sf-layout-item-value span:last-child';
+}
+
+::content .edit .sf-layout-item-value span:last-child,
+::content>* /deep/ .edit .sf-layout-item-value span:last-child,
 :host /deep/ .edit .sf-layout-item-value span:last-child {
   -webkit-box-flex: 1.0;
 }
 
-:scope /deep/ .sf-layout-item-value,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item-value,:host /deep/ input[class*="readonly"],:host /deep/ textarea[class*="readonly"]';
+}
+
+::content .sf-layout-item-value,
+::content>* /deep/ .sf-layout-item-value,
 :host /deep/ .sf-layout-item-value,
-:scope /deep/ input[class*="readonly"],
+::content input[class*="readonly"],
+::content>* /deep/ input[class*="readonly"],
 :host /deep/ input[class*="readonly"],
-:scope /deep/ textarea[class*="readonly"],
+::content textarea[class*="readonly"],
+::content>* /deep/ textarea[class*="readonly"],
 :host /deep/ textarea[class*="readonly"] {
   margin: 0;
   padding: 0;
@@ -3199,9 +4311,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   border: none;
 }
 
-:scope /deep/ .sf-layout-item-value select,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item-value select,:host /deep/ input[class*="picklist"]';
+}
+
+::content .sf-layout-item-value select,
+::content>* /deep/ .sf-layout-item-value select,
 :host /deep/ .sf-layout-item-value select,
-:scope /deep/ input[class*="picklist"],
+::content input[class*="picklist"],
+::content>* /deep/ input[class*="picklist"],
 :host /deep/ input[class*="picklist"] {
   background: white -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, #ededed), color-stop(100%, #f7f7f7));
   background: white -webkit-linear-gradient(bottom, #ededed 0%, #f7f7f7 100%);
@@ -3216,9 +4334,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   -webkit-appearance: none;
 }
 
-:scope /deep/ select:active,
+polyfill-next-selector {
+  content: ':host /deep/ select:active,:host /deep/ input[class*="picklist"]:active';
+}
+
+::content select:active,
+::content>* /deep/ select:active,
 :host /deep/ select:active,
-:scope /deep/ input[class*="picklist"]:active,
+::content input[class*="picklist"]:active,
+::content>* /deep/ input[class*="picklist"]:active,
 :host /deep/ input[class*="picklist"]:active {
   border: 1px solid #dbdbdb;
   background: #e9e9e9;
@@ -3228,9 +4352,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   box-shadow: none;
 }
 
-:scope /deep/ input[type="checkbox"],
+polyfill-next-selector {
+  content: ':host /deep/ input[type="checkbox"],:host /deep/ input[type="radio"]';
+}
+
+::content input[type="checkbox"],
+::content>* /deep/ input[type="checkbox"],
 :host /deep/ input[type="checkbox"],
-:scope /deep/ input[type="radio"],
+::content input[type="radio"],
+::content>* /deep/ input[type="radio"],
 :host /deep/ input[type="radio"] {
   position: relative;
   -webkit-appearance: none;
@@ -3245,27 +4375,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05), inset 0 0 1px 1px white;
 }
 
-:scope /deep/ input[type="checkbox"]:focus,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="checkbox"]:focus,:host /deep/ input[type="checkbox"]:active,:host /deep/ input[type="radio"]:focus,:host /deep/ input[type="radio"]:active';
+}
+
+::content input[type="checkbox"]:focus,
+::content>* /deep/ input[type="checkbox"]:focus,
 :host /deep/ input[type="checkbox"]:focus,
-:scope /deep/ input[type="checkbox"]:active,
+::content input[type="checkbox"]:active,
+::content>* /deep/ input[type="checkbox"]:active,
 :host /deep/ input[type="checkbox"]:active,
-:scope /deep/ input[type="radio"]:focus,
+::content input[type="radio"]:focus,
+::content>* /deep/ input[type="radio"]:focus,
 :host /deep/ input[type="radio"]:focus,
-:scope /deep/ input[type="radio"]:active,
+::content input[type="radio"]:active,
+::content>* /deep/ input[type="radio"]:active,
 :host /deep/ input[type="radio"]:active {
   background-color: #eee;
 }
 
-:scope /deep/ input[type="checkbox"][class*="disabled"],
+polyfill-next-selector {
+  content: ':host /deep/ input[type="checkbox"][class*="disabled"],:host /deep/ input[type="radio"][class*="disabled"]';
+}
+
+::content input[type="checkbox"][class*="disabled"],
+::content>* /deep/ input[type="checkbox"][class*="disabled"],
 :host /deep/ input[type="checkbox"][class*="disabled"],
-:scope /deep/ input[type="radio"][class*="disabled"],
+::content input[type="radio"][class*="disabled"],
+::content>* /deep/ input[type="radio"][class*="disabled"],
 :host /deep/ input[type="radio"][class*="disabled"] {
   opacity: 0.4;
 }
 
-:scope /deep/ input[type="checkbox"]:checked,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="checkbox"]:checked,:host /deep/ input[type="radio"]:checked';
+}
+
+::content input[type="checkbox"]:checked,
+::content>* /deep/ input[type="checkbox"]:checked,
 :host /deep/ input[type="checkbox"]:checked,
-:scope /deep/ input[type="radio"]:checked,
+::content input[type="radio"]:checked,
+::content>* /deep/ input[type="radio"]:checked,
 :host /deep/ input[type="radio"]:checked {
   border: 1px solid #2c75a3;
   background-color: #3b9fdd;
@@ -3279,15 +4429,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   background-image: linear-gradient(bottom, #3b9fdd 0%, #3b9fdd 100%);
 }
 
-:scope /deep/ input[type="checkbox"]:checked::after,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="checkbox"]:checked::after,:host /deep/ input[type="radio"]:checked::after';
+}
+
+::content input[type="checkbox"]:checked::after,
+::content>* /deep/ input[type="checkbox"]:checked::after,
 :host /deep/ input[type="checkbox"]:checked::after,
-:scope /deep/ input[type="radio"]:checked::after,
+::content input[type="radio"]:checked::after,
+::content>* /deep/ input[type="radio"]:checked::after,
 :host /deep/ input[type="radio"]:checked::after {
   position: absolute;
   content: '';
 }
 
-:scope /deep/ input[type="checkbox"]:checked::after,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="checkbox"]:checked::after';
+}
+
+::content input[type="checkbox"]:checked::after,
+::content>* /deep/ input[type="checkbox"]:checked::after,
 :host /deep/ input[type="checkbox"]:checked::after {
   left: 4px;
   top: 5px;
@@ -3299,12 +4460,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   -webkit-transform: rotate(-45deg);
 }
 
-:scope /deep/ input[type="radio"],
+polyfill-next-selector {
+  content: ':host /deep/ input[type="radio"]';
+}
+
+::content input[type="radio"],
+::content>* /deep/ input[type="radio"],
 :host /deep/ input[type="radio"] {
   border-radius: 11px;
 }
 
-:scope /deep/ input[type="radio"]:checked::after,
+polyfill-next-selector {
+  content: ':host /deep/ input[type="radio"]:checked::after';
+}
+
+::content input[type="radio"]:checked::after,
+::content>* /deep/ input[type="radio"]:checked::after,
 :host /deep/ input[type="radio"]:checked::after {
   left: 6px;
   top: 6px;
@@ -3316,7 +4487,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   /*box-shadow: 0 0 2px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.2);*/
 }
 
-:scope /deep/ .page-header--details,
+polyfill-next-selector {
+  content: ':host /deep/ .page-header--details';
+}
+
+::content .page-header--details,
+::content>* /deep/ .page-header--details,
 :host /deep/ .page-header--details {
   padding: 0.875em;
   margin-bottom: -15px;
@@ -3325,37 +4501,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   text-align: left;
 }
 
-:scope /deep/ .page-header--details .item-header-details,
+polyfill-next-selector {
+  content: ':host /deep/ .page-header--details .item-header-details';
+}
+
+::content .page-header--details .item-header-details,
+::content>* /deep/ .page-header--details .item-header-details,
 :host /deep/ .page-header--details .item-header-details {
   float: none;
 }
 
-:scope /deep/ .page-header--details .item-header h1,
+polyfill-next-selector {
+  content: ':host /deep/ .page-header--details .item-header h1,:host /deep/ .page-header--details .item-header--small h1';
+}
+
+::content .page-header--details .item-header h1,
+::content>* /deep/ .page-header--details .item-header h1,
 :host /deep/ .page-header--details .item-header h1,
-:scope /deep/ .page-header--details .item-header--small h1,
+::content .page-header--details .item-header--small h1,
+::content>* /deep/ .page-header--details .item-header--small h1,
 :host /deep/ .page-header--details .item-header--small h1 {
   margin-bottom: .15em;
   font-size: 1.5em;
   font-family: 'ProximaNovaSoft-Semibold';
 }
 
-:scope /deep/ .page-header--details .item-header h2,
+polyfill-next-selector {
+  content: ':host /deep/ .page-header--details .item-header h2,:host /deep/ .page-header--details .item-header--small h2';
+}
+
+::content .page-header--details .item-header h2,
+::content>* /deep/ .page-header--details .item-header h2,
 :host /deep/ .page-header--details .item-header h2,
-:scope /deep/ .page-header--details .item-header--small h2,
+::content .page-header--details .item-header--small h2,
+::content>* /deep/ .page-header--details .item-header--small h2,
 :host /deep/ .page-header--details .item-header--small h2 {
   color: #969899;
   font-size: 1.1em;
   font-family: 'ProximaNovaSoft-Medium';
 }
 
-:scope /deep/ .page-header--details .item-header-details,
+polyfill-next-selector {
+  content: ':host /deep/ .page-header--details .item-header-details';
+}
+
+::content .page-header--details .item-header-details,
+::content>* /deep/ .page-header--details .item-header-details,
 :host /deep/ .page-header--details .item-header-details {
   margin: 0;
 }
 
-:scope /deep/ .page-header--details .item-header h1,
+polyfill-next-selector {
+  content: ':host /deep/ .page-header--details .item-header h1,:host /deep/ .page-header--details .item-header--small h1';
+}
+
+::content .page-header--details .item-header h1,
+::content>* /deep/ .page-header--details .item-header h1,
 :host /deep/ .page-header--details .item-header h1,
-:scope /deep/ .page-header--details .item-header--small h1,
+::content .page-header--details .item-header--small h1,
+::content>* /deep/ .page-header--details .item-header--small h1,
 :host /deep/ .page-header--details .item-header--small h1 {
   color: #454747;
 }
@@ -3364,13 +4568,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 /* Localized */
 
-:scope /deep/ .sf-list-item,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-list-item';
+}
+
+::content .sf-list-item,
+::content>* /deep/ .sf-list-item,
 :host /deep/ .sf-list-item {
   font-family: "ProximaNovaSoft-Regular";
   color: #525354;
 }
 
-:scope /deep/ .sf-layout-item-error,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-item-error';
+}
+
+::content .sf-layout-item-error,
+::content>* /deep/ .sf-layout-item-error,
 :host /deep/ .sf-layout-item-error {
   color: red;
   font-size: 0.9em;
@@ -3382,9 +4596,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   word-wrap: break-word;
 }
 
-:scope /deep/ .ui-header,
+polyfill-next-selector {
+  content: ':host /deep/ .ui-header,:host /deep/ .ui-footer';
+}
+
+::content .ui-header,
+::content>* /deep/ .ui-header,
 :host /deep/ .ui-header,
-:scope /deep/ .ui-footer,
+::content .ui-footer,
+::content>* /deep/ .ui-footer,
 :host /deep/ .ui-footer {
   background-color: #3291db;
   background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.07) 0%, rgba(255, 255, 255, 0.07) 100%);
@@ -3394,26 +4614,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-:scope /deep/ .ui-header a,
+polyfill-next-selector {
+  content: ':host /deep/ .ui-header a';
+}
+
+::content .ui-header a,
+::content>* /deep/ .ui-header a,
 :host /deep/ .ui-header a {
   text-decoration: none;
   font-size: 1.3em;
   color: inherit;
 }
 
-:scope /deep/ .ui-header a:before,
+polyfill-next-selector {
+  content: ':host /deep/ .ui-header a:before';
+}
+
+::content .ui-header a:before,
+::content>* /deep/ .ui-header a:before,
 :host /deep/ .ui-header a:before {
   line-height: 0;
   vertical-align: -6px;
 }
 
-:scope /deep/ .ui-title,
+polyfill-next-selector {
+  content: ':host /deep/ .ui-title';
+}
+
+::content .ui-title,
+::content>* /deep/ .ui-title,
 :host /deep/ .ui-title {
   color: white;
   font-family: "ProximaNovaSoft-Regular";
 }
 
-:scope /deep/ .sf-layout-section-heading,
+polyfill-next-selector {
+  content: ':host /deep/ .sf-layout-section-heading';
+}
+
+::content .sf-layout-section-heading,
+::content>* /deep/ .sf-layout-section-heading,
 :host /deep/ .sf-layout-section-heading {
   color: rgb(156, 161, 165);
   font-size: 0.9em;
@@ -3425,14 +4665,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   font-weight: bold;
 }
 
-:scope /deep/ .edit .ui-content,
+polyfill-next-selector {
+  content: ':host /deep/ .edit .ui-content,:host /deep/ #detail .ui-content';
+}
+
+::content .edit .ui-content,
+::content>* /deep/ .edit .ui-content,
 :host /deep/ .edit .ui-content,
-:scope /deep/ #detail .ui-content,
+::content #detail .ui-content,
+::content>* /deep/ #detail .ui-content,
 :host /deep/ #detail .ui-content {
   padding: 0px;
 }
 
-:scope /deep/ .absolute,
+polyfill-next-selector {
+  content: ':host /deep/ .absolute';
+}
+
+::content .absolute,
+::content>* /deep/ .absolute,
 :host /deep/ .absolute {
   position: absolute;
   top: 0;
@@ -3441,8 +4692,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   right: 0;
 }</style>
     <style>
-      /* @polyfill :host */
-      :scope {
+      :host {
         display: block;
         min-height: 200px;
         min-width: 200px;
@@ -3455,18 +4705,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         position: absolute;
         top: 0; left: 0;
       }
-      /* @polyfill :host .splitview ^^ .content */
-      :scope .splitview ^^ .content {
+      :host header[class*="bar-"] {
+        position: absolute;
+      }
+      polyfill-next-selector { content: ':host(.splitview) .content'; }
+      :host(.splitview) ::content .content {
         position: static;
         margin-top: 44px;
       }
-      /* @polyfill :host header[class*="bar-"], :host ^^ .content */
-      :scope header[class*="bar-"], :scope ^^ .content {
-        position: absolute;
-      }
-      /* @polyfill :host ^^ .content */
-      :scope ^^ .content {
-        padding-top: 44px;
+      polyfill-next-selector { content: ':host .content'; }
+      ::content .content {
+        margin-top: 44px;
       }
     </style>
     <template if="{{!hideheader}}">
@@ -3477,11 +4726,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <content select="a.icon, a.btn, div.segmented-control, h1"></content>
       </header>
     </template>
-    <core-layout>
+    <div layout="" horizontal="">
       <content id="pages" select="*"></content>
-    </core-layout>
+    </div>
   </template>
-
+  
   
 </polymer-element>
 <!--
@@ -3817,7 +5066,7 @@ Fired when an item element is tapped.
   
 </polymer-element>
 <!--
-    force-ui-detail element enables the rendering of full view of a salesforce record. It extends the force-sobject-layout to fetch the page layout for the record. This element also embeds a force-sobject element to allow all the CRUD operations on an SObject.
+    force-ui-detail element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a force-sobject element to allow all the CRUD operations on an SObject.
     Why: a) Reads the layout settings of an object and renders the detail accordingly.
     b) Provides a simpler DOM based interface to fetch full or partial record.
 
@@ -3850,7 +5099,7 @@ Fired when an item element is tapped.
 
 
 <!--
-    force-selector-relatedlist element is an extension of core-selector element and provides a wrapper around force-sobject-collection element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+    force-selector-relatedlist element is an extension of `core-selector` element and fetches the records of related sobject using a `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
 
     @extends core-selector
 
@@ -3903,7 +5152,7 @@ Fired when an item element is tapped.
 </polymer-element>
 
 <!--
-    force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It extends the force-sobject-layout element to fetch the related lists configuraton from the page layout settings.
+    force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It embeds the force-sobject-layout element to fetch the related lists configuraton from the page layout settings.
     Why: a) Parses the related lists configuration for a particular sobject type.
     b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
 

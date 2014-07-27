@@ -1,7 +1,11 @@
 # Mobile UI Elements (BETA) #
 
-### [Try it out!!](https://sfdc-designer.herokuapp.com/designer/index.html)
-### [Watch this video!!](http://youtu.be/67FjSemJ7uQ)
+## Upgrade Steps ##
+To get the latest Polymer library and all the bug fixes, please re-run `npm install`, `bower install` and `grunt` commands.
+
+
+### [Try out the Designer!!](https://sfdc-designer.herokuapp.com)
+### [Watch this Designer video!!](http://youtu.be/67FjSemJ7uQ)
 ### [Material Design Contact Manager](https://sfdc-sobject-editor.herokuapp.com/)
 
 Mobile UI Elements is a free, open-source Force.com (unsupported) library to simplify the development of mobile apps. The library, based on the [Google’s Polymer framework](http://www.polymer-project.org), provides the fundamental building blocks for creating HTML5 apps that run well on smartphones and tablets. The elements can be mixed together to create fairly complex force.com applications and the apps can be deployed in the browser or embedded inside Container from the Salesforce Mobile SDK.
