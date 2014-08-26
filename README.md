@@ -175,6 +175,7 @@ Obtaining salesforce session Id for running the sample app:
 	- `fields`: Returns an object with map of all the sobject fields and corresponding values. Use this object to get/set the sobject field values.
 
 	Events:
+	- `save`: when the data has been successfully saved to the server.
 	- `sync`: when the data has been successfully synced with the server.
 	- `destroy`: when a record is deleted.
 	- `error`: when a request to remote server has failed.

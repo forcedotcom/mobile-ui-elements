@@ -112,25 +112,67 @@
             this.async(operation.bind(this));
             return this;
         },
+        /*
+        * If the model was modified locally, it saves all the updateable fields on the sobject back to server. 
+        * If fieldlist property is specified on the options, 
+        * only the specified fields are included during the save operation.
+        */
         save: function(options) {
 
             var operation = function() {
                 var that = this,
-                    model = that._model;
+                    model = that._model,
+                    changedAttributes = this._changedAttributes;
 
-                options = _.extend({
-                    mergeMode: this.mergemode,
-                    fieldlist: this._changedAttributes
-                }, options);
+                options = _.extend({ mergeMode: this.mergemode }, options);
 
                 var successCB = options.success;
                 options.success = function() {
                     that.recordid = model.id;
+                    that.fire('save');
                     if (successCB) successCB(arguments);
                 }
 
+                var getEditableFieldList = function() {
+                    return SFDC.getSObjectType(that.sobject)
+                        .describe()
+                        .then(function(describeResult) {
+
+                            return _.pluck(_.filter(describeResult.fields, function(fieldInfo) {
+                                return fieldInfo.updateable;
+                            }), "name");
+                        });
+                }
+
                 if (model) {
+
+                    // Setup the fieldlist for save operation
                     this.whenModelReady().then(function() {
+                        
+                        // Check if fieldlist is not specified. If not, then generate that list based on changed attributes.
+                        if (!options.fieldlist) {
+                            options.fieldlist = changedAttributes;
+
+                            // Check if the record was modified locally and the current save operation is not cache only.
+                            // If yes, we will need to send all the updateable fields for save to server.
+                            var cacheMode = options.cacheMode || model.cacheMode;
+                            cacheMode = _.isFunction(cacheMode) ? cacheMode('save') : cacheMode;
+
+                            if (model.get('__local__') && cacheMode != Force.CACHE_MODE.CACHE_ONLY) {
+                                // Get all the updatable fields and union them with the list provided by the user.
+                                return getEditableFieldList().then(function(fieldlist) {
+                                    options.fieldlist = _.union(
+                                        _.intersection(_.keys(model.attributes), fieldlist),
+                                        options.fieldlist || []
+                                    );
+                                });
+                            }
+                        }
+                    }).then(function() {
+                        // During create, add the attibutes field in the fieldlist for save.
+                        // We use attributes property to index data offline
+                        if (model.isNew()) 
+                            options.fieldlist = _.union(['attributes'], options.fieldlist);
                         // Perform save (upsert) against the server
                         model.save(null, options);
                     });
@@ -148,7 +190,7 @@
 
             var operation = function() {
                 var model = this._model;
-                options = _.extend({mergeMode: this.mergemode}, options);
+                options = _.extend({mergeMode: this.mergemode, wait: true}, options);
                 if (model && model.id) {
                     this.whenModelReady().then(function() {
                         // Perform delete of record against the server

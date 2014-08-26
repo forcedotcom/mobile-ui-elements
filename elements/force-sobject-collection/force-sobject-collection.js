@@ -16,22 +16,24 @@
 
         // Fetch if only sobject type is specified.
         if (props.sobject && typeof props.sobject === 'string') {
+            config.sobjectType = props.sobject;
             // Is device offline and smartstore is available
             if (!SFDC.isOnline() && navigator.smartstore) {
                 // Only run cache queries. If none provided, fetch all data.
                 config.type = 'cache';
                 if (props.querytype == 'cache' && props.query) config.cacheQuery = props.query;
                 else config.cacheQuery = navigator.smartstore.buildAllQuerySpec('attributes.type');
-            } else {
+            } 
+            /* Query must be specified if Querytype is not mru */
+            else if (props.querytype == 'mru' || (props.querytype && props.query)) {
+
                 // Send the user config for fetch
-                config.sobjectType = props.sobject;
                 config.type = props.querytype;
                 if (props.querytype == 'cache') config.cacheQuery = props.query;
                 else config.query = props.query;
             }
-            return config;
         }
-        return null;
+        return (config.type) ? config : null;
     }
 
     //TBD: Make collection a private property. Then expose sobjects property which contains the array of models wrapped into SObjectViewModel.
