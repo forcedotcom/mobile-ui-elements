@@ -56,22 +56,7 @@ Run a local node server:
 
 	$ node proxy.js	
 
-This repo contains a sample webapp `index.html`. To run the sample app in Safari:
-
-```
-1. Open index.html in an editor
-2. At the bottom of the page, replace `<session_id>` with salesforce session Id. To obtain the salesforce session Id, follow the instructions below.
-3. Also replace the `<instance>` with the instance of the org. Eg. https://na1.salesforce.com
-4. Open http://localhost:9000/index.html and you should be able to browse a simple list and detail of an account.
-```
-
-Obtaining salesforce session Id for running the sample app:
-
-```
-1. Login into salesforce using your web browser.
-2. Open the salesforce API debugshell by going to https://<your org instance url>/soap/ajax/29.0/debugshell.html
-3. In debugshell, run the following command to obtain the session ID: sforce.connection.sessionId
-```
+You can now launch the [Sample App](http://localhost:9000/index.html). Make sure that popups are disabled to allow authentication.
 
 ## Available UI Elements ##
 1. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page. This is useful in single page view with split view panels. All the children of the main section must have the class "content" specified on them to apply the right styles.

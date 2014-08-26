@@ -21,6 +21,8 @@
     <body touch-action="auto">
         <polymer-element name="mobile-app">
             <template>
+                <force-signin consumerkey="3MVG9QDx8IX8nP5TwrwtRg53zXgW0xeFBfLMzPRJ4aNy8z7MsSSDjNj.NLu4pSY4B8V3sbYSLrhAMJWxs39jB" callbackurl="http://localhost:9000/oauth/success"></force-signin>
+                
                 <force-ui-app id="force_app" multipage="true">
                     <h1 class="title">Accounts</h1>
                     <force-ui-list id="force_ui_list" sobject="Account" class="page content" on-core-activate="{{showDetail}}"></force-ui-list>
@@ -58,14 +60,5 @@
         </polymer-element>
 
         <mobile-app></mobile-app>
-        <script>
-            document.addEventListener('WebComponentsReady', function() {
-                SFDC.launch({
-                    accessToken: '<session_id>',
-                    instanceUrl: 'https://<instance>.salesforce.com',
-                    proxyUrl: (location.protocol === 'file:') ? null : location.origin
-                });
-            });
-        </script>
     </body>
 </html>

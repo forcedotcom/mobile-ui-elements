@@ -1,0 +1,51 @@
+<link rel="import" href="../../dependencies/polymer/polymer.html">
+<link rel="import" href="../force-app/force-app.html">
+<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl">
+	<script src="forcetk.ui.js"></script>
+	<script>
+		Polymer('force-signin', {
+			consumerkey: "",
+			callbackurl: "",
+			loginurl: "https://login.salesforce.com/",
+			authenticateWithPlugin: function() {
+				document.addEventListener("deviceready", function() {
+			    	var oauthPlugin = cordova.require("com.salesforce.plugin.oauth");
+
+					// Call getAuthCredentials to get the initial session credentials
+					oauthPlugin.getAuthCredentials(
+						// Callback method when authentication succeeds.
+						function (creds) {
+						    SFDC.launch(creds);
+						},
+						function (error) {
+						    alert('Failed to authenticate user: ' + error);
+						}
+					);
+			    });
+			},
+			authenticateWithForcetk: function() {
+				// Instantiating forcetk ClientUI
+				var oauthClient = new ForceOAuth(this.loginurl, this.consumerkey, this.callbackurl,
+				                function forceOAuthUI_successHandler(forcetkClient) { // successCallback
+				                    console.log('OAuth success!');
+				                    creds = {
+				                      accessToken: oauthClient.oauthResponse.access_token,
+				                      instanceUrl: oauthClient.oauthResponse.instance_url
+				                    };
+				                    SFDC.launch(creds);
+				                },
+
+				                function forceOAuthUI_errorHandler(error) { // errorCallback
+				                    console.log('OAuth error!');
+				                    if (confirm("Authentication Failed. Try again?")) oauthClient.login();
+				                });
+
+				oauthClient.login();
+			},
+			ready: function() {
+				if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
+				else this.authenticateWithForcetk();
+			}
+		});
+	</script>
+</polymer-element>
