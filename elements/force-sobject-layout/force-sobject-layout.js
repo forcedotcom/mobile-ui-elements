@@ -4,7 +4,8 @@
 
     // Fetches the record type id for the required layout.
     // Returns a promise which is resolved when the record type id is fetched from the server.
-    var fetchRecordTypeId = function(view) {
+    var fetchRecordTypeId = function() {
+        var view = this;
         var fetchStatus = $.Deferred();
 
         var resolveStatus = function(recordTypeId) {
@@ -55,7 +56,8 @@
         fetch: function() {
             this.layout = null;
             if (this.sobject && typeof this.sobject === 'string') {
-                fetchRecordTypeId(this)
+                SFDC.launcher
+                .then(fetchRecordTypeId.bind(this))
                 .then(getLayoutInfo)
                 .then(function(layout) {
                     this.layout = layout;
