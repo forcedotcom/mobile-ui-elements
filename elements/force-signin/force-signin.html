@@ -1,50 +1,68 @@
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
-<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl">
+<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl accesstoken instanceurl">
 	<script src="forcetk.ui.js"></script>
 	<script>
 		Polymer('force-signin', {
 			consumerkey: "",
 			callbackurl: "",
 			loginurl: "https://login.salesforce.com/",
+			observe: {
+				accesstoken: "launch",
+				instanceurl: "launch"
+			},
+			launch: function() {
+				SFDC.launch({
+					accessToken: this.accesstoken,
+					instanceUrl: this.instanceurl
+				});
+			},
 			authenticateWithPlugin: function() {
+				var that = this;
 				document.addEventListener("deviceready", function() {
 			    	var oauthPlugin = cordova.require("com.salesforce.plugin.oauth");
 
 					// Call getAuthCredentials to get the initial session credentials
-					oauthPlugin.getAuthCredentials(
+					oauthPlugin.authenticate(
 						// Callback method when authentication succeeds.
 						function (creds) {
-						    SFDC.launch(creds);
+							console.log('OAuth success!');
+							that.accesstoken = creds.accessToken;
+				            that.instanceurl = creds.instanceUrl;
+				            that.fire('success');
 						},
 						function (error) {
-						    alert('Failed to authenticate user: ' + error);
+							console.log('OAuth error!');
+						    that.fire('error');
+						    if (confirm("Authentication Failed. Try again?")) that.authenticateWithPlugin();
 						}
 					);
 			    });
 			},
 			authenticateWithForcetk: function() {
+				var that = this;
 				// Instantiating forcetk ClientUI
 				var oauthClient = new ForceOAuth(this.loginurl, this.consumerkey, this.callbackurl,
 				                function forceOAuthUI_successHandler(forcetkClient) { // successCallback
 				                    console.log('OAuth success!');
-				                    creds = {
-				                      accessToken: oauthClient.oauthResponse.access_token,
-				                      instanceUrl: oauthClient.oauthResponse.instance_url
-				                    };
-				                    SFDC.launch(creds);
+				                    that.accesstoken = oauthClient.oauthResponse.access_token;
+				                    that.instanceurl = oauthClient.oauthResponse.instance_url;
+				                    that.fire('success');
 				                },
 
 				                function forceOAuthUI_errorHandler(error) { // errorCallback
 				                    console.log('OAuth error!');
+				                    that.fire('error');
 				                    if (confirm("Authentication Failed. Try again?")) oauthClient.login();
 				                });
 
 				oauthClient.login();
 			},
 			ready: function() {
-				if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
-				else this.authenticateWithForcetk();
+				if (!(this.accesstoken && this.instanceurl)) {
+					if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
+					else this.authenticateWithForcetk();
+				}
 			}
 		});
 	</script>
