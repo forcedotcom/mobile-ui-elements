@@ -1,6 +1,6 @@
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
-<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl accesstoken instanceurl">
+<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl proxyurl accesstoken instanceurl">
     <script src="forcetk.ui.js"></script>
     <script>
         Polymer('force-signin', {
@@ -14,7 +14,8 @@
             launch: function() {
                 SFDC.launch({
                     accessToken: this.accesstoken,
-                    instanceUrl: this.instanceurl
+                    instanceUrl: this.instanceurl,
+                    proxyUrl: this.proxyurl
                 });
             },
             authenticateWithPlugin: function() {
