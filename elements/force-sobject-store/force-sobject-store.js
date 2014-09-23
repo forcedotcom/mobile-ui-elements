@@ -9,7 +9,7 @@
         var indexSpecs = [{path: "attributes.type", type: "string"}];
         if (describeResult) {
             describeResult.fields.forEach(function(field) {
-                if (field.type == 'reference' || _.contains(fieldsToIndex, field.name.toLowerCase())) {
+                if (field.type == 'reference' || _.contains(fieldsToIndex, field.name)) {
                     var storeType;
                     switch(field.type) {
                         case 'int': storeType = 'integer'; break;
@@ -94,7 +94,7 @@
                 var keyField = ((sobject && sobject.indexOf('__x') > 0)
                         ? 'ExternalId' : 'Id');
                 var fieldsToIndex = typeof this.fieldstoindex === 'string' ?
-                    this.fieldstoindex.toLowerCase().trim().split(/\s+/) : [];
+                    this.fieldstoindex.trim().split(/\s+/) : [];
 
                 // Create offline stores if launcher is complete
                 return SFDC.launcher.then(function() {

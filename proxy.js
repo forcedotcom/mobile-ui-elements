@@ -1,5 +1,6 @@
 var http = require('http'),
     httpProxy = require('http-proxy'),
+    url = require('url'),
     express = require('express');
 
 // Create a proxy server with custom application logic
@@ -14,10 +15,21 @@ var proxy = httpProxy.createProxyServer({ secure: true });
 var server = require('http').createServer(function(req, res) {
   // You can define here your custom logic to handle the request
   // and then proxy the request.
-  var host = req.headers['x-host'];
-  var target = host || 'http://localhost:8080';
-  proxy.web(req, res, { target: target });
+  var endpoint = req.headers['salesforceproxy-endpoint'];
+  var target = 'http://localhost:8000';
 
+  if (endpoint) {
+    var auth = req.headers['x-authorization'];
+    if (auth) req.headers['Authorization'] = auth;
+    // http-proxy module uses the url path to generate the path of new outgoing request
+    req.url = endpoint;
+    
+    // Building the target host url from the endpoint information.
+    var targetURL = url.parse(endpoint);
+    target = targetURL.protocol + "//" + targetURL.host;
+  }
+
+  proxy.web(req, res, { target: target });
 });
 
 //
@@ -46,6 +58,6 @@ console.log('Listening on port %d', server.address().port);
 // Create express application (http://expressjs.com) ###
 var app = express();
 app.use(express.static(__dirname));
-var appServer = app.listen(8080, function() {
+var appServer = app.listen(8000, function() {
     console.log('Listening on port %d', appServer.address().port);
 });

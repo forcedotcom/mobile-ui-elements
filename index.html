@@ -62,7 +62,8 @@
             document.addEventListener('WebComponentsReady', function() {
                 SFDC.launch({
                     accessToken: '<session_id>',
-                    instanceUrl: 'https://<instance>.salesforce.com'
+                    instanceUrl: 'https://<instance>.salesforce.com',
+                    proxyUrl: (location.protocol === 'file:') ? null : location.origin
                 });
             });
         </script>

@@ -8,15 +8,12 @@
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
-    "mobilesdk-shared": "akhileshgupta/SalesforceMobileSDK-Shared#8fd59192c1b8ad438e29e961d88a65781506b60d",
+    "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared",
     "ratchet": "twbs/ratchet#>=2.0.2"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
     "should": "~3.3.1",
     "core-icon": "Polymer/core-icon#>=0.4.0 <1.0.0"
-  },
-  "resolutions": {
-    "polymer": ">=0.4.0 <1.0.0"
   }
 }
