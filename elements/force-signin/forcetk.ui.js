@@ -36,7 +36,7 @@
         /**
          * Starts OAuth login process.
          */
-        login: function login() {
+        login: function login(usePopupWindow) {
             var that = this;
 
             var winHeight = 524,
@@ -48,27 +48,36 @@
                 + '&response_type=token&client_id=' + encodeURIComponent(that.consumerKey)
                 + '&redirect_uri=' + encodeURIComponent(that.callbackURL);
 
-            var loginWindow = window.open(authUrl,
-                'Login to Salesforce', 'height=' + winHeight + ',width=' + winWidth
-                + ',toolbar=1,scrollbars=1,status=1,resizable=1,location=0,menuBar=0'
-                + ',left=' + centeredX + ',top=' + centeredY);
+            if (usePopupWindow) {
+                var loginWindow = window.open(authUrl,
+                    'Login to Salesforce', 'height=' + winHeight + ',width=' + winWidth
+                    + ',toolbar=1,scrollbars=1,status=1,resizable=1,location=0,menuBar=0'
+                    + ',left=' + centeredX + ',top=' + centeredY);
 
-            if (loginWindow) {
-                // Creating an interval to detect popup window location change event
-                var interval = setInterval(function () {
-                    if (loginWindow.closed) {
-                        // Clearing interval if popup was closed
-                        clearInterval(interval);
-                    } else {
-                        var loc = loginWindow.location.href;
-                        if (typeof loc !== 'undefined' && loc.indexOf(that.callbackURL) == 0) {
-                            loginWindow.close();
-                            that.oauthCallback(loginWindow.location.hash);
+                if (loginWindow) {
+                    // Creating an interval to detect popup window location change event
+                    var interval = setInterval(function () {
+                        if (loginWindow.closed) {
+                            // Clearing interval if popup was closed
+                            clearInterval(interval);
+                        } else {
+                            var loc = loginWindow.location.href;
+                            if (typeof loc !== 'undefined' && loc.indexOf(that.callbackURL) == 0) {
+                                loginWindow.close();
+                                that.oauthCallback(loginWindow.location.hash);
+                            }
                         }
-                    }
-                }, 250);
+                    }, 250);
 
-                loginWindow.focus();
+                    loginWindow.focus();
+                }
+            } else {
+                if (window.location.href.indexOf(that.callbackURL) == 0) {
+                    that.errorCallback = function() {
+                        window.location = authUrl;
+                    }
+                    that.oauthCallback(window.location.hash);
+                } else window.location = authUrl;
             }
         },
 

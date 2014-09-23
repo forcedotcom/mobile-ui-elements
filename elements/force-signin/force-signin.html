@@ -1,12 +1,13 @@
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
-<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl proxyurl accesstoken instanceurl">
+<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl proxyurl accesstoken instanceurl usePopupWindow">
     <script src="forcetk.ui.js"></script>
     <script>
         Polymer('force-signin', {
             consumerkey: "",
             callbackurl: "",
             loginurl: "https://login.salesforce.com/",
+            usePopupWindow: false,
             observe: {
                 accesstoken: "launch",
                 instanceurl: "launch"
@@ -61,7 +62,7 @@
                     }
                 );
 
-                oauthClient.login();
+                oauthClient.login(this.usePopupWindow);
             },
             ready: function() {
                 if (!(this.accesstoken && this.instanceurl)) {
