@@ -19,6 +19,10 @@
     SFDC.eventDispatcher = _.extend({}, Backbone.Events);
     SFDC.launcher = readyDeferred.promise();
 
+    // Forcing v29.0 as API version as all methods/components are currently built using that API.
+    // This can't be changed by the others to make sure the components don't break due to API changes.
+    var SFDC_API_VERSION = 'v29.0';
+
     SFDC.isOnline = function() {
         return navigator.onLine ||
                (typeof navigator.connection != 'undefined' &&
@@ -29,12 +33,12 @@
     //SFDC.launch
     //TODO: Provide an auth provider as an argument so that the consumer can initiate fetch for new session tokens
     SFDC.launch = function(options, logLevel) {
-        var opts = {apiVersion: 'v31.0', userAgent: 'SalesforceMobileUI/alpha'};
+        var opts = {userAgent: 'SalesforceMobileUI/alpha'};
         options = _.extend(opts, options);
         if (!initialized) {
 
             initialized = true;
-            Force.init(options, options.apiVersion, null, authenticator);
+            Force.init(options, SFDC_API_VERSION, null, authenticator);
 
             if (navigator.smartstore) {
                 navigator.smartstore.setLogLevel(logLevel || "info");
@@ -48,7 +52,7 @@
             }
         } else {
             // Forcetk already initialized. So refresh the session info.
-            Force.forcetkClient.impl.setSessionToken(options.accessToken, options.apiVersion, options.instanceUrl);
+            Force.forcetkClient.impl.setSessionToken(options.accessToken, SFDC_API_VERSION, options.instanceUrl);
             readyDeferred.resolve();
         }
     }
