@@ -64,10 +64,13 @@
 
                 oauthClient.login(this.usePopupWindow);
             },
+            authenticate: function() {
+                if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
+                else this.authenticateWithForcetk();
+            },
             ready: function() {
                 if (!(this.accesstoken && this.instanceurl)) {
-                    if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
-                    else this.authenticateWithForcetk();
+                    this.async(this.authenticate);
                 }
             }
         });
