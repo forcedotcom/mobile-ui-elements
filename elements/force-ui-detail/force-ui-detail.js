@@ -3,24 +3,37 @@
     Polymer('force-ui-detail', {
         foredit: false,
         fieldlist: null,
+        fieldlabels: null,
         observe: {
-            fieldlist: "render",
-            fieldlabels: "render"
+            foredit: "renewTemplate",
+            fieldlist: "renewTemplate",
+            fieldlabels: "renewTemplate",
+            "$.sobject_layout.layout": "renewTemplate",
+            "$.force_sobject._model": "renderModel"
         },
-        foreditChanged: function() {
-            // Execute render after current process ends to allow processing all change handlers on parent.
-            setTimeout(this.render.bind(this), 0);
-        },
-        ready: function() {
-            this.super();
-            this.$.sobject_layout.addEventListener('layout-change', this.render.bind(this));
-        },
-        render: function(ev) {
-            var that = this;
-            //FIX: Need to have better validation of attribute values
-            if (this.sobject && typeof this.sobject == 'string') {
-                SFDC.launcher.done(function() { renderView(that); });
+        renewTemplate: function() {
+            // Clean up older templates
+            if (this._templateInfo) {
+                this._templateInfo.template.remove();    
+                $(this.$.viewContainer).empty();
+                this._templateInfo = null;
             }
+            // Generate new templates and update view
+            SFDC.launcher.then(generateViewTemplate.bind(this))
+            .then(function(templateInfo) {
+                // TemplateInfo may be null if no layout info has been fetched yet.
+                if (templateInfo) {
+                    this._templateInfo = templateInfo;
+                    // Attach template to the DOM
+                    this.$.viewContainer.appendChild(templateInfo.template);
+                    // Render model and template
+                    this.renderModel();
+                }
+            }.bind(this));
+        },
+        renderModel: function() {
+            // Template Info may not generated yet
+            if (this._templateInfo) this.async(updateViewModel);
         },
         compileTemplate: function(layoutSections) {
             return compileTemplateForLayout(layoutSections);
@@ -31,6 +44,7 @@
     });
 
     // Returns whether the current view has an overriden layout.
+    // i.e. if someone extends the force-ui-detail but doesn't include the shadow tag.
     var isLayoutOverriden = function(elem) {
         var shadowRoot = elem.shadowRoot;
         while (shadowRoot.olderShadowRoot) {
@@ -38,7 +52,7 @@
                 shadowRoot = shadowRoot.olderShadowRoot;
             else break;
         }
-        return shadowRoot.querySelector('shadow') != null;
+        return elem.shadowRoot.olderShadowRoot && shadowRoot.querySelector('shadow') == null;
     }
 
     var describeField = function(sobject, fieldname) {
@@ -94,7 +108,10 @@
 
     // Returns a promise, which on resolution returns an object with template information for rendering the view.
     // FIXME: Need to handle the case where multiple calls to prepareLayout happen and then have to kill older async processes.
-    var generateViewTemplate = function(view) {
+    var generateViewTemplate = function() {
+
+        var view = this;
+
         // Check if default layout is overriden. Don't do anything if yes.
         if (!isLayoutOverriden(view) && view.sobject) {
             if (view.fieldlist && typeof view.fieldlist === 'string' && view.fieldlist.trim().length) {
@@ -123,30 +140,27 @@
         }
     }
 
-    // Renders the view based on the current layout settings
-    function renderView(view) {
+    var updateViewModel = function() {
+            
+        var attachModel = function() {
+            //Attach the template to the current view model
+            this._templateInfo.template.model = this.viewModel;
+        }
 
-        var renderTemplate = function(templateInfo) {
-            // Template info is null when there's no template generated
-            if (templateInfo) {
-                var renderModel = function() {
-                    // Attach the template instance to the view
-                    var template = templateInfo.template;
-                    view.viewModel = new SObjectViewModel(view.model, templateInfo.fieldInfos);
-                    $(view.$.viewContainer).empty().append(template.createInstance(view.viewModel));
-                }
-                if (view.recordid) {
-                    // Perform data fetch for the fieldlist used in template
-                    view.$.force_sobject.fetch({
-                        fieldlist: templateInfo.fields,
-                        success: renderModel
-                    });
-                } else renderModel();
-            }
-        };
+        // Fetch only if the current view model is not for same recordid
+        if (!this.viewModel || !this.viewModel.Id || this.viewModel.Id != this.recordid) {
+            // Update the instance of current view model
+            this.viewModel = new SObjectViewModel(this.model, this._templateInfo.fieldInfos);
 
-        var templatePromise = generateViewTemplate(view);
-        if (templatePromise) templatePromise.then(renderTemplate);
+            if (this.recordid) {
+                // Perform data fetch for the fieldlist used in template
+                this.$.force_sobject.fetch({
+                    fieldlist: this._templateInfo.fields,
+                    cacheMode: this.fetchCacheMode,
+                    success: attachModel.bind(this)
+                });
+            } else attachModel.apply(this);
+        }
     }
 
     var SObjectViewModel = function(model, fieldInfos) {
