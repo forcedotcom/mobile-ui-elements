@@ -44,12 +44,10 @@
             querytype: "reset"
         },
         ready: function() {
-            var that = this;
-
-            that.collection = new Force.SObjectCollection();
-            that.collection.on('all', function(event) {
-                that.fire(event);
-            });
+            this.collection = new Force.SObjectCollection();
+            this.collection.on('all', function(event) {
+                this.fire(event);
+            }.bind(this));
         },
         reset: function() {
             this.collection.config = generateConfig(_.pick(this, _.keys(viewProps)));

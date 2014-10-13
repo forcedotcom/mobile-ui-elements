@@ -10,9 +10,13 @@
     instanceurl: (Optional) Instance URL of the org to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
     usePopupWindow: (Optional) Default: false. Set as true if you want OAuth flow to be started in a new child window.
 
+    @properties:
+    userInfo: Returns the details of the current logged in user.
+
     @methods:
     authenticate: Initiates the authentication into salesforce. The force-signin element automatically initiates the authentication process if no accesstoken is specified.
     logout: Initiates the logout of the current user session.
+    getUserInfo: Returns a promise which on completion returns the details of the current logged in user.
 
     @events:
     success: when the OAuth flow is successfully completed and the accesstoken is obtained from salesforce.
@@ -30,10 +34,14 @@
             loginurl: "https://login.salesforce.com/",
             usePopupWindow: false,
             observe: {
-                accesstoken: "launch",
-                instanceurl: "launch"
+                "accesstoken instanceurl": "launch"
             },
             launch: function() {
+                // reset user info
+                this.userInfo = null;
+                this.getUserInfo();
+
+                // launch ui elements
                 SFDC.launch({
                     accessToken: this.accesstoken,
                     instanceUrl: this.instanceurl,
@@ -53,6 +61,7 @@
                             console.log('OAuth success!');
                             that.accesstoken = creds.accessToken;
                             that.instanceurl = creds.instanceUrl;
+                            that.idUrl = creds.instanceUrl + '/id/' + creds.orgId + '/' + creds.userId;
                             that.fire('success');
                         },
                         function (error) {
@@ -74,6 +83,13 @@
                         console.log('OAuth success!');
                         that.accesstoken = oauthClient.oauthResponse.access_token;
                         that.instanceurl = oauthClient.oauthResponse.instance_url;
+
+                        // parse id url to use instance url for hostname.
+                        // login.salesforce.com sometimes returns 403 for no reason
+                        var anchor = document.createElement('a');
+                        anchor.href = oauthClient.oauthResponse.id;
+                        that.idUrl = that.instanceurl + anchor.pathname;
+
                         that.fire('success');
                     },
 
@@ -103,6 +119,29 @@
             ready: function() {
                 if (!(this.accesstoken && this.instanceurl)) {
                     this.async(this.authenticate);
+                }
+            },
+            getUserInfo: function() {
+                var that = this;
+
+                if (this.userInfo) return $.when(this.userInfo);
+                // Fetch user information. Ideally we should use the SDK, but it doesn't have sufficient info right now.
+                else if (SFDC.isOnline()) {
+                    var forcetkClient = new forcetk.Client(null, null, this.proxyurl);
+                    forcetkClient.setSessionToken(this.accesstoken, null, this.instanceurl);
+                    var url = this.idUrl + "?oauth_token=" + this.accesstoken;
+                    var request = {
+                        type: 'GET',
+                        url: this.proxyurl || url,
+                        dataType: "json",
+                        headers: forcetkClient.getRequestHeaders(url),
+                        success: function(result) {
+                            that.userInfo = result;
+                            that.userInfo.photos.picture += "?oauth_token=" + that.accesstoken;
+                            that.userInfo.photos.thumbnail += "?oauth_token=" + that.accesstoken;
+                        }
+                    }
+                    return $.ajax(request).then(function() { return that.userInfo; });
                 }
             }
         });

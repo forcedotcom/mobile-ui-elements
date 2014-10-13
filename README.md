@@ -74,9 +74,13 @@ To create a mobile sdk app, run the following command. Make sure that the [force
     - `instanceurl`: (Optional) Instance URL of the org to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
     - `usePopupWindow`: (Optional) Default: false. Set as true if you want OAuth flow to be started in a new child window.
 
+    Properties:
+    - `userInfo`: Returns the details of the current logged in user.
+
     Methods:
     - `authenticate`: Initiates the authentication into salesforce. The force-signin element automatically initiates the authentication process if no accesstoken is specified.
     - `logout`: Initiates the logout of the current user session.
+    - `getUserInfo`: Returns a promise which on completion returns the details of the current logged in user.
 
     Events:
     - `success`: when the OAuth flow is successfully completed and the accesstoken is obtained from salesforce.
