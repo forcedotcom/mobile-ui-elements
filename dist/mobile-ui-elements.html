@@ -316,6 +316,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
+<!--
+    force-signin element allows an easy way to initiate OAuth into salesforce via web or mobile SDK.
+    
+    @attributes:
+    consumerkey: (Optional) OAuth consumer key required only for web based applications. For SDK based applications, specify the consumer key in the bootconfig.json.
+    callbackurl: (Optional) OAuth callback url required only for web based applications. For SDK based applications, specify the callback url in the bootconfig.json.
+    loginurl: (Optional) Login URL for salesforce. Default value is https://login.salesforce.com
+    proxyurl: (Optional) Proxy host to avoid cross-domain calls issue.
+    accesstoken: (Optional) Session Id to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
+    instanceurl: (Optional) Instance URL of the org to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
+    usePopupWindow: (Optional) Default: false. Set as true if you want OAuth flow to be started in a new child window.
+
+    @methods:
+    authenticate: Initiates the authentication into salesforce. The force-signin element automatically initiates the authentication process if no accesstoken is specified.
+    logout: Initiates the logout of the current user session.
+
+    @events:
+    success: when the OAuth flow is successfully completed and the accesstoken is obtained from salesforce.
+    error: when OAuth flow ends in an error.
+    offline: when the device is offline and authentication cannot complete. The UI Elements are launched with empty session in that scenario.
+-->
 
 
 <polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl proxyurl accesstoken instanceurl usePopupWindow" assetpath="../elements/force-signin/">
