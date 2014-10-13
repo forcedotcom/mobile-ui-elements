@@ -316,6 +316,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
+
+
+<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl proxyurl accesstoken instanceurl usePopupWindow" assetpath="../elements/force-signin/">
+    
+    
+</polymer-element>
+
 <!--
     force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page, esp. in single page view with split view panels.
     Why: a) Manages all the UI stylesheets.
@@ -4782,7 +4789,7 @@ polyfill-next-selector {
     query: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
     querytype: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
     autosync: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
-    maxsize: (Optional) Default: -1. If positive
+    maxsize: (Optional) Default: -1. If positive, limits the maximum number of records fetched.
 
     @methods:
     fetch: Initiates the fetching of records from the relevant data store (server/offline store).
@@ -4798,10 +4805,12 @@ polyfill-next-selector {
 
 <polymer-element name="force-sobject-collection" attributes="sobject query querytype autosync maxsize" assetpath="../elements/force-sobject-collection/">
     <template>
+        <style> :host { display: none; } </style>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
     </template>
     
 </polymer-element>
+
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -5093,7 +5102,7 @@ Fired when an item element is tapped.
 <polymer-element name="force-ui-detail" attributes="sobject recordid hasrecordtypes recordtypeid foredit fieldlist fieldlabels" assetpath="../elements/force-ui-detail/">
   <template>
     <force-sobject id="force_sobject" sobject="{{sobject}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
-    <force-sobject-layout id="sobject_layout" sobject="{{sobject}}" recordid="{{recordid}}" hasrecordtypes="{{hasrecordtypes}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
+    <force-sobject-layout id="sobject_layout" sobject="{{fieldlist ? null : sobject}}" recordid="{{fieldlist ? null : sobject}}" hasrecordtypes="{{hasrecordtypes}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
     <div id="viewContainer" class="{{foredit ? &apos;edit&apos; :&apos;&apos;}}"></div>
     <content select="*"></content>
   </template>
@@ -5103,6 +5112,7 @@ Fired when an item element is tapped.
 <polymer-element name="force-html-output" attributes="value" assetpath="../elements/force-ui-detail/">
   
 </polymer-element>
+
 
 
 
@@ -5178,6 +5188,7 @@ Fired when an item element is tapped.
   </template>
   
 </polymer-element>
+
 
 
 

@@ -58,8 +58,38 @@ Run a local node server:
 
 You can now launch the [Sample App](http://localhost:9000/index.html). It will go through the OAuth flow to obtain user session and render data.
 
+To create a mobile sdk app, run the following command. Make sure that the [forceios](https://www.npmjs.org/package/forceios) tool is already installed:
+	
+	$ grunt create_app
+
 ## Available UI Elements ##
-1. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page. This is useful in single page view with split view panels. All the children of the main section must have the class "content" specified on them to apply the right styles.
+1. __force-signin__: force-signin element allows an easy way to initiate OAuth into salesforce via web or mobile SDK.
+    
+    Supported attributes include:
+    - `consumerkey`: (Optional) OAuth consumer key required only for web based applications. For SDK based applications, specify the consumer key in the bootconfig.json.
+    - `callbackurl`: (Optional) OAuth callback url required only for web based applications. For SDK based applications, specify the callback url in the bootconfig.json.
+    - `loginurl`: (Optional) Login URL for salesforce. Default value is https://login.salesforce.com
+    - `proxyurl`: (Optional) Proxy host to avoid cross-domain calls issue.
+    - `accesstoken`: (Optional) Session Id to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
+    - `instanceurl`: (Optional) Instance URL of the org to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
+    - `usePopupWindow`: (Optional) Default: false. Set as true if you want OAuth flow to be started in a new child window.
+
+    Methods:
+    - `authenticate`: Initiates the authentication into salesforce. The force-signin element automatically initiates the authentication process if no accesstoken is specified.
+    - `logout`: Initiates the logout of the current user session.
+
+    Events:
+    - `success`: when the OAuth flow is successfully completed and the accesstoken is obtained from salesforce.
+    - `error`: when OAuth flow ends in an error.
+    - `offline`: when the device is offline and authentication cannot complete. The UI Elements are launched with empty session in that scenario.
+
+	Example (when using inside Visualforce):
+
+	```
+	<force-signin consumerkey="OAuth Consumer key" callbackurl="OAuth Callback url"></force-signin>
+	```
+
+2. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page. This is useful in single page view with split view panels. All the children of the main section must have the class "content" specified on them to apply the right styles.
 
 	Supported attributes include:
 	- `multipage`: (Optional) Default: false. When true, force-ui-app shows only one direct child, with class="page", at a time and allows navigation to other child elements.
@@ -72,7 +102,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-ui-app multipage="true"></force-ui-app>
 	```
 
-2. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of `force-ui-app` element to inherit the appropriate styles.
+3. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of `force-ui-app` element to inherit the appropriate styles.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to render a list.
@@ -85,7 +115,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-ui-list sobject="Account" querytype="mru"></force-ui-list>
 	```
 
-3. __force-ui-detail__: force-ui-detail element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a `force-sobject` element to allow all the CRUD operations on an SObject. This element should always be a child of `force-ui-app` element to inherit the default styles.
+4. __force-ui-detail__: force-ui-detail element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a `force-sobject` element to allow all the CRUD operations on an SObject. This element should always be a child of `force-ui-app` element to inherit the default styles.
 
 	Supported attributes include:
 	- All attributes of `force-sobject-layout` element.
@@ -98,7 +128,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-ui-detail sobject="Account" recordid="001000000000AAA"></force-ui-detail>
 	```
 
-4. __force-selector-list__: force-selector-list is an extension of core-selector element and provides a wrapper around `force-sobject-collection` element. The element acts as a base for any list UI element that also needs the selector functionality. It automatically updates the selected attribute when a row has been clicked on.
+5. __force-selector-list__: force-selector-list is an extension of core-selector element and provides a wrapper around `force-sobject-collection` element. The element acts as a base for any list UI element that also needs the selector functionality. It automatically updates the selected attribute when a row has been clicked on.
 
 	Supported attributes include:
 	- All the attributes of the `core-selector` element.
@@ -119,7 +149,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-selector-list sobject="Account" querytype="mru"></force-selector-list>
 	```
 
-5. __force-sobject-collection__: force-sobject-collection is a low level polymer wrapper for the SmartSync `Force.SObjectCollection`, which auto manages the offline data store for caching (when running inside a container), provides a simple DOM based interface for SmartSync interactions, and allows other polymer elements to easily consume SmartSync.
+6. __force-sobject-collection__: force-sobject-collection is a low level polymer wrapper for the SmartSync `Force.SObjectCollection`, which auto manages the offline data store for caching (when running inside a container), provides a simple DOM based interface for SmartSync interactions, and allows other polymer elements to easily consume SmartSync.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to render a list
@@ -143,7 +173,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-sobject-collection sobject="Account" querytype="mru"></force-sobject-collection>
 	```
 
-6. __force-sobject__: force-sobject element wraps the SmartSync `Force.SObject` into a polymer element, providing auto management of the offline store for caching, a simpler DOM based interface to interact with Smartsync SObject Model, and allows other polymer elements to easily comsume smartsync.
+7. __force-sobject__: force-sobject element wraps the SmartSync `Force.SObject` into a polymer element, providing auto management of the offline store for caching, a simpler DOM based interface to interact with Smartsync SObject Model, and allows other polymer elements to easily comsume smartsync.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to fetch the record
@@ -173,7 +203,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-sobject sobject="Account" recordid="001000000000AAA"></force-sobject>
 	```
 
-7. __force-sobject-store__: force-sobject-store element wraps the SmartSync `Force.StoreCache` into a polymer element. This element auto manages the lifecycle of the smartstore soup for each sobject type, auto creates index spec based on the lookup relationships on the sobject, provides a simpler DOM based interface to interact with Smartsync SObject Model and allows other polymer elements to easily comsume smartstore.
+8. __force-sobject-store__: force-sobject-store element wraps the SmartSync `Force.StoreCache` into a polymer element. This element auto manages the lifecycle of the smartstore soup for each sobject type, auto creates index spec based on the lookup relationships on the sobject, provides a simpler DOM based interface to interact with Smartsync SObject Model and allows other polymer elements to easily comsume smartstore.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject that you would like to store in this cache.
@@ -197,7 +227,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-sobject-store sobject="Account"></force-sobject-store>
 	```
 
-8. __force-sobject-layout__: force-sobject-layout element provides the layout information for a particular sobject record. It wraps the `describeLayout` API call. The layout information is cached in memory for existing session and stored in smartstore for offline consumption. This object also provides a base definition for elements that depend on page layouts, such as force-ui-detail and force-sobject-related.
+9. __force-sobject-layout__: force-sobject-layout element provides the layout information for a particular sobject record. It wraps the `describeLayout` API call. The layout information is cached in memory for existing session and stored in smartstore for offline consumption. This object also provides a base definition for elements that depend on page layouts, such as force-ui-detail and force-sobject-related.
 
 	Supported attributes include:
 	- `sobject`: (Required) Type of sobject on which you want to fetch the layout
@@ -216,7 +246,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-sobject-layout sobject="Account"></force-sobject-layout>
 	```
 
-9. __force-sobject-relatedlists__: force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It embeds the `force-sobject-layout` element to fetch the related lists configuraton from the page layout settings. a) Parses the related lists configuration for a particular sobject type, and b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
+10. __force-sobject-relatedlists__: force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It embeds the `force-sobject-layout` element to fetch the related lists configuraton from the page layout settings. a) Parses the related lists configuration for a particular sobject type, and b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
 
     Supported attributes include:
     - All attributes of force-sobject-layout
@@ -231,7 +261,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-sobject-relatedlists sobject="Account" recordid="001000000000AAA"></force-sobject-relatedlists>
 	```
 
-10. __force-selector-relatedlist__: force-selector-relatedlist element is an extension of `core-selector` element and fetches the records of related sobject using a `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
+11. __force-selector-relatedlist__: force-selector-relatedlist element is an extension of `core-selector` element and fetches the records of related sobject using a `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
 
 	Supported attributes include:
 	- `related`: (Required) Object instance of each related list item from the array obtained via force-sobject-relatedlists element. The object must contain the query and querytype properties to fetch the related items
@@ -248,7 +278,7 @@ You can now launch the [Sample App](http://localhost:9000/index.html). It will g
 	<force-selector-relatedlist related="{{related}}"></force-selector-relatedlist>
 	```
 
-11. __force-ui-relatedlist__: force-ui-relatedlist element is an extension of `force-selector-relatedlist` element and renders a list of related records to an sobject record. This element should always be a child of `force-ui-app` element to inherit the default styles.
+12. __force-ui-relatedlist__: force-ui-relatedlist element is an extension of `force-selector-relatedlist` element and renders a list of related records to an sobject record. This element should always be a child of `force-ui-app` element to inherit the default styles.
 
 	Supported attributes include:
     - All attributes of force-selector-relatedlist
