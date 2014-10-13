@@ -9,7 +9,7 @@
     query: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
     querytype: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
     autosync: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
-    maxsize: (Optional) Default: -1. If positive
+    maxsize: (Optional) Default: -1. If positive, limits the maximum number of records fetched.
 
     @methods:
     fetch: Initiates the fetching of records from the relevant data store (server/offline store).
@@ -25,6 +25,7 @@
 <link rel="import" href="../force-sobject-store/force-sobject-store.html">
 <polymer-element name="force-sobject-collection" attributes="sobject query querytype autosync maxsize">
     <template>
+        <style> :host { display: none; } </style>
         <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
     </template>
     <script src="force-sobject-collection.js"></script>
