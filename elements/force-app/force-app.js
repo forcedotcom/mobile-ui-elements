@@ -7,12 +7,15 @@
     var initialized = false;
     var readyDeferred = $.Deferred();
 
-    var authenticator = function(client, callback, error) {
-        if (readyDeferred.state() != 'pending') {
-            readyDeferred = $.Deferred();
-            SFDC.launcher = readyDeferred.promise();
+    var authenticator = function(authProvider) {
+        return function(client, callback, error) {
+            if (readyDeferred.state() != 'pending') {
+                readyDeferred = $.Deferred();
+                SFDC.launcher = readyDeferred.promise();
+                if (authProvider) authProvider();
+            }
+            SFDC.launcher.done(callback).fail(error);
         }
-        SFDC.launcher.done(callback).fail(error);
     }
 
     // Global Events Dispatcher to loosely couple all the views
@@ -24,7 +27,9 @@
     var SFDC_API_VERSION = 'v29.0';
 
     SFDC.isOnline = function() {
-        return navigator.onLine ||
+        // If we have cordova available, then use the bootstrap plugin to check network connection.
+        if (window.cordova) return cordova.require('com.salesforce.util.bootstrap').deviceIsOnline();
+        else return navigator.onLine ||
                (typeof navigator.connection != 'undefined' &&
                navigator.connection.type !== Connection.UNKNOWN &&
                navigator.connection.type !== Connection.NONE);
@@ -38,7 +43,7 @@
         if (!initialized) {
 
             initialized = true;
-            Force.init(options, SFDC_API_VERSION, null, authenticator);
+            Force.init(options, SFDC_API_VERSION, null, authenticator(options.authProvider));
 
             if (navigator.smartstore) {
                 navigator.smartstore.setLogLevel(logLevel || "info");

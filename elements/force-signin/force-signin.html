@@ -16,7 +16,8 @@
                 SFDC.launch({
                     accessToken: this.accesstoken,
                     instanceUrl: this.instanceurl,
-                    proxyUrl: this.proxyurl
+                    proxyUrl: this.proxyurl,
+                    authProvider: this.authenticate.bind(this)
                 });
             },
             authenticateWithPlugin: function() {
@@ -65,8 +66,18 @@
                 oauthClient.login(this.usePopupWindow);
             },
             authenticate: function() {
-                if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
-                else this.authenticateWithForcetk();
+                if (SFDC.isOnline()) {
+                    if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
+                    else this.authenticateWithForcetk();
+                } else {
+                    this.launch();
+                    this.fire('offline');
+                }
+            },
+            logout: function() {
+                if (window.cordova && !cordova.interceptExec) {
+                    cordova.require("com.salesforce.plugin.oauth").logout();
+                } else location.href = this.instanceurl + "/secur/logout.jsp";
             },
             ready: function() {
                 if (!(this.accesstoken && this.instanceurl)) {
