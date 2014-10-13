@@ -56,7 +56,7 @@ Run a local node server:
 
 	$ node proxy.js	
 
-You can now launch the [Sample App](http://localhost:9000/index.html). Make sure that popups are disabled to allow authentication.
+You can now launch the [Sample App](http://localhost:9000/index.html). It will go through the OAuth flow to obtain user session and render data.
 
 ## Available UI Elements ##
 1. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page. This is useful in single page view with split view panels. All the children of the main section must have the class "content" specified on them to apply the right styles.
