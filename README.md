@@ -309,6 +309,8 @@ Example:
 </script>
 ```
 
+When using `force-signin` component for authentication, the component automatically calls `SFDC.launch` with the valid accesstoken and instanceurl after the authentication is complete.
+
 ## Third-party Code ##
 
 This library makes use of a number of third-party components:
