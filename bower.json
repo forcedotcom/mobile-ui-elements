@@ -2,7 +2,6 @@
   "name": "mobile-ui-elements",
   "version": "0.0.0",
   "dependencies": {
-    "platform": "Polymer/platform#>=0.4.0 <1.0.0",
     "polymer": "Polymer/polymer#>=0.4.0 <1.0.0",
     "core-selector": "Polymer/core-selector#>=0.4.0 <1.0.0",
     "jquery": "latest",
