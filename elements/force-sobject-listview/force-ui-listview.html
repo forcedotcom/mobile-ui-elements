@@ -1,0 +1,18 @@
+<!--
+    force-sobject-listview : Polymer Component quries salesforce using ListView API, through AJAX call and list the available view based on the sObject
+    you point to 
+
+    @attributes:
+    sobject: (Required) Type of sobject on which you want to render a list
+    querytype: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+
+    @methods:
+    refresh: Refreshes the list view
+-->
+<link rel="import" href="../../dependencies/polymer/polymer.html">
+<link rel="import" href="../force-app/force-app.html">
+<link rel="import" href="../force-sobject-store/force-sobject-store.html">
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
+<polymer-element name="force-sobject-listview" attributes="sobject" noscript="true" on-sync="{{updateListView}}" >
+   <script src="force-sobject-listview.js"></script>
+</polymer-element>
