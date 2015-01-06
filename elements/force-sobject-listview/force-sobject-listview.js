@@ -9,7 +9,6 @@ Polymer('force-sobject-listview', {
     var query = '/services/data/v32.0/sobjects/' + this.sobject + '/listviews/';
     var success = function(response) {                   
       that.listviews = response.listviews;
-      console.log(that.listviews);
     };
     SFDC.launcher.then(function(){
          Force.forcetkClient.impl.ajax(query, success);
