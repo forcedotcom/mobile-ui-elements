@@ -18,9 +18,9 @@
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject/force-sobject.html">
-<polymer-element name="force-sobject-layout" attributes="sobject, hasrecordtypes, recordtypeid, recordid">
+<dom-module id="force-sobject-layout">
   <template>
-    <force-sobject id="force_sobject" sobject="{{sobject}}" fieldlist="{{recordTypeId}}" recordid="{{recordid}}" autosync="false"></force-sobject>
+    <force-sobject id="force_sobject" sobject="[[sobject]]" fieldlist="[[recordTypeId]]" recordid="[[recordid]]"></force-sobject>
   </template>
   <script src="force-sobject-layout.js"></script>
-</polymer-element>
+</dom-module>

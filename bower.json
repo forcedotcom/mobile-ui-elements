@@ -2,8 +2,8 @@
   "name": "mobile-ui-elements",
   "version": "0.0.0",
   "dependencies": {
-    "polymer": "Polymer/polymer#>=0.4.0 <1.0.0",
-    "core-selector": "Polymer/core-selector#>=0.4.0 <1.0.0",
+    "polymer": "Polymer/polymer#>=0.8.0",
+    "iron-selector": "PolymerElements/iron-selector#>=0.8.0",
     "jquery": "latest",
     "underscore": "latest",
     "backbone": "latest",
@@ -13,6 +13,6 @@
   "devDependencies": {
     "mocha": "~1.18.2",
     "should": "~3.3.1",
-    "core-icon": "Polymer/core-icon#>=0.4.0 <1.0.0"
+    "iron-icons": "PolymerElements/iron-icons#>=0.8.0"
   }
 }

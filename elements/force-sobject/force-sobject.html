@@ -26,9 +26,9 @@
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject-store/force-sobject-store.html">
-<polymer-element name="force-sobject" attributes="sobject recordid fieldlist autosync mergemode">
+<dom-module id="force-sobject">
     <template>
-        <force-sobject-store id="store" sobject="{{sobject}}"></force-sobject-store>
+        <force-sobject-store id="store" sobject="[[sobject]]"></force-sobject-store>
     </template>
     <script src="force-sobject.js"></script>
-</polymer-element>
+</dom-module>

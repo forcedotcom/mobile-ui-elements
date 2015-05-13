@@ -3,11 +3,23 @@
     "use strict";
 
     var viewProps = {
-        sobject: null,
-        query: "",
-        querytype: "mru",
-        maxsize: -1,
-        autosync: true
+        sobject: String,
+        query: {
+            type: String,
+            value: null
+        },
+        querytype: {
+            type: String,
+            value: "mru"
+        },
+        maxsize: {
+            type: Number,
+            value: -1
+        },
+        autosync: {
+            type: Boolean,
+            value: true
+        }
         /* async: false */ // Optional property to perform fetch as a web worker operation. Useful for data priming.
     };
 
@@ -37,18 +49,24 @@
     }
 
     //TBD: Make collection a private property. Then expose sobjects property which contains the array of models wrapped into SObjectViewModel.
-    Polymer('force-sobject-collection', _.extend({}, viewProps, {
-        observe: {
-            sobject: "reset",
-            query: "reset",
-            querytype: "reset"
-        },
-        ready: function() {
-            this.collection = new Force.SObjectCollection();
-            this.collection.on('all', function(event) {
-                this.fire(event);
-            }.bind(this));
-        },
+    Polymer({
+        is: 'force-sobject-collection', 
+        properties: _.extend({
+            collection: {
+                type: Object,
+                value: function() {
+                    var collection = new Force.SObjectCollection();
+                    collection.on('all', function(event) {
+                        this.fire(event);
+                    }.bind(this));
+                    return collection;
+                },
+                notify: true
+            }
+        }, viewProps),
+        observers: [
+            "reset(sobject, query, querytype)"
+        ],
         reset: function() {
             this.collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
             this.collection.reset();
@@ -83,6 +101,6 @@
             // Queue the operation for next cycle after all change watchers are fired.
             this.async(operation);
         }
-    }));
+    });
 
 })(window.SFDC);

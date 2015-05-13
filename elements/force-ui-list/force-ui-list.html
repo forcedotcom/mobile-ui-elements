@@ -10,42 +10,71 @@
 
     @properties:
     selected: Returns the value of "idfield" of the selected records.
-    viewModels: Returns an array of objects with only the fields used for rendering the list.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
-<link rel="import" href="../force-selector-list/force-selector-list.html">
-<polymer-element name="force-ui-list" attributes="labelfield, sublabelfield" extends="force-selector-list" on-sync="{{updateModels}}">
+<link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
+<link rel="import" href="../../dependencies/iron-selector/iron-selector.html">
+<dom-module id="force-ui-list">
   <template>
-      <shadow></shadow>
-      <ul id="list" class="table-view">
-        <template repeat="{{viewModels}}">
-            <li name="{{id}}" class="table-view-cell">
-              <span>{{label}}</span>
-              <p>{{sublabel}}</p>
-            </li>
+      <force-sobject-collection id="listsource" sobject="[[sobject]]" querytype="[[querytype]]" query="[[query]]" autosync="false"></force-sobject-collection>
+      <div class="table-view">
+        <iron-selector id="selector" attr-for-selected="id" on-iron-select="_updateSelected">
+        <template is="dom-repeat" items="[[viewModels]]">
+          <div id="[[item.id]]" class="table-view-cell">
+            <span>[[item.label]]</span>
+            <p>[[item.sublabel]]</p>
+          </div>
         </template>
-      </ul>
+        </iron-selector>
+      </div>
   </template>
   <script>
-    Polymer('force-ui-list', {
-      labelfield: 'Name',
-      viewModels: [],
-      ready: function() {
-        this.super();
-        this.target = this.$.list;
+    Polymer({
+      is: 'force-ui-list', 
+
+      properties: {
+        sobject: String,
+        query: {
+          type: String,
+          value: null
+        },
+        querytype: {
+          type: String,
+          value: "mru"
+        },
+        labelfield: {
+          type: String,
+          value: 'Name'
+        },
+        sublabelfield: String,
+        selected: {
+          type: String,
+          readOnly: true,
+          notify: true
+        }
       },
+
+      listeners: {
+        "sync": "updateModels"
+      },
+
+      _updateSelected: function() {
+        this._setSelected(this.$.selector.selected);
+      },
+
       updateModels: function() {
         var that = this;
-        this.viewModels = [];
-        this.collection.models.forEach(function(model) {
+        var viewModels = []
+        this.$.listsource.collection.models.forEach(function(model) {
           var wrappedModel = {
             id: model.id,
             label: model.attributes[that.labelfield],
             sublabel: model.attributes[that.sublabelfield]
           }
-          that.viewModels.push(wrappedModel);
+          viewModels.push(wrappedModel);
         });
+        this.viewModels = viewModels;
       }
     });
   </script>
-</polymer-element>
+</dom-module>

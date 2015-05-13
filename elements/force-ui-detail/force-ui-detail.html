@@ -13,23 +13,30 @@
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject/force-sobject.html">
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
-<polymer-element name="force-ui-detail" attributes="sobject recordid hasrecordtypes recordtypeid foredit fieldlist fieldlabels">
+<dom-module id="force-ui-detail">
   <template>
-    <force-sobject id="force_sobject" sobject="{{sobject}}" recordid="{{recordid}}" fieldlist="{{fieldlist}}" autosync="false"></force-sobject>
-    <force-sobject-layout id="sobject_layout" sobject="{{fieldlist ? null : sobject}}" recordid="{{fieldlist ? null : sobject}}" hasrecordtypes="{{hasrecordtypes}}" recordtypeid="{{recordtypeid}}"></force-sobject-layout>
-    <div id="viewContainer" class="{{foredit ? 'edit' :''}}"></div>
+    <force-sobject id="force_sobject" sobject="[[sobject]]" recordid="[[recordid]]" fieldlist="[[fieldlist]]" fields="{{model}}"></force-sobject>
+    <!-- TBD: Prevent layout fetch if fieldlist is already specified -->
+    <force-sobject-layout id="sobject_layout" sobject="[[sobject]]" recordid="[[recordid]]" hasrecordtypes="[[hasrecordtypes]]" recordtypeid="[[recordtypeid]]" on-layout-change="renewTemplate"></force-sobject-layout>
+    <div id="viewContainer" class$="[[viewClass]]"></div>
     <content select="*"></content>
   </template>
   <script src="force-ui-detail.js"></script>
-</polymer-element>
+</dom-module>
 
-<polymer-element name="force-html-output" attributes="value">
+<dom-module id="force-html-output">
   <script>
-    Polymer('force-html-output', {
-      value: null,
-      valueChanged: function() {
+    Polymer({
+      is: 'force-html-output', 
+      property: {
+        value: String
+      },
+      observers: [
+        "_valueChanged(value)"
+      ],
+      _valueChanged: function() {
         this.innerHTML = this.value;
       }
     })
   </script>
-</polymer-element>
+</dom-module>

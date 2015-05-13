@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width">
 
         <!-- Importing Google Polymer framework -->
-        <script src="dependencies/webcomponentsjs/webcomponents.min.js"></script>
+        <script src="dependencies/webcomponentsjs/webcomponents-lite.min.js"></script>
 
         <!-- Include cordova script. Will be available when we create SDK project -->
         <script src="cordova.js"></script>
@@ -19,33 +19,47 @@
 
         <!-- Place your HTML imports here -->
         <link rel="import" href="elements/mobile-ui-elements.html">
-        <link rel="import" href="dependencies/core-icons/core-icons.html">
+        <link rel="import" href="dependencies/iron-icons/iron-icons.html">
 
         <!-- Font-face imports. Bug in chrome -->
         <link rel="stylesheet" href="elements/css/ratcheticons.css">
     </head>
     <body touch-action="auto">
-        <polymer-element name="mobile-app">
+        <dom-module id="mobile-app">
             <template>
                 <force-signin consumerkey="3MVG9QDx8IX8nP5TwrwtRg53zXgW0xeFBfLMzPRJ4aNy8z7MsSSDjNj.NLu4pSY4B8V3sbYSLrhAMJWxs39jB" callbackurl="http://localhost:9000" proxyurl="{{proxy}}"></force-signin>
                 
-                <force-ui-app id="force_app" multipage="true">
+                <force-ui-app id="force_app" multipage>
                     <h1 class="title">Accounts</h1>
-                    <force-ui-list id="force_ui_list" sobject="Account" class="page content" on-core-activate="{{showDetail}}"></force-ui-list>
-                    <force-ui-detail flex id="force_ui_detail" sobject="Account" recordid="{{$.force_ui_list.selected}}" class="page content">
-                        <force-sobject-relatedlists id="force_relatedlists" sobject="Account" recordid="{{$.force_ui_list.selected}}"></force-sobject-relatedlists>
-                        <template repeat="{{related in $.force_relatedlists.relatedLists}}">
-                            <force-ui-relatedlist related="{{related}}"></force-ui-relatedlist>
+                    <force-ui-list id="force_ui_list" sobject="[[sobject]]" selected="{{recordid}}" class="page content" on-iron-activate="showDetail"></force-ui-list>
+                    <force-ui-detail flex id="force_ui_detail" sobject="[[sobject]]" recordid="[[recordid]]" class="page content">
+                        <force-sobject-relatedlists id="force_relatedlists" sobject="[[sobject]]" recordid="[[recordid]]" related-lists="{{relatedLists}}"></force-sobject-relatedlists>
+                        <template is="dom-repeat" items="[[relatedLists]]">
+                            <force-ui-relatedlist related="[[item]]"></force-ui-relatedlist>
                         </template>
                     </force-ui-detail>
                 </force-ui-app>
-                <core-icon id="network_icon" icon="{{cloudicon}}" class="bottomright" style="position: fixed; bottom: 0; right: 0; margin: 10px; zoom: 2; fill: green; -webkit-tap-highlight-color: rgba(0,0,0,0);" on-tap="{{toggleStatus}}"></core-icon>
+                <iron-icon id="network_icon" icon="{{cloudicon}}" class="bottomright" style="position: fixed; bottom: 0; right: 0; margin: 10px; zoom: 2; fill: green; -webkit-tap-highlight-color: rgba(0,0,0,0);" on-tap="toggleStatus"></iron-icon>
             </template>
             <script type="text/javascript">
-              Polymer('mobile-app', {
+            window.addEventListener('WebComponentsReady', function() {
+              Polymer({
+                is: 'mobile-app', 
                 _onlineStatus: true,
-                cloudicon: 'cloud-done',
-                proxy: (location.protocol === 'file:') ? null : location.origin,
+                properties: {
+                    sobject: String,
+                    recordid: String,
+                    cloudicon: {
+                        type: String,
+                        value: 'cloud-done',
+                        notify: true
+                    },
+                    proxy: {
+                        type: String,
+                        value: function() { return (location.protocol === 'file:') ? null : location.origin; },
+                        notify: true
+                    }
+                },
                 showDetail: function(e) {
                     this.$.force_app.navigateTo('#force_ui_detail');
                 },
@@ -63,9 +77,10 @@
                     this.onlineStatus = !this.onlineStatus;
                 },
               });
+            });
             </script>
-        </polymer-element>
+        </dom-module>
 
-        <mobile-app></mobile-app>
+        <mobile-app sobject="Account"></mobile-app>
     </body>
 </html>

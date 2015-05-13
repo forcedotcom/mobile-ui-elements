@@ -1,13 +1,27 @@
 (function($, SFDC) {
-
-    Polymer('force-sobject-relatedlists', {
-        relatedLists: [],
+    Polymer({
+        is: 'force-sobject-relatedlists', 
+        properties: {
+            sobject: String,
+            recordid: {
+                type: String,
+                observer: 'generateRelatedLists'
+            },
+            hasrecordtypes: String,
+            recordtypeid: String,
+            relationships: {
+                type: String,
+                observer: "relationshipsChanged"
+            },
+            relatedLists: {
+                type: Array,
+                value: function() { return []; },
+                notify: true
+            }
+        },
         relationshipsChanged: function() {
             // Execute generateRelatedLists after current process ends to allow processing all change handlers on parent.
             setTimeout(this.generateRelatedLists.bind(this), 0);
-        },
-        ready: function() {
-            this.$.sobject_layout.addEventListener('layout-change', this.generateRelatedLists.bind(this));
         },
         generateRelatedLists: function(ev) {
             this.relatedLists = [];
@@ -22,7 +36,7 @@
 
         var addConfigIfAllowed = function(related, childInfo, parentDescribe) {
             if (childInfo.objectDescribe.queryable) {
-                view.relatedLists.push(related);
+                view.push('relatedLists', related);
                 generateQuery(view.recordid, related, parentDescribe);
             }
         }

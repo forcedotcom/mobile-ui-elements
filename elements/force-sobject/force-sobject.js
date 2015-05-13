@@ -1,13 +1,5 @@
 (function(SFDC) {
 
-    var viewProps = {
-        sobject: null,
-        recordid: null,
-        fieldlist: null,
-        autosync: true,
-        mergemode: Force.MERGE_MODE.OVERWRITE
-    };
-
     var createModel = function(sobject) {
         sobject = sobject.toLowerCase();
 
@@ -34,9 +26,13 @@
                 });
             });
         }
-        setupProps(_.union(_.keys(model.attributes), model.fieldlist));
+        // Review all fields in fieldlist to pick the first part of the reference fields. 
+        // eg. for "Owner.Name" pick "Owner"
+        var addFields = _.map(model.fieldlist, function(prop) { return prop.split('.')[0]; });
+        // Create object map
+        setupProps(_.union(_.keys(model.attributes), addFields));
 
-        // Setup an event listener to update properties whenever model attributes change
+        // Setup an event listener to update object map when fieldlist changes on model
         model.on('change', function() {
             setupProps(_.difference(_.keys(model.attributes), _.keys(_self)));
         });
@@ -49,12 +45,28 @@
             return fieldlist;
     }
 
-    Polymer('force-sobject', _.extend({}, viewProps, {
-        observe: {
-            sobject: "init",
-            recordid: "init",
-            fieldlist: "init"
+    Polymer({
+        is: 'force-sobject', 
+        properties: {
+            sobject: String,
+            recordid: String,
+            fieldlist: {
+                type: String,
+                value: null
+            },
+            autosync: String,
+            mergemode: {
+                type: String,
+                value: Force.MERGE_MODE.OVERWRITE
+            },
+            fields: {
+                type: Object,
+                notify: true
+            }
         },
+        observers: [
+            "init(sobject, recordid, fieldlist)"
+        ],
         // Resets all the properties on the model.
         // Recreates model if sobject type or id of model has changed.
         init: function() {
@@ -206,6 +218,6 @@
             this.async(operation.bind(this));
             return this;
         }
-    }));
+    });
 
 })(window.SFDC);

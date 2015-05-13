@@ -1,21 +1,39 @@
 (function($, SFDC, Path) {
 
-    Polymer('force-ui-detail', {
-        foredit: false,
-        fieldlist: null,
-        fieldlabels: null,
-        observe: {
-            foredit: "renewTemplate",
-            fieldlist: "renewTemplate",
-            fieldlabels: "renewTemplate",
-            "$.sobject_layout.layout": "renewTemplate",
-            "$.force_sobject._model": "renderModel"
+    Polymer({
+        is: 'force-ui-detail', 
+        properties: {
+            sobject: String,
+            recordid: String,
+            hasrecordtypes: Boolean,
+            foredit: {
+                type: Boolean,
+                value: false
+            },
+            fieldlist: {
+                type: String, /*TBD: Should move it to array */
+                value: null
+            },
+            fieldlabels: {
+                type: String, /*TBD: Should move it to array */
+                value: null
+            },
+            viewClass: {
+              type: String,
+              computed: '_viewClass(foredit)'
+            },
+            model: {
+                type: Object,
+                observer: "renderModel"
+            }
         },
+        observers: [
+            "renewTemplate(foredit, fieldlist, fieldlabels)"
+        ],
         renewTemplate: function() {
             // Clean up older templates
             if (this._templateInfo) {
-                this._templateInfo.template.remove();    
-                $(this.$.viewContainer).empty();
+                this.$.viewContainer.innerHTML = '';
                 this._templateInfo = null;
             }
             // Generate new templates and update view
@@ -25,7 +43,10 @@
                 if (templateInfo) {
                     this._templateInfo = templateInfo;
                     // Attach template to the DOM
-                    this.$.viewContainer.appendChild(templateInfo.template);
+                    var viewContainer = Polymer.dom(this.$.viewContainer);
+                    this.$.viewContainer.innerHTML = templateInfo.templateString;
+                    templateInfo.template = viewContainer.querySelector('template');
+                    //Polymer.dom(this.$.viewContainer).appendChild(templateInfo.template);
                     // Render model and template
                     this.renderModel();
                 }
@@ -38,21 +59,23 @@
         compileTemplate: function(layoutSections) {
             return compileTemplateForLayout(layoutSections);
         },
-        get model() {
-            return this.$ ? this.$.force_sobject._model : null;
+        _viewClass: function() {
+            return this.foredit ? 'edit' : '';
         }
     });
 
     // Returns whether the current view has an overriden layout.
     // i.e. if someone extends the force-ui-detail but doesn't include the shadow tag.
     var isLayoutOverriden = function(elem) {
+        return false; // TBD: broken in 0.8
+        /*
         var shadowRoot = elem.shadowRoot;
         while (shadowRoot.olderShadowRoot) {
             if (shadowRoot.olderShadowRoot.olderShadowRoot)
                 shadowRoot = shadowRoot.olderShadowRoot;
             else break;
         }
-        return elem.shadowRoot.olderShadowRoot && shadowRoot.querySelector('shadow') == null;
+        return elem.shadowRoot.olderShadowRoot && shadowRoot.querySelector('shadow') == null;*/
     }
 
     var describeField = function(sobject, fieldname) {
@@ -148,7 +171,12 @@
         }
 
         // Fetch only if the current view model is not for same recordid
-        if (!this.viewModel || !this.viewModel.Id || this.viewModel.Id != this.recordid) {
+        if (this.recordid && 
+            (!this.viewModel || !this.viewModel.Id || this.viewModel.Id != this.recordid)) {
+
+            // Remove the current model
+            this._templateInfo.template.model = null;
+
             // Update the instance of current view model
             this.viewModel = new SObjectViewModel(this.model, this._templateInfo.fieldInfos);
 
@@ -180,7 +208,7 @@
                 Object.defineProperty(_self, prop, {
                     get: function() {
                         var fieldInfo = fieldInfos[prop];
-                        var value = model.get(prop);
+                        var value = model[prop];
 
                         if (fieldInfo && fieldInfo.type)
                             return dateTimeToString(fieldInfo.type, value);
@@ -192,25 +220,22 @@
                         if (fieldInfo && fieldInfo.type && fieldInfo.type == 'base64') {
                             var reader  = new FileReader();
                             reader.onloadend = function () {
-                                model.set(prop, reader.result);
+                                model[prop] = reader.result;
                             }
                             if (file) reader.readAsDataURL(file);
                         }
-                        else model.set(prop, val);
+                        else model[prop] = val;
                     },
                     enumerable: true
                 });
             });
         }
-        model.on('change', function() {
-            setupProps(_.difference(_.keys(model.attributes), _.keys(_self)));
-        });
         // review all fields to pick the first part of the reference fields. eg. for "Owner.Name" pick "Owner"
-        var attributes = _.map(_.keys(fieldInfos),
-            function(prop) {
-                return prop.split('.')[0];
-            });
+        var attributes = _.map(_.keys(fieldInfos), function(prop) {
+                            return prop.split('.')[0];
+                        });
         setupProps(attributes);
+        //TBD: Test if change in property list also updates the view model. Since the change observer was removed.
     }
 
     //------------------------- INTERNAL METHODS -------------------------
@@ -233,11 +258,12 @@
     var createTemplateFromMarkup = function (markup, bindingDelegate) {
         // Templatize the markup
         var helperTemplate = document.createElement('template');
-        helperTemplate.setAttribute('bind', '')
+        helperTemplate.setAttribute('is', 'dom-bind');
         helperTemplate.innerHTML = markup;
 
+        /*
         HTMLTemplateElement.decorate(helperTemplate);
-        if (bindingDelegate) helperTemplate.bindingDelegate = bindingDelegate;
+        if (bindingDelegate) helperTemplate.bindingDelegate = bindingDelegate;*/
 
         return helperTemplate;
     }
@@ -329,24 +355,24 @@
 
             if (forEdit) {
                 if (fieldType == 'boolean')
-                    html += ('<input type="checkbox" checked="{{' + displayField + '}}"/>');
+                    html += ('<input type="checkbox" checked="{{' + displayField + '::change}}"/>');
                 else if (fieldType == 'picklist') {
-                    html += '<select value="{{' + displayField + '}}">';
+                    html += '<select value="{{' + displayField + '::change}}">';
                     fieldInfo.picklistValues.forEach(function(option){
                         html += ('<option value="' + option.value + '">' + option.label + '</option>');
                     })
                     html += '</select>';
                 } else if (fieldType == 'textarea')
-                    html += ('<input type="textarea" value="{{' + displayField + '}}"/>');
+                    html += ('<input type="textarea" value="{{' + displayField + '::change}}"/>');
                 else
-                    html += ('<input value="{{' + displayField + '}}" type="' + inputType(fieldType) + '" maxlength="' + fieldInfo.length + '"/>');
+                    html += ('<input value="{{' + displayField + '::change}}" type="' + inputType(fieldType) + '" maxlength="' + fieldInfo.length + '"/>');
             }
             else {
                 if (fieldType == 'boolean')
-                    html += ('<input type="checkbox" checked="{{' + displayField + '}}" disabled="true"/>');
+                    html += ('<input type="checkbox" checked="[[' + displayField + ']]" disabled="true"/>');
                 else if (fieldInfo.htmlFormatted) //TBD: See if we need to do anything for HTML type fields in polymer.
-                    html += '<force-html-output value="{{' + displayField + '}}"></force-html-output>';
-                else html += ('{{' + displayField + '}}');
+                    html += '<force-html-output value="[[' + displayField + ']]"></force-html-output>';
+                else html += ('[[' + displayField + ']]');
             }
             return html + '</span>';
         }
@@ -383,8 +409,8 @@
                                 }
                                 // check if field is editable based on the field type information and the layout settings. Also ignore refrence type fields as we don't currently support the edit for that.
                                 isFieldEditable = (item.editable && fieldInfo.type != 'reference' && fieldInfo.updateable);
-                                valueHtml += generateFieldTemplate(comp.value, fieldInfo, displayField, isFieldEditable);
-                                if (isFieldEditable) errorHtml += '<div class="sf-layout-item-error">{{__errors__.' + comp.value + '}}</div>';
+                                valueHtml += generateFieldTemplate(comp.value, fieldInfo, 'model.' + displayField, isFieldEditable);
+                                if (isFieldEditable) errorHtml += '<div class="sf-layout-item-error">[[model.__errors__.' + comp.value + ']]</div>';
                             }
                         });
                         html += (errorHtml + valueHtml + '</div>');
@@ -398,7 +424,8 @@
 
         // Templatize the markup
         return {
-            template: createTemplateFromMarkup(html),
+            templateString: '<template is="dom-bind">' + html + "</template>",
+            //template: createTemplateFromMarkup(html),
             fields: _.keys(layoutFieldsInfoMap),
             fieldInfos: layoutFieldsInfoMap
         };

@@ -1,46 +1,178 @@
 <!--
-    force-signin element allows an easy way to initiate OAuth into salesforce via web or mobile SDK.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
+
+<!--
+force-signin element allows an easy way to initiate OAuth into salesforce via web or Mobile SDK.
+
+To use it in a web application, specify the consumerkey and callbackurl for OAuth setup.
+
+Example:
+
+    <force-signin consumerkey="CONSUMER_KEY_FROM_SALESFORCE_CONNECTED_APP" callbackurl="https://mycallback.com"></force-signin>
+
+To use it in a Mobile SDK based app, OAuth configuration will be automatically picked from bootconfig.json.
+
+Example:
+
+    <force-signin></force-signin>
+
+@group Salesforce Mobile Elements
+@element force-signin
     
-    @attributes:
-    consumerkey: (Optional) OAuth consumer key required only for web based applications. For SDK based applications, specify the consumer key in the bootconfig.json.
-    callbackurl: (Optional) OAuth callback url required only for web based applications. For SDK based applications, specify the callback url in the bootconfig.json.
-    loginurl: (Optional) Login URL for salesforce. Default value is https://login.salesforce.com
-    proxyurl: (Optional) Proxy host to avoid cross-domain calls issue.
-    accesstoken: (Optional) Session Id to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
-    instanceurl: (Optional) Instance URL of the org to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
-    usePopupWindow: (Optional) Default: false. Set as true if you want OAuth flow to be started in a new child window.
-
-    @properties:
-    userInfo: Returns the details of the current logged in user.
-
-    @methods:
-    authenticate: Initiates the authentication into salesforce. The force-signin element automatically initiates the authentication process if no accesstoken is specified.
-    logout: Initiates the logout of the current user session.
-    getUserInfo: Returns a promise which on completion returns the details of the current logged in user.
-
-    @events:
+@events
     success: when the OAuth flow is successfully completed and the accesstoken is obtained from salesforce.
     error: when OAuth flow ends in an error.
     offline: when the device is offline and authentication cannot complete. The UI Elements are launched with empty session in that scenario.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
-<polymer-element name="force-signin" attributes="consumerkey callbackurl loginurl proxyurl accesstoken instanceurl usePopupWindow">
+<dom-module id="force-signin">
     <script src="forcetk.ui.js"></script>
     <script>
-        Polymer('force-signin', {
-            consumerkey: "",
-            callbackurl: "",
-            loginurl: "https://login.salesforce.com/",
-            usePopupWindow: false,
-            observe: {
-                "accesstoken instanceurl": "launch"
-            },
-            launch: function() {
-                // reset user info
-                this.userInfo = null;
-                this.getUserInfo();
+        Polymer({
+            is: 'force-signin', 
+            properties: {
+                /**
+                 * Automatically trigger user authentication as soon as the component is ready.
+                 *
+                 * @attribute auto
+                 * @type Boolean
+                 */
+                auto: Boolean,
 
+                /**
+                 * Consumer key for initiating OAuth based salesforce authentication. It's required only for web based applications. For SDK based applications, specify the consumer key in the bootconfig.json.
+                 *
+                 * @attribute consumerkey
+                 * @type String
+                 */
+                consumerkey: String,
+
+                /**
+                 * Callback URL property for OAuth based authentication. It's required only for web based applications. For SDK based applications, specify the callback URL in the bootconfig.json.
+                 *
+                 * @attribute callbackurl
+                 * @type String
+                 */
+                callbackurl: String,
+
+                /**
+                 * Login Host for salesforce authentication. It's required only for web based applications. For SDK based applications, specify the login host in application settings.
+                 *
+                 * @attribute loginurl
+                 * @type String
+                 * @default "https://login.salesforce.com/" 
+                 */
+                loginurl: {
+                    type: String,
+                    value: "https://login.salesforce.com/"
+                },
+
+                /**
+                 * Custom proxy host setting for web based application. If specified, all the HTTP requests will be sent to this proxy host with "Salesforce-Endpoint" header for actual host URL. This allows cross-domain calls restricted by browsers.
+                 *
+                 * @attribute proxyurl
+                 * @type String
+                 */
+                proxyurl: String,
+
+                /**
+                 * Set as true if you want OAuth flow to be started in a new child window.
+                 *
+                 * @attribute usePopupWindow
+                 * @type String
+                 */
+                usePopupWindow: Boolean,
+
+                /**
+                 * Salesforce session ID for API requests. It can directly specified for a known session ID, or will be obtained automatically via OAuth.
+                 *
+                 * @attribute accesstoken
+                 * @type String
+                 */
+                accesstoken: {
+                    type: String,
+                    notify: true
+                },
+
+                /**
+                 * Salesforce instance URL for API requests. It can directly specified for a known salesforce host, or will be obtained automatically via OAuth.
+                 *
+                 * @attribute instanceurl
+                 * @type String
+                 */
+                instanceurl: {
+                    type: String,
+                    notify: true
+                },
+
+                /**
+                 * Salesforce user identity URL. It can directly specified for a known user, or will be obtained automatically via OAuth.
+                 *
+                 * @attribute idUrl
+                 * @type String
+                 */
+                idUrl: {
+                    type: String,
+                    notify: true
+                },
+
+                /**
+                 * Returns current user information. It's obtained via the current user's identity URL after authentication.
+                 *
+                 * @attribute userInfo
+                 * @type Object
+                 */
+                userInfo: {
+                    type: Object,
+                    notify: true,
+                    readOnly: true
+                }
+            },
+            observers: [
+                "_fetchUserInfo(idUrl)"
+            ],
+            listeners: {
+                success: "_launch"
+            },
+            ready: function() {
+                if (this.accesstoken && this.instanceurl) {
+                    this.fire('success');
+                } else if (this.auto) {
+                    this.async(this.authenticate);
+                }
+            },
+
+            /**
+             * Authenticate the user with salesforce via OAuth.
+             *
+             * @method authenticate
+             */
+            authenticate: function() {
+                if (SFDC.isOnline()) {
+                    if (window.cordova && !cordova.interceptExec) this._authenticateWithPlugin();
+                    else this._authenticateWithForcetk();
+                } else {
+                    //TBD: Offline should probably be a no-op. review it later.
+                    this._launch();
+                    this.fire('offline');
+                }
+            },
+
+            /**
+             * Logout the current user session.
+             *
+             * @method logout
+             */
+            logout: function() {
+                if (window.cordova && !cordova.interceptExec) {
+                    cordova.require("com.salesforce.plugin.oauth").logout();
+                } else location.href = this.instanceurl + "/secur/logout.jsp";
+            },
+            
+            _launch: function() {
                 // launch ui elements
                 SFDC.launch({
                     accessToken: this.accesstoken,
@@ -49,7 +181,7 @@
                     authProvider: this.authenticate.bind(this)
                 });
             },
-            authenticateWithPlugin: function() {
+            _authenticateWithPlugin: function() {
                 var that = this;
                 document.addEventListener("deviceready", function() {
                     var oauthPlugin = cordova.require("com.salesforce.plugin.oauth");
@@ -67,12 +199,12 @@
                         function (error) {
                             console.log('OAuth error!');
                             that.fire('error');
-                            if (confirm("Authentication Failed. Try again?")) that.authenticateWithPlugin();
+                            if (confirm("Authentication Failed. Try again?")) that._authenticateWithPlugin();
                         }
                     );
                 });
             },
-            authenticateWithForcetk: function() {
+            _authenticateWithForcetk: function() {
                 var that = this;
                 // Instantiating forcetk ClientUI
                 var oauthClient = new ForceOAuth(
@@ -102,31 +234,11 @@
 
                 oauthClient.login(this.usePopupWindow);
             },
-            authenticate: function() {
-                if (SFDC.isOnline()) {
-                    if (window.cordova && !cordova.interceptExec) this.authenticateWithPlugin()
-                    else this.authenticateWithForcetk();
-                } else {
-                    this.launch();
-                    this.fire('offline');
-                }
-            },
-            logout: function() {
-                if (window.cordova && !cordova.interceptExec) {
-                    cordova.require("com.salesforce.plugin.oauth").logout();
-                } else location.href = this.instanceurl + "/secur/logout.jsp";
-            },
-            ready: function() {
-                if (!(this.accesstoken && this.instanceurl)) {
-                    this.async(this.authenticate);
-                }
-            },
-            getUserInfo: function() {
+            _fetchUserInfo: function() {
                 var that = this;
 
-                if (this.userInfo) return $.when(this.userInfo);
                 // Fetch user information. Ideally we should use the SDK, but it doesn't have sufficient info right now.
-                else if (SFDC.isOnline()) {
+                if (SFDC.isOnline()) {
                     var forcetkClient = new forcetk.Client(null, null, this.proxyurl);
                     forcetkClient.setSessionToken(this.accesstoken, null, this.instanceurl);
                     var url = this.idUrl + "?oauth_token=" + this.accesstoken;
@@ -134,16 +246,19 @@
                         type: 'GET',
                         url: this.proxyurl || url,
                         dataType: "json",
-                        headers: forcetkClient.getRequestHeaders(url),
+                        headers: {
+                            'Cache-Control': 'no-store',
+                            'SalesforceProxy-Endpoint': this.proxyurl ? url : ''
+                        },
                         success: function(result) {
-                            that.userInfo = result;
-                            that.userInfo.photos.picture += "?oauth_token=" + that.accesstoken;
-                            that.userInfo.photos.thumbnail += "?oauth_token=" + that.accesstoken;
+                            result.photos.picture += "?oauth_token=" + that.accesstoken;
+                            result.photos.thumbnail += "?oauth_token=" + that.accesstoken;
+                            that._setUserInfo(result);
                         }
                     }
-                    return $.ajax(request).then(function() { return that.userInfo; });
+                    return $.ajax(request);
                 }
             }
         });
     </script>
-</polymer-element>
+</dom-module>

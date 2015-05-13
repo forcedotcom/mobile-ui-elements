@@ -8,7 +8,6 @@
 
     @attributes:
     multipage: (Optional) Default: false. When true, force-ui-app shows only one direct children (class="page") at a time and allows navigation to other children.
-    hideheader: (Optional) Default: false. Show/Hide default header on the page.
     startpage: (Optional) Default: first direct child element with class="page". Instance of the DOM element, with class="page", that should be shown first when the app loads.
 
     @properties:
@@ -29,68 +28,77 @@
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
-<polymer-element name="force-ui-app" attributes="multipage, startpage, hideheader">
+<dom-module id="force-ui-app">
+  <style>
+    :host {
+      display: block;
+      min-height: 200px;
+      min-width: 200px;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      z-index: 0;
+      font: 14px/1.25 "Helvetica Neue", sans-serif;
+      color: #222;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    :host header[class*="bar-"] {
+      position: absolute;
+    }
+    polyfill-next-selector { content: ':host(.splitview) .content'; }
+    :host(.splitview) ::content .content {
+      position: static;
+      margin-top: 44px;
+    }
+    polyfill-next-selector { content: ':host .content'; }
+    ::content .content {
+      margin-top: 44px;
+    }
+  </style>
+  <link rel="stylesheet" href="../../dependencies/ratchet/dist/css/ratchet.css"/>
+  <link rel="stylesheet" href="../css/responsive.css"/>
+  <link rel="stylesheet" href="../css/styles.css"/>
   <template>
-    <link rel="stylesheet" href="../../dependencies/ratchet/dist/css/ratchet.shim.css"/>
-    <link rel="stylesheet" href="../css/responsive.shim.css"/>
-    <link rel="stylesheet" href="../css/styles.shim.css"/>
-    <style>
-      :host {
-        display: block;
-        min-height: 200px;
-        min-width: 200px;
-        width: 100%;
-        height: 100%;
-        background-color: white;
-        z-index: 0;
-        font: 14px/1.25 "Helvetica Neue", sans-serif;
-        color: #222;
-        position: absolute;
-        top: 0; left: 0;
-      }
-      :host header[class*="bar-"] {
-        position: absolute;
-      }
-      polyfill-next-selector { content: ':host(.splitview) .content'; }
-      :host(.splitview) ::content .content {
-        position: static;
-        margin-top: 44px;
-      }
-      polyfill-next-selector { content: ':host .content'; }
-      ::content .content {
-        margin-top: 44px;
-      }
-    </style>
-    <template if="{{!hideheader}}">
-      <header class="bar bar-nav">
-        <template if="{{multipage && pageStack.length}}">
-          <a class="icon icon-left-nav pull-left" on-click="{{navigateBack}}"></a>
+    <header class="bar bar-nav">
+        <template is="dom-if" if="[[showBackBtn]]">
+          <a class="icon icon-left-nav pull-left" on-click="navigateBack"></a>
         </template>
         <content select="a.icon, a.btn, div.segmented-control, h1"></content>
-      </header>
-    </template>
-    <div layout horizontal>
-      <content id="pages" select="*"></content>
+    </header>
+    <div class="layout horizontal">
+      <content id="pages" select=".page"></content>
     </div>
   </template>
   <script src="../js/jq-slide.js"></script>
   <script>
     (function() {
-      Polymer('force-ui-app', {
-        multipage: false,
-        startpage: '.page:first',
-        pageStack: [],
-        hideheader: false,
-        disablestyles: false,
+      Polymer({
+        is: 'force-ui-app', 
+        properties: {
+          multipage: Boolean,
+          startpage: {
+            type: String,
+            value: '.page:first'
+          },
+          pageStack: Array,
+          showBackBtn: {
+            type: Boolean,
+            notify: true
+          }
+        },
+        _showBackBtn: function() {
+          this.showBackBtn = this.multipage && this.pageStack.length;
+        },
         ready: function() {
           this.async(this.arrangePages);
         },
-        observe: {
-          multipage: 'arrangePages',
-          startpage: 'arrangePages'
-        },
+        observers: [
+          "arrangePages(startpage)",
+          "_showBackBtn(pageStack.splices)"
+        ],
         get pages() {
-          return $(this.$.pages.getDistributedNodes()).filter('.page').toArray();
+          return Polymer.dom(this.$.pages).getDistributedNodes();
         },
         arrangePages: function() {
           var $pages = $(this.pages);
@@ -108,7 +116,7 @@
         },
         navigateBack: function(e) {
           if (this.multipage) {
-            navigate(this, this.activepage, this.pageStack.pop(), true);
+            navigate(this, this.activepage, this.pop('pageStack'), true);
             if (e) e.stopPropagation();
           }
         },
@@ -116,7 +124,7 @@
           if (this.multipage) {
             var $target = $(this.pages).filter(target);
             if ($target.length == 1) {
-              this.pageStack.push(this.activepage);
+              this.push("pageStack", this.activepage);
               navigate(this, this.activepage, $target[0]);
             }
           }
@@ -150,4 +158,4 @@
         }
     })();
   </script>
-</polymer-element>
+</dom-module>

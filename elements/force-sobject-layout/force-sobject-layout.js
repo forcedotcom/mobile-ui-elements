@@ -41,26 +41,46 @@
         return SFDC.getSObjectType(sobject)
             .describeLayout(recordtypeid);
     }
-
-    Polymer('force-sobject-layout', {
-        sobject: null,
-        hasrecordtypes: false,
-        recordtypeid: null,
-        recordid: null,
-        observe: {
-            sobject: "fetch",
-            recordid: "fetch",
-            hasrecordtypes: "fetch",
-            recordtypeid: "fetch"
+    Polymer({
+        is: 'force-sobject-layout', 
+        properties: {
+            sobject: String,
+            hasrecordtypes: {
+                type: Boolean,
+                value: false
+            },
+            recordtypeid: {
+                type: String,
+                value: null
+            },
+            recordid: {
+                type: String,
+                value: null
+            },
+            layout: {
+                type: Object,
+                readOnly: true,
+                notify: true
+            }
+        },
+        observers: [
+            "_reset(sobject, hasrecordtypes, recordid, recordtypeid)"
+        ],
+        _reset: function() {
+            if (this.hasrecordtypes || this._sobject != this.sobject) {
+                this._sobject = this.sobject;
+                this._setLayout(null);
+                this.debounce("fetch-layout", this.fetch.bind(this));
+            }
         },
         fetch: function() {
-            this.layout = null;
+            if (this.layout && !this.hasrecordtypes) return;
             if (this.sobject && typeof this.sobject === 'string') {
                 SFDC.launcher
                 .then(fetchRecordTypeId.bind(this))
                 .then(getLayoutInfo)
                 .then(function(layout) {
-                    this.layout = layout;
+                    this._setLayout(layout);
                     this.fire('layout-change');
                 }.bind(this));
             }
