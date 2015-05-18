@@ -1,21 +1,21 @@
 <!--
-    force-sobject-collection element wraps the SmartSync Force.SObjectCollection into a polymer element.
-    Why: a) Auto manages the offline store for caching.
-    b) Provides a simple DOM based interface to interact with Smartsync.
-    c) Allows other polymer elements to easily comsume smartsync.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
 
-    @attributes:
-    sobject: (Required) Type of sobject on which you want to render a list
-    query: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
-    querytype: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
-    autosync: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
-    maxsize: (Optional) Default: -1. If positive, limits the maximum number of records fetched.
+<!--
+force-sobject-collection element provides a custom component for Force.SObjectCollection from Mobile SDK's SmartSync JS. It allows apps to easily fetch a list of records from a salesforce sobject in both online & offline modes. For Offline use, the application should first create a Smartstore soup with same name as the target sobject.
 
-    @methods:
-    fetch: Initiates the fetching of records from the relevant data store (server/offline store).
-    reset: Replaces all the existing contents of the collection and initiates autosync if enabled.
+To use this component, specify the sobject name and the query for fetching data.
 
-    @events:
+Example:
+
+    <force-sobject-collection sobject="Account" query="Select id, name from Account" querytype="soql" autosync></force-sobject-collection>
+
+@group Salesforce Mobile Elements
+@element force-sobject-collection
+    
+@events:
     reset: when the collection's entire contents have been replaced.
     sync: when the collection has been successfully synced with the server
     error: when a request to remote server has failed.

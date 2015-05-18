@@ -1,28 +1,22 @@
 <!--
-    force-ui-app element is a top level UI element that extends the force-app element and also provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page, esp. in single page view with split view panels.
-    Why: a) Manages all the UI stylesheets.
-    b) Provides simple header and content location for the app.
-    c) Provides way to create splitview or multipage app with built-in navigation.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
 
-    @extends force-app
+<!--
+force-ui-app element is a top level UI element that provides the basic styling and structure for an application. This element uses polymer layout features to enable flexible sections on the page, esp. in single page view with split view panels. It also contains 2 content sections, one for elements in header and another for all the body elements with class `page`.
 
-    @attributes:
-    multipage: (Optional) Default: false. When true, force-ui-app shows only one direct children (class="page") at a time and allows navigation to other children.
-    startpage: (Optional) Default: first direct child element with class="page". Instance of the DOM element, with class="page", that should be shown first when the app loads.
+Example:
 
-    @properties:
-    pages: Returns all the direct child elements of the force-ui-app with class as "page".
+    <force-ui-app>
+      <h1>Title</h1>
+      <div class="page">Body</div>
+    </force-ui-app>
 
-    @content sections:
-    header: Selects all child elements of nodeType header.
-    content: Selects all the rest of child elements.
-
-    @methods:
-    navigateTo: Navigates the user from one page element to another page element.
-      @param target, Selector or dom element to navigate the user to.
-    navigateBack: Navigates the user to the last page element in the stack.
-
-    @events:
+@group Salesforce Mobile Elements
+@element force-ui-app
+    
+@events:
     navigation-start: Thrown before starting the navigation from one page to another.
     navigation-end: Thrown after the navigation animation ends.
 -->
@@ -76,12 +70,42 @@
       Polymer({
         is: 'force-ui-app', 
         properties: {
+
+          /**
+           * (Optional) When true, force-ui-app shows only one direct children (class="page") at a time and allows navigation to other children.
+           *
+           * @attribute multipage
+           * @type Boolean
+           * @default false
+           */
           multipage: Boolean,
+
+          /**
+           * (Optional) Instance of the DOM element, with class="page", that should be shown first when the app loads.
+           *
+           * @attribute startpage
+           * @type String
+           * @default .page:first
+           */
           startpage: {
             type: String,
             value: '.page:first'
           },
+
+          /**
+           * Returns an array of DOM elements in the navigation stack.
+           *
+           * @attribute pageStack
+           * @type Array
+           */
           pageStack: Array,
+
+          /**
+           * Property to show/hide the back button during navigation.
+           *
+           * @attribute showBackBtn
+           * @type Boolean
+           */
           showBackBtn: {
             type: Boolean,
             notify: true
@@ -114,12 +138,25 @@
             $(this).addClass('splitview');
           }
         },
+
+        /**
+         * Navigates the user to the last page element in the stack.
+         *
+         * @method navigateBack
+         */
         navigateBack: function(e) {
           if (this.multipage) {
             navigate(this, this.activepage, this.pop('pageStack'), true);
             if (e) e.stopPropagation();
           }
         },
+
+        /**
+         * Navigates the user from one page element to another page element.
+         * 
+         * @method navigateTo
+         * @param target. Selector or dom element to navigate the user to.
+         */
         navigateTo: function(target) {
           if (this.multipage) {
             var $target = $(this.pages).filter(target);

@@ -4,7 +4,6 @@
         sobject = sobject.toLowerCase();
 
         return new (Force.SObject.extend({
-            cacheMode: SFDC.cacheMode,
             sobjectType: sobject.toLowerCase(),
             idAttribute: sobject.search(/__x$/) > 0 ? 'ExternalId' : 'Id'
         }));
@@ -48,71 +47,97 @@
     Polymer({
         is: 'force-sobject', 
         properties: {
+            /**
+             * (Required) Name of Salesforce sobject against which CRUD operations will be performed.
+             *
+             * @attribute sobject
+             * @type String
+             */
             sobject: String,
+
+            /**
+             * (Required) Id of the record on which CRUD operations will be performed.
+             *
+             * @attribute recordid
+             * @type String
+             */
             recordid: String,
+
+            /**
+             * (Optional) List of field names that need to be fetched for the record. 
+             * Provide a space delimited list. Also the field names are case sensitive.
+             *
+             * @attribute fieldlist
+             * @type String
+             * @default All fields
+             */
             fieldlist: {
                 type: String,
                 value: null
             },
+
+            /**
+             * (Optional) Auto synchronize (fetch/save) changes to the model with the remote server/local store. 
+             * If false, use fetch/save methods to commit changes to server or local store. (TBD: autosync not working for "save" operations)
+             *
+             * @attribute autosync
+             * @type Boolean
+             * @default false
+             */
             autosync: String,
+
+            /**
+             * (Optional) The cache mode (server-first, server-only, cache-first, cache-only) to use during CRUD operations.
+             *
+             * @attribute cachemode
+             * @type String
+             * @default SFDC.cacheMode()
+             */
+            cachemode: {
+                type: String,
+                value: function() { return SFDC.cacheMode(); }
+            },
+
+            /**
+             * (Optional) The merge mode to use when saving record changes to salesforce.
+             *
+             * @attribute mergemode
+             * @type String
+             * @default Force.MERGE_MODE.OVERWRITE
+             */
             mergemode: {
                 type: String,
                 value: Force.MERGE_MODE.OVERWRITE
             },
+
+            /**
+             * Returns a map of fields to values for a specified record. Update this map before saving changes.
+             *
+             * @attribute fields
+             * @type Object
+             */
             fields: {
                 type: Object,
                 notify: true
             }
         },
+
         observers: [
-            "init(sobject, recordid, fieldlist)"
+            "_init(sobject, recordid, fieldlist)",
+            "_updateCacheMode(cachemode)"
         ],
-        // Resets all the properties on the model.
-        // Recreates model if sobject type or id of model has changed.
-        init: function() {
-            var that = this,
-                model;
-
-            if (this.sobject && typeof this.sobject === 'string') {
-                that._changedAttributes = [];
-                model = this._model = createModel(this.sobject);
-                model.set(model.idAttribute, this.recordid);
-                model.fieldlist = processFieldlist(this.fieldlist);
-                model.set({attributes: {type: this.sobject}});
-                model.on('all', function(event) {
-                    switch(event) {
-                        case 'change':
-                            var changedFields = _.keys(model.changedAttributes());
-                            changedFields = changedFields.filter(function(field) {
-                                return field.indexOf('__') != 0;
-                            })
-                            that._changedAttributes = _.union(that._changedAttributes, changedFields);
-                            break;
-                        case 'sync': that._changedAttributes = [];
-                    }
-                    that.fire(event);
-                });
-
-                this.fields = new SObjectViewModel(model);
-                if (this.autosync) this.fetch();
-            }
-        },
-        // All CRUD operations should ensure that the model is ready by checking this promise.
-        whenModelReady: function() {
-            var model = this._model;
-            var store = this.$.store;
-            return $.when(store.cacheReady, SFDC.launcher)
-                .then(function() {
-                    model.cache = store.cache;
-                    model.cacheForOriginals = store.cacheForOriginals;
-                });
-        },
+        
+        /**
+         * Initiate the fetching of record data from the relevant data store (server/offline store).
+         *
+         * @method fetch
+         */
         fetch: function(opts) {
 
             var operation = function() {
                 var model = this._model;
                 if (model && model.id) {
-                    this.whenModelReady().then(function() {
+                    this._whenModelReady().then(function() {
                         model.fetch(opts);
                     });
                 } else if (!this.autosync) {
@@ -124,11 +149,14 @@
             this.async(operation.bind(this));
             return this;
         },
-        /*
-        * If the model was modified locally, it saves all the updateable fields on the sobject back to server. 
-        * If fieldlist property is specified on the options, 
-        * only the specified fields are included during the save operation.
-        */
+
+        /**
+         * Initiate the saving of record data to the relevant data store (server/offline store).
+         * If the model was modified locally, it saves all the updateable fields on the sobject back to server. 
+         * If fieldlist property is specified on the options, only the specified fields are included during the save operation.
+         *
+         * @method save
+         */
         save: function(options) {
 
             var operation = function() {
@@ -159,7 +187,7 @@
                 if (model) {
 
                     // Setup the fieldlist for save operation
-                    this.whenModelReady().then(function() {
+                    this._whenModelReady().then(function() {
                         
                         // Check if fieldlist is not specified. If not, then generate that list based on changed attributes.
                         if (!options.fieldlist) {
@@ -198,13 +226,19 @@
             this.async(operation.bind(this));
             return this;
         },
+
+        /**
+         * Initiate the deleting of record data from the relevant data store (server/offline store).
+         *
+         * @method destroy
+         */
         destroy: function(options) {
 
             var operation = function() {
                 var model = this._model;
                 options = _.extend({mergeMode: this.mergemode, wait: true}, options);
                 if (model && model.id) {
-                    this.whenModelReady().then(function() {
+                    this._whenModelReady().then(function() {
                         // Perform delete of record against the server
                         model.destroy(options);
                     });
@@ -217,6 +251,51 @@
             // Queue the operation for next cycle after all change watchers are fired.
             this.async(operation.bind(this));
             return this;
+        },
+
+        // Resets all the properties on the model.
+        // Recreates model if sobject type or id of model has changed.
+        _init: function() {
+            var that = this,
+                model;
+
+            if (this.sobject && typeof this.sobject === 'string') {
+                that._changedAttributes = [];
+                model = this._model = createModel(this.sobject);
+                model.cacheMode = this.cachemode;
+                model.fieldlist = processFieldlist(this.fieldlist);
+                model.set(model.idAttribute, this.recordid);
+                model.set({attributes: {type: this.sobject}});
+                model.on('all', function(event) {
+                    switch(event) {
+                        case 'change':
+                            var changedFields = _.keys(model.changedAttributes());
+                            changedFields = changedFields.filter(function(field) {
+                                return field.indexOf('__') != 0;
+                            })
+                            that._changedAttributes = _.union(that._changedAttributes, changedFields);
+                            break;
+                        case 'sync': that._changedAttributes = [];
+                    }
+                    that.fire(event);
+                });
+
+                this.fields = new SObjectViewModel(model);
+                if (this.autosync) this.fetch();
+            }
+        },
+        // All CRUD operations should ensure that the model is ready by checking this promise.
+        _whenModelReady: function() {
+            var model = this._model;
+            var store = this.$.store;
+            return $.when(store.cacheReady, SFDC.launcher)
+                .then(function() {
+                    model.cache = store.cache;
+                    model.cacheForOriginals = store.cacheForOriginals;
+                });
+        },
+        _updateCacheMode: function() {
+            if (this._model) this._model.cacheMode = this.cachemode;
         }
     });
 

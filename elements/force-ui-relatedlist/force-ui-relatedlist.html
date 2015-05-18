@@ -1,18 +1,24 @@
+<!--
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject-layout/force-sobject-layout.html">
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
 <link rel="import" href="../../dependencies/iron-selector/iron-selector.html">
+
 <!--
-    force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It embeds the force-sobject-layout element to fetch the related lists configuraton from the page layout settings.
-    Why: a) Parses the related lists configuration for a particular sobject type.
-    b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
+force-sobject-relatedlists element allows fetching related lists configuration of a sobject record. It embeds the `force-sobject-layout` element to fetch the related list setup from the page layout. If `recordid` attribute is provided, it also generates a soql/cache query to fetch the related record items.
 
-    @attributes:
-    relationships: (Optional) Default: null. A list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
+To use this component, specify the sobject name and the recordid.
 
-    @properties:
-    relatedLists: An array of all the related list information.
+Example:
+
+    <force-sobject-relatedlists sobject="Account" recordid="0010000000AAA"></force-sobject-relatedlists>
+
+@group Salesforce Mobile Elements
+@element force-sobject-relatedlists
 -->
 <dom-module id="force-sobject-relatedlists">
   <template>
@@ -22,16 +28,20 @@
 </dom-module>
 
 <!--
-    force-ui-relatedlist element is an extension of force-selector-relatedlist element and renders a list of related records to an sobject record.
+force-ui-relatedlist element renders a list of records for a SObject's related list configuration.  It uses the iron-selector element to detect record selection based on user's tap actions.
 
-    @extends force-selector-relatedlist
+To use this component, specify a related list configuration obtained from `force-sobject-relatedlist`.
 
-    @properties:
-    selected: Returns the value of "idfield" of the selected records.
+Example:
+
+    <force-ui-relatedlist related="OBJECT"></force-ui-relatedlist>
+
+@group Salesforce Mobile Elements
+@element force-ui-relatedlist
 -->
 <dom-module id="force-ui-relatedlist">
   <template>
-    <force-sobject-collection id="force_sobjects" sobject="[[related.sobject]]" querytype="[[related.querytype]]" query="[[related.query]]" on-sync="_updateModels"></force-sobject-collection>
+    <force-sobject-collection id="force_sobjects" sobject="[[related.sobject]]" querytype="[[related.querytype]]" query="[[related.query]]" on-sync="_updateModels" autosync></force-sobject-collection>
     <div id="table" class="table-view" style="display: none;">
       <div class="table-view-divider">[[related.label]]</div>
       <iron-selector id="selector" attr-for-selected="id" on-iron-select="_updateSelected">
@@ -50,8 +60,30 @@
     Polymer({
       is: 'force-ui-relatedlist',
       properties: {
+
+        /**
+         * (Required) Related list configuration obtained from force-sobject-relatedlist.
+         *
+         * @attribute related
+         * @type Object
+         */
         related: Object,
+
+        /**
+         * Returns the list of records in an array.
+         *
+         * @attribute models
+         * @type Array
+         */
         models: Array,
+
+        /**
+         * Returns the value of "idfield" of the selected records.
+         * 
+         * @attribute selected
+         * @type String
+         * @readOnly
+         */
         selected: {
           type: String,
           readOnly: true,

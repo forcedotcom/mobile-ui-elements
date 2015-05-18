@@ -1,13 +1,26 @@
 <!--
-    force-ui-detail element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a force-sobject element to allow all the CRUD operations on an SObject.
-    Why: a) Reads the layout settings of an object and renders the detail accordingly.
-    b) Provides a simpler DOM based interface to fetch full or partial record.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
 
-    @attributes:
-    fieldlist: (Optional) Default: All fields on the layout. A list of fields that should be displayed for the record.
-    fieldlabels: (Optional) Default: Actual field labels. A list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
+<!--
+force-ui-detail element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a `force-sobject` element to allow all the CRUD operations on an SObject.
 
-    @extends force-sobject-layout
+To use this component, specify the sobject name and the recordid.
+
+Example:
+
+    <force-ui-detail sobject="Account" recordid="0010000000AAA" autosync></force-ui-detail>
+
+@group Salesforce Mobile Elements
+@element force-ui-detail
+    
+@events:
+    save: when the data has been successfully saved to the server.
+    sync: when the data has been successfully synced with the server.
+    destroy: when a record is deleted.
+    error: when a request to remote server has failed.
+    invalid: when the data validation fails on the client.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">

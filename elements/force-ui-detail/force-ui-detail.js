@@ -3,17 +3,75 @@
     Polymer({
         is: 'force-ui-detail', 
         properties: {
+
+            /**
+             * (Required) Name of Salesforce sobject for which detail view will be rendered.
+             *
+             * @attribute sobject
+             * @type String
+             */
             sobject: String,
+
+            /**
+             * (Required) Id of the record for which detail view will be rendered.
+             *
+             * @attribute recordid
+             * @type String
+             */
             recordid: String,
+
+            /**
+             * (Optional) If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
+             *
+             * @attribute hasrecordtypes
+             * @type Boolean
+             * @default false
+             */
             hasrecordtypes: Boolean,
+
+            /**
+             * (Optional) Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
+             *
+             * @attribute recordtypeid
+             * @type String
+             * @default null
+             */
+            recordtypeid: {
+                type: String,
+                value: null
+            },
+
+            /**
+             * (Optional) Display edit view of the detail.
+             *
+             * @attribute foredit
+             * @type Boolean
+             * @default false
+             */
             foredit: {
                 type: Boolean,
                 value: false
             },
+
+            /**
+             * (Optional) A list of fields that should be displayed for the record.
+             *
+             * @attribute fieldlist
+             * @type String
+             * @default null
+             */
             fieldlist: {
                 type: String, /*TBD: Should move it to array */
                 value: null
             },
+
+            /**
+             * (Optional) A list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
+             *
+             * @attribute fieldlabels
+             * @type String
+             * @default null
+             */
             fieldlabels: {
                 type: String, /*TBD: Should move it to array */
                 value: null

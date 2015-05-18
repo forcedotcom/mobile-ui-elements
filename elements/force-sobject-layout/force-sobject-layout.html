@@ -1,19 +1,22 @@
 <!--
-    force-sobject-layout element provides the layout information for a particular sobject record.
-    Why: a) Wraps the describeLayout API call.
-    b) Layout information is cached in memory for existing session and stored in smartstore for offline consumption.
-    c) Provides a base definition for elements that depend on page layouts, such as force-ui-detail and force-sobject-related.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
 
-    @attributes:
-    sobject: (Required) Type of sobject on which you want to fetch the layout
-    hasrecordtypes: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
-    recordtypeid: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
-    recordid: (Optional) Default: null. Id of the record for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordtypeid" is not provided.
+<!--
+force-sobject-layout web component provides the layout information for a particular sobject type or record. Layout information is cached in memory for existing session and is also stored in smartstore if used with Mobile SDK. `force-ui-detail` and `force-sobject-related` use this web component to obtain layout information.
 
-    @methods:
-    whenDetailSections: Initiate the fetching of layout's detail view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all detail sections.
-    whenEditSections: Initiate the fetching of layout's edit view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all edit sections.
-    whenRelatedLists: Initiate the fetching of layout's related lists data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all related list infos.
+To use this component just specify the sobject name.
+
+Example:
+
+    <force-sobject-layout sobject="Account"></force-sobject-layout>
+
+@group Salesforce Mobile Elements
+@element force-sobject-layout
+    
+@events:
+    layout-change:
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">

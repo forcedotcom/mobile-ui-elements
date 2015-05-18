@@ -3,24 +3,59 @@
     "use strict";
 
     var viewProps = {
+
+        /**
+         * (Required) Name of Salesforce sobject against which fetch operations will be performed.
+         *
+         * @attribute sobject
+         * @type String
+         */
         sobject: String,
+
+        /**
+         * (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
+         *
+         * @attribute query
+         * @type String
+         * @default null
+         */
         query: {
             type: String,
             value: null
         },
+
+        /**
+         * (Optional) Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+         *
+         * @attribute querytype
+         * @type String
+         * @default mru
+         */
         querytype: {
             type: String,
             value: "mru"
         },
+
+        /**
+         * (Optional) Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
+         *
+         * @attribute autosync
+         * @type Boolean
+         * @default false
+         */
+        autosync: Boolean,
+
+        /**
+         * (Optional) If positive, limits the maximum number of records fetched.
+         *
+         * @attribute maxsize
+         * @type Number
+         * @default -1
+         */
         maxsize: {
             type: Number,
             value: -1
-        },
-        autosync: {
-            type: Boolean,
-            value: true
         }
-        /* async: false */ // Optional property to perform fetch as a web worker operation. Useful for data priming.
     };
 
     var generateConfig = function(props) {
@@ -52,6 +87,13 @@
     Polymer({
         is: 'force-sobject-collection', 
         properties: _.extend({
+
+            /**
+             * Returns an instance of Force.SObjectCollection containing the list of records fetched by the query.
+             *
+             * @attribute collection
+             * @type Object
+             */
             collection: {
                 type: Object,
                 value: function() {
@@ -67,11 +109,23 @@
         observers: [
             "reset(sobject, query, querytype)"
         ],
+        
+        /**
+         * Replaces all the existing contents of the collection and initiates autosync if enabled.
+         *
+         * @method reset
+         */
         reset: function() {
             this.collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
             this.collection.reset();
             if (this.autosync) this.fetch();
         },
+
+        /**
+         * Initiates the fetching of records from the relevant data store (server/offline store).
+         *
+         * @method fetch
+         */
         fetch: function() {
 
             var onFetch = function() {

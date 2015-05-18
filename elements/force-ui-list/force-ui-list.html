@@ -1,22 +1,29 @@
 <!--
-    force-ui-list element enables the rendering of simple list of salesforce records driven by a force-sobject-collection. It extends the force-selector-list element to allow all the fetching of records and to detect record selection based on user's tap actions.
-    Why: a) Renders the list of records within a Force.SObjectCollection as an Unordered List.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
 
-    @extends force-selector-list
+<!--
+force-ui-list element enables the rendering of simple list of salesforce records driven by a `force-sobject-collection`. It uses the iron-selector element to detect record selection based on user's tap actions.
 
-    @attributes:
-    labelfield: (Optional) Default: Name. Name of the field to be used as label on each list element.
-    sublabelfield: (Optional) Name of the field to be used as the sublabel on each list element.
+To use this component, specify the sobject name and the query.
 
-    @properties:
-    selected: Returns the value of "idfield" of the selected records.
+Example:
+
+    <force-ui-list sobject="Account" query="Select id, name from Account" querytype="soql"></force-ui-list>
+
+@group Salesforce Mobile Elements
+@element force-sobject
+    
+@events:
+    sync: when the data has been successfully synced with the server.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
 <link rel="import" href="../../dependencies/iron-selector/iron-selector.html">
 <dom-module id="force-ui-list">
   <template>
-      <force-sobject-collection id="listsource" sobject="[[sobject]]" querytype="[[querytype]]" query="[[query]]" autosync="false"></force-sobject-collection>
+      <force-sobject-collection id="listsource" sobject="[[sobject]]" querytype="[[querytype]]" query="[[query]]" autosync></force-sobject-collection>
       <div class="table-view">
         <iron-selector id="selector" attr-for-selected="id" on-iron-select="_updateSelected">
         <template is="dom-repeat" items="[[viewModels]]">
@@ -33,20 +40,67 @@
       is: 'force-ui-list', 
 
       properties: {
+
+        /**
+         * (Required) Name of Salesforce sobject against which fetch operations will be performed.
+         *
+         * @attribute sobject
+         * @type String
+         */
         sobject: String,
+
+        /**
+         * (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
+         *
+         * @attribute query
+         * @type String
+         * @default null
+         */
         query: {
-          type: String,
-          value: null
+            type: String,
+            value: null
         },
+
+        /**
+         * (Optional) Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+         *
+         * @attribute querytype
+         * @type String
+         * @default mru
+         */
         querytype: {
-          type: String,
-          value: "mru"
+            type: String,
+            value: "mru"
         },
+
+        /**
+         * (Optional) Name of the field to be used as label on each list element.
+         * 
+         * @attribute labelfield
+         * @type String
+         * @default Name
+         */
         labelfield: {
           type: String,
           value: 'Name'
         },
+
+        /**
+         * (Optional) Name of the field to be used as the sublabel on each list element.
+         * 
+         * @attribute sublabelfield
+         * @type String
+         * @default null
+         */
         sublabelfield: String,
+
+        /**
+         * Returns the value of "idfield" of the selected records.
+         * 
+         * @attribute selected
+         * @type String
+         * @readOnly
+         */
         selected: {
           type: String,
           readOnly: true,

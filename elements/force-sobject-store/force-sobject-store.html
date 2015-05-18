@@ -1,23 +1,21 @@
 <!--
-    force-sobject-store element wraps the SmartSync Force.StoreCache into a polymer element.
-    Why: a) Auto manages the lifecycle of the smartstore soup for each sobject type.
-    b) Auto creates index spec based on the lookup relationships on the sobject.
-    c) Provides a simpler DOM based interface to interact with Smartsync SObject Model.
-    d) Allows other polymer elements to easily comsume smartstore.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
 
-    @attributes:
-    sobject: (Required) Type of sobject that you would like to store in this cache.
-    fieldstoindex: (Optional) Addition fields (given by their name) that you want to have indexes on.
+<!--
+force-sobject-store element provides a custom component for Force.StoreCache from Mobile SDK's SmartSync JS. It allows an app to quickly create and manage Smartstore soup for a salesforce sobject.
 
-    @properties:
-    cacheReady: Returns a promise to track store cache creation progress.
-    cache: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
-    cacheForOriginals: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
+To use this component just specify the sobject name.
 
-    @methods:
-    destroy: Removes the soup from smartstore. Returns a promise to track the completion of process.
+Example:
 
-    @events:
+    <force-sobject-store sobject="Account"></force-sobject-store>
+
+@group Salesforce Mobile Elements
+@element force-sobject-store
+    
+@events:
     store-ready: Fires this event when the store cache has been successfully created and ready to use.
     store-destroy: Fires this event when the store cache has been successfully removed.
 -->

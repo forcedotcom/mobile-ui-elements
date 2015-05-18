@@ -71,7 +71,23 @@
     Polymer({
         is: 'force-sobject-store', 
         properties: {
+
+            /**
+             * (Required) Type of sobject that you would like to store in this cache.
+             *
+             * @attribute sobject
+             * @type String
+             */
             sobject: String,
+
+            /**
+             * (Optional) Addition fields (given by their name) that you want to have indexes on.
+             * Provide a space delimited list. Also the field names are case sensitive.
+             *
+             * @attribute fieldstoindex
+             * @type String
+             * @default null
+             */
             fieldstoindex: {
                 type: String, /*TBD: Should switch to array */
                 value: null
@@ -80,14 +96,17 @@
         observers: [
             "init(sobject, fieldstoindex)"
         ],
+        // cacheReady: Returns a promise to track store cache creation progress.
         /* TBD: Evaluate moving to computed properties */
         get cacheReady() {
             return this.init();
         },
+        // cache: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
         get cache() {
             var cache = sobjectStores[processName(this.sobject)];
             if (cache instanceof Force.StoreCache) return cache;
         },
+        // cacheForOriginals: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
         get cacheForOriginals() {
             var cache = originalSObjectStores[processName(this.sobject)];
             if (cache instanceof Force.StoreCache) return cache;
@@ -110,6 +129,11 @@
                 });
             }
         },
+        /**
+         * Removes the soup from smartstore. Returns a promise to track the completion of process.
+         * 
+         * @method destroy
+         */
         destroy: function() {
             var cacheDestroy, cacheForOriginalsDestroy;
             var that = this;

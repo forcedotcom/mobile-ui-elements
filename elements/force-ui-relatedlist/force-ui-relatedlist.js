@@ -2,20 +2,63 @@
     Polymer({
         is: 'force-sobject-relatedlists', 
         properties: {
+
+            /**
+             * (Required) Name of Salesforce sobject for which related list info will be fetched.
+             *
+             * @attribute sobject
+             * @type String
+             */
             sobject: String,
+
+            /**
+             * Id of the record for which related list queries will be generated. These queries can be used for fetching related records.
+             *
+             * @attribute recordid
+             * @type String
+             */
             recordid: {
                 type: String,
                 observer: 'generateRelatedLists'
             },
+
+            /**
+             * (Optional) If false, the element returns the related list on default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
+             *
+             * @attribute hasrecordtypes
+             * @type Boolean
+             */
             hasrecordtypes: String,
+
+            /**
+             * (Optional) Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
+             *
+             * @attribute recordtypeid
+             * @type String
+             */
             recordtypeid: String,
+
+            /**
+             * (Optional) A list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
+             * 
+             * @attribute relationships
+             * @type String
+             */
             relationships: {
                 type: String,
                 observer: "relationshipsChanged"
             },
+
+            /**
+             * An array of all the related list information.
+             * 
+             * @attribute relatedLists
+             * @type Array
+             * @readOnly
+             */
             relatedLists: {
                 type: Array,
-                value: function() { return []; },
+                readOnly: true,
                 notify: true
             }
         },
@@ -24,7 +67,7 @@
             setTimeout(this.generateRelatedLists.bind(this), 0);
         },
         generateRelatedLists: function(ev) {
-            this.relatedLists = [];
+            this._setRelatedLists([]);
             fetchRelatedLists(this);
         }
     });
