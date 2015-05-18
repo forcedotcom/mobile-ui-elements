@@ -1,0 +1,56 @@
+<!--
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+This code may only be used under the BSD style license found at https://github.com/ForceDotComLabs/mobile-ui-elements/LICENSE
+-->
+
+<!--
+SFDC.RoutingBehavior provides a simple routing behavior based on Backbone JS router. It also maps the current URL to a specified path to set the appropriate properties.
+
+To use this behavior, specify the path which should activate the component.
+
+@group Salesforce Mobile Elements
+    
+@events:
+    route-changed
+-->
+<script>
+    SFDC.RoutingBehavior = (function() {
+        var private_router;
+        var pathParser = /(?::|\*)([^\/\(\)]*)/g;
+        return {
+            properties: {
+              /**
+               * (Required) Path to a supported route
+               *
+               * @attribute path
+               * @type String
+               */
+              path: {
+                type: String,
+                observer: '_pathChanged'
+              }
+            },
+            _pathChanged: function(newPath, oldPath) {
+                // setup listeners for this.path
+                // and fire a change event when complete
+                this.router.route(newPath, this.localName , function() {
+                  this._fireChange(arguments);
+                }.bind(this));
+            },
+            _fireChange: function(args) {
+                var res, idx = 0;
+                while ((res = pathParser.exec(this.path)) !== null) {
+                  if (typeof this[res[1]] == 'boolean') this[res[1]] = args[idx++] ? true : false;
+                  else this[res[1]] = args[idx++];
+                }
+                this.fire('route-changed', {path: this.path, params: args});
+            },
+            get router() {
+                if (!private_router) {
+                  private_router = new Backbone.Router();
+                }
+                return private_router;
+            }
+        };
+    })();
+</script>
