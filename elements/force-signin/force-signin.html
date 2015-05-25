@@ -35,7 +35,7 @@ Example:
             is: 'force-signin', 
             properties: {
                 /**
-                 * Automatically trigger user authentication as soon as the component is ready.
+                 * Automatically trigger user authentication as soon as the component is ready. If accesstoken and instanceurl are set via attributes, OAuth will not trigger automatically.
                  *
                  * @attribute auto
                  * @type Boolean
@@ -87,7 +87,7 @@ Example:
                 usePopupWindow: Boolean,
 
                 /**
-                 * Salesforce session ID for API requests. It can directly specified for a known session ID, or will be obtained automatically via OAuth.
+                 * Salesforce session ID for API requests. It is set by the component after successful completion of Salesforce OAuth.
                  *
                  * @attribute accesstoken
                  * @type String
@@ -98,7 +98,7 @@ Example:
                 },
 
                 /**
-                 * Salesforce instance URL for API requests. It can directly specified for a known salesforce host, or will be obtained automatically via OAuth.
+                 * Salesforce instance URL for API requests. It is set by the component after successful completion of Salesforce OAuth.
                  *
                  * @attribute instanceurl
                  * @type String
@@ -109,9 +109,9 @@ Example:
                 },
 
                 /**
-                 * Salesforce user identity URL. It can directly specified for a known user, or will be obtained automatically via OAuth.
+                 * Salesforce user identity URL. It is set by the component after successful completion of Salesforce OAuth.
                  *
-                 * @attribute idUrl
+                 * @attribute id-url
                  * @type String
                  */
                 idUrl: {

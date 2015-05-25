@@ -54,7 +54,7 @@
             sobject: String,
 
             /**
-             * (Optional) If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
+             * (Optional) If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, `recordid` or `recordtypeid` must be provided.
              *
              * @attribute hasrecordtypes
              * @type Boolean
@@ -66,7 +66,7 @@
             },
 
             /**
-             * (Optional) Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
+             * (Optional) Id of the record type for which layout has to be fetched. Required if `hasrecordtypes` is true and `recordid` is not provided.
              *
              * @attribute recordtypeid
              * @type String
@@ -78,7 +78,7 @@
             },
 
             /**
-             * (Optional) Id of the record for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordtypeid" is not provided.
+             * (Optional) Id of the record for which layout has to be fetched. Required if `hasrecordtypes` is true and `recordtypeid` is not provided.
              *
              * @attribute recordid
              * @type String

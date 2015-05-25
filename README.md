@@ -22,7 +22,7 @@ This document is intended to introduce you to the app's architecture and design 
 - Mobile UI Elements License
 
 ## What is it? ##
-Mobile UI Elements is a set of web components built using [Google’s Polymer framework](http://www.polymer-project.org). The library utilizes the future of HTML5 standards, such as Custom Elements, ShadowDOM, Templates, HTML imports etc., to provide a set of new HTML tags that generate the Saleforce driven UI for your mobile application. It's built on top of [Salesforce Mobile SDK 2.0](http://www2.developerforce.com/en/mobile/services/mobile-sdk) and extends the open source frameworks such as [Backbone.js](http://backbonejs.org/) and [Undescore.js](http://underscorejs.org/) and [JQuery](http://jquery.com/). It also comes with some stylesheets, providing the responsive design for tablets and phones, and Sample Apps to showcase how to use them in a real application. You can easily combine and extend this library to develop UI specific to your application.
+Mobile UI Elements is a set of web components built using [Google’s Polymer framework](http://www.polymer-project.org). The library utilizes the future of HTML5 standards, such as Custom Elements, ShadowDOM, Templates, HTML imports etc., to provide a set of new HTML tags that generate the Saleforce driven UI for your mobile application. It's built on top of [Salesforce Mobile SDK](http://www2.developerforce.com/en/mobile/services/mobile-sdk) and extends the open source frameworks such as [Backbone.js](http://backbonejs.org/) and [Undescore.js](http://underscorejs.org/) and [JQuery](http://jquery.com/). It also comes with some stylesheets, providing the responsive design for tablets and phones, and Sample Apps to showcase how to use them in a real application. You can easily combine and extend this library to develop UI specific to your application.
 
 ## Setup ##
 
@@ -65,24 +65,23 @@ To create a mobile sdk app, run the following command. Make sure that the [force
 	$ grunt create_app
 
 ## Available UI Elements ##
-1. __force-signin__: force-signin element allows an easy way to initiate OAuth into salesforce via web or mobile SDK.
+1. __force-signin__: This element allows an easy way to initiate OAuth into salesforce via web or mobile SDK.
     
     Supported attributes include:
-    - `consumerkey`: (Optional) OAuth consumer key required only for web based applications. For SDK based applications, specify the consumer key in the bootconfig.json.
-    - `callbackurl`: (Optional) OAuth callback url required only for web based applications. For SDK based applications, specify the callback url in the bootconfig.json.
-    - `loginurl`: (Optional) Login URL for salesforce. Default value is https://login.salesforce.com
-    - `proxyurl`: (Optional) Proxy host to avoid cross-domain calls issue.
-    - `accesstoken`: (Optional) Session Id to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
-    - `instanceurl`: (Optional) Instance URL of the org to be used for making API calls to salesforce. It's generated automatically in case OAuth is used to authenticate into salesforce.
-    - `usePopupWindow`: (Optional) Default: false. Set as true if you want OAuth flow to be started in a new child window.
-
-    Properties:
-    - `userInfo`: Returns the details of the current logged in user.
+    - `auto`: (Optional) Automatically trigger user authentication as soon as the component is ready. If accesstoken and instanceurl are set via attributes, OAuth will not trigger automatically.
+    - `consumerkey`: (Optional) Consumer key for initiating OAuth based salesforce authentication. It's required only for web based applications. For SDK based applications, specify the consumer key in the bootconfig.json.
+    - `callbackurl`: (Optional) Callback URL property for OAuth based authentication. It's required only for web based applications. For SDK based applications, specify the callback URL in the bootconfig.json.
+    - `loginurl`: (Optional) Login Host for salesforce authentication. It's required only for web based applications. For SDK based applications, specify the login host in application settings. Default value is https://login.salesforce.com
+    - `proxyurl`: (Optional) Custom proxy host setting for web based application. If specified, all the HTTP requests will be sent to this proxy host with "Salesforce-Endpoint" header for actual host URL. This allows cross-domain calls restricted by browsers.
+    - `usePopupWindow`: (Optional) Set as true if you want OAuth flow to be started in a new child window.
+    - `accesstoken`: Salesforce session ID for API requests. It is set by the component after successful completion of Salesforce OAuth.
+    - `instanceurl`: Salesforce instance URL for API requests. It is set by the component after successful completion of Salesforce OAuth.
+    - `id-url`: Salesforce user identity URL. It is set by the component after successful completion of Salesforce OAuth.
+    - `userInfo`: (Read Only) Returns basic user information of currently active session. It is set by the component after successful completion of Salesforce OAuth.
 
     Methods:
-    - `authenticate`: Initiates the authentication into salesforce. The force-signin element automatically initiates the authentication process if no accesstoken is specified.
+    - `authenticate`: Authenticate the user with salesforce via OAuth.
     - `logout`: Initiates the logout of the current user session.
-    - `getUserInfo`: Returns a promise which on completion returns the details of the current logged in user.
 
     Events:
     - `success`: when the OAuth flow is successfully completed and the accesstoken is obtained from salesforce.
@@ -92,28 +91,139 @@ To create a mobile sdk app, run the following command. Make sure that the [force
 	Example (when using inside Visualforce):
 
 	```
-	<force-signin consumerkey="OAuth Consumer key" callbackurl="OAuth Callback url"></force-signin>
+	<force-signin consumerkey="CONSUMER_KEY_FROM_SALESFORCE_CONNECTED_APP" callbackurl="https://mycallback.com"></force-signin>
 	```
 
-2. __force-ui-app__: force-ui-app element is a top level UI element that provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page. This is useful in single page view with split view panels. All the children of the main section must have the class "content" specified on them to apply the right styles.
+2. __force-sobject-collection__: This element provides a custom component for `Force.SObjectCollection` from Mobile SDK's SmartSync JS. It allows apps to easily fetch a list of records from a salesforce sobject in both online & offline modes. For Offline use, the application should first create a Smartstore soup with same name as the target sobject.
+
+    Supported attributes include:
+    - `sobject`: (Required) Name of Salesforce sobject against which fetch operations will be performed.
+    - `query`: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
+    - `querytype`: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+    - `autosync`: (Optional) Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
+    - `maxsize`: (Optional) Default: -1. If positive, limits the maximum number of records fetched.
+
+    Methods:
+    - `fetch`: Initiates the fetching of records from the relevant data store (server/offline store).
+    - `reset`: Replaces all the existing contents of the collection and initiates autosync if enabled.
+
+    Events:
+    - `reset`: when the collection's entire contents have been replaced.
+    - `sync`: when the collection has been successfully synced with the server
+    - `error`: when a request to remote server has failed.
+
+    Example:
+
+    ```
+    <force-sobject-collection sobject="Account" querytype="mru"></force-sobject-collection>
+    ```
+
+3. __force-sobject__: This element provides a custom component for `Force.SObject` from Mobile SDK's SmartSync JS. It allows apps to easily perform CRUD operations against a salesforce sobject in both online & offline modes. For Offline use, the application should first create a Smartstore soup with same name as the target sobject.
+
+    Supported attributes include:
+    - `sobject`: (Required) Name of Salesforce sobject against which CRUD operations will be performed.
+    - `recordid`: (Required) Id of the record on which CRUD operations will be performed.
+    - `fieldlist`: (Optional) Default: All fields. List of field names that need to be fetched for the record. Provide a space delimited list. Also the field names are case sensitive.
+    - `autosync`: (Optional) Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
+    - `cachemode`: (Optional) Default `SFDC.cacheMode()`. The cache mode (server-first, server-only, cache-first, cache-only) to use during CRUD operations.
+    - `mergemode`: (Optional) Default `Force.MERGE_MODE.OVERWRITE`. The merge model to use when saving record changes to salesforce.
+    - `fields`: Returns a map of fields to values for a specified record. Update this map to change SObject field values.
+
+    Methods:
+    - `fetch`: Initiate the fetching of record data from the relevant data store (server/offline store).
+    - `save`: Initiate the saving of record data to the relevant data store (server/offline store).
+    - `destroy`: Initiate the deleting of record data from the relevant data store (server/offline store).
+
+    Events:
+    - `save`: when the data has been successfully saved to the server.
+    - `sync`: when the data has been successfully synced with the server.
+    - `destroy`: when a record is deleted.
+    - `error`: when a request to remote server has failed.
+    - `invalid`: when the data validation fails on the client.
+
+    Example:
+
+    ```
+    <force-sobject sobject="Account" recordid="001000000000AAA"></force-sobject>
+    ```
+
+4. __force-sobject-store__: This element provides a custom component for `Force.StoreCache` from Mobile SDK's SmartSync JS. It allows an app to quickly create and manage Smartstore soup for a salesforce sobject.
+
+    Supported attributes include:
+    - `sobject`: (Required) Type of sobject that you would like to store in this cache.
+    - `fieldstoindex`: (Optional) Addition fields (given by their name) that you want to have indexes on.
+    - `cacheReady`: Returns a promise to track store cache creation progress.
+    - `cache`: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
+    - `cacheForOriginals`: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
+
+    Methods:
+    - `destroy`: Removes the soup from smartstore. Returns a promise to track the completion of process.
+
+    Events:
+    - `store-ready`: Fires this event when the store cache has been successfully created and ready to use.
+    - `store-destroy`: Fires this event when the store cache has been successfully removed.
+
+    Example:
+
+    ```
+    <force-sobject-store sobject="Account"></force-sobject-store>
+    ```
+
+5. __force-sobject-layout__: This web component provides the layout information for a particular sobject type or record. Layout information is cached in memory for existing session and is also stored in smartstore if used with Mobile SDK. `force-ui-detail` and `force-sobject-related` use this web component to obtain layout information.
+
+    Supported attributes include:
+    - `sobject`: (Required) Name of Salesforce sobject for which layout info will be fetched.
+    - `hasrecordtypes`: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, `recordid` or `recordtypeid` must be provided.
+    - `recordtypeid`: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if `hasrecordtypes` is true and `recordid` is not provided.
+    - `recordid`: (Optional) Default: null. Id of the record for which layout has to be fetched. Required if `hasrecordtypes` is true and `recordtypeid` is not provided.
+    - `layout`: (Read Only) Returns an object with the complete layout information.
+    
+    Methods:
+    - `fetch`: Method to manually initiate the fetching of layout information.
+
+    Example:
+
+    ```
+    <force-sobject-layout sobject="Account"></force-sobject-layout>
+    ```
+
+6. __force-sobject-relatedlists__: This element allows fetching related lists configuration of a sobject record. It embeds the `force-sobject-layout` element to fetch the related list setup from the page layout. If `recordid` attribute is provided, it also generates a soql/cache query to fetch the related record items.
+
+    Supported attributes include:
+    - `sobject`: (Required) Name of Salesforce sobject for which related list info will be fetched.
+    - `recordid`: (Required) Id of the record for which related list queries will be generated. These queries can be used for fetching related records.
+    - `hasrecordtypes`: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, `recordid` or `recordtypeid` must be provided.
+    - `recordtypeid`: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if `hasrecordtypes` is true and `recordid` is not provided.
+    - `relationships`: (Optional) Default: null. A list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
+    - `relatedLists`: Returns an array of all the related list information.
+
+    Example:
+
+    ```
+    <force-sobject-relatedlists sobject="Account" recordid="001000000000AAA"></force-sobject-relatedlists>
+    ```
+
+7. __force-ui-app__: This element is a top level UI element that provides the basic styling and structure for the application. This element uses polymer layout features to enable flexible sections on the page. This is useful in single page view with split view panels. All the children of the main section must have the class "content" specified on them to apply the right styles.
 
 	Supported attributes include:
 	- `multipage`: (Optional) Default: false. When true, force-ui-app shows only one direct child, with class="page", at a time and allows navigation to other child elements.
 	- `startpage`: (Optional) Default: first direct child element with class="page". Instance of the DOM element, with class="page", that should be shown first when the app loads.
-	- `hideheader`: (Optional) Default: false. Show/Hide default header on the page.
 
 	Example (when using inside Visualforce):
 
 	```
-	<force-ui-app multipage="true"></force-ui-app>
+	<force-ui-app multipage></force-ui-app>
 	```
 
-3. __force-ui-list__: force-ui-list element enables the rendering of list of records for any sobject. The element can be configured using various attributes, such as query, sobject and querytype, to show specific set of records. This element should always be a child of `force-ui-app` element to inherit the appropriate styles.
+8. __force-ui-list__: This element enables the rendering of simple list of salesforce records driven by a `force-sobject-collection`. It uses the iron-selector element to detect record selection based on user's tap actions. This element should always be a child of `force-ui-app` element to inherit the appropriate styles.
 
 	Supported attributes include:
-	- `sobject`: (Required) Type of sobject on which you want to render a list.
-	- `query`: (Optional) Default: null. SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
-	- `querytype`: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+	- `sobject`: (Required) Name of Salesforce sobject for which record list will be generated.
+    - `query`: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
+    - `querytype`: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
+    - `labelfield`: (Optional) Default: "Name". Name of the field to be used as label on each list element.
+    - `sublabelfield`: (Optional) Name of the field to be used as the sublabel on each list element.
+    - `selected`: Returns the value of "idfield" of the selected records.
 
 	Example:
 
@@ -121,12 +231,16 @@ To create a mobile sdk app, run the following command. Make sure that the [force
 	<force-ui-list sobject="Account" querytype="mru"></force-ui-list>
 	```
 
-4. __force-ui-detail__: force-ui-detail element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a `force-sobject` element to allow all the CRUD operations on an SObject. This element should always be a child of `force-ui-app` element to inherit the default styles.
+9. __force-ui-detail__: This element enables the rendering of full view of a salesforce record. This element uses the `force-sobject-layout` element to fetch the page layout for the record. This element also embeds a `force-sobject` element to allow all the CRUD operations on an SObject. This element should always be a child of `force-ui-app` element to inherit the default styles.
 
 	Supported attributes include:
-	- All attributes of `force-sobject-layout` element.
+	- `sobject`: (Required) Name of Salesforce sobject for which detail view will be rendered.
+    - `recordid`: (Required) Id of the record for which detail view will be rendered.
+    - `hasrecordtypes`: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, `recordid` or `recordtypeid` must be provided.
+    - `recordtypeid`: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if `hasrecordtypes` is true and `recordid` is not provided.
 	- `fieldlist`: (Optional) Default: All fields on the layout. A list of fields that should be displayed for the record.
     - `fieldlabels`: (Optional) Default: Actual field labels. A list of labels for fields provided in fieldlist attribute. The order of labels should be same as the order of fields in the fieldlist attribute.
+    - `foredit`: (Optional) Default: false. Display edit view of the detail.
 
 	Example:
 
@@ -134,162 +248,10 @@ To create a mobile sdk app, run the following command. Make sure that the [force
 	<force-ui-detail sobject="Account" recordid="001000000000AAA"></force-ui-detail>
 	```
 
-5. __force-selector-list__: force-selector-list is an extension of core-selector element and provides a wrapper around `force-sobject-collection` element. The element acts as a base for any list UI element that also needs the selector functionality. It automatically updates the selected attribute when a row has been clicked on.
+10. __force-ui-relatedlist__: This element renders a list of records for a SObject's related list configuration.  It uses the iron-selector element to detect record selection based on user's tap actions. This element should always be a child of `force-ui-app` element to inherit the default styles.
 
 	Supported attributes include:
-	- All the attributes of the `core-selector` element.
-	- `sobject`: (Required) Type of sobject on which you want to render a list
-	- `query`: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
-	- `querytype`: Type of query (mru, soql, sosl, cache). Required if query is specified.
-	- `selected`: Id of the selected sobject.
-
-	Properties:
-	- `collection`: Returns an instance of Force.SObjectCollection with associated models.
-
-	Methods:
-	- `fetch`: Executes a fetch request on the underlying collection object based on the current config.
-
-	Example:
-
-	```
-	<force-selector-list sobject="Account" querytype="mru"></force-selector-list>
-	```
-
-6. __force-sobject-collection__: force-sobject-collection is a low level polymer wrapper for the SmartSync `Force.SObjectCollection`, which auto manages the offline data store for caching (when running inside a container), provides a simple DOM based interface for SmartSync interactions, and allows other polymer elements to easily consume SmartSync.
-
-	Supported attributes include:
-	- `sobject`: (Required) Type of sobject on which you want to render a list
-	- `query`: (Optional) SOQL/SOSL/SmartSQL statement to fetch the records. Required when querytype is soql, sosl or cache.
-	- `querytype`: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
-	- `autosync`: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
-	- `maxsize`: (Optional) Default: -1. If positive
-
-	Methods:
-	- `fetch`: Initiates the fetching of records from the relevant data store (server/offline store).
-	- `reset`: Replaces all the existing contents of the collection and initiates autosync if enabled.
-
-	Events:
-	- `reset`: when the collection's entire contents have been replaced.
-	- `sync`: when the collection has been successfully synced with the server
-	- `error`: when a request to remote server has failed.
-
-	Example:
-
-	```
-	<force-sobject-collection sobject="Account" querytype="mru"></force-sobject-collection>
-	```
-
-7. __force-sobject__: force-sobject element wraps the SmartSync `Force.SObject` into a polymer element, providing auto management of the offline store for caching, a simpler DOM based interface to interact with Smartsync SObject Model, and allows other polymer elements to easily comsume smartsync.
-
-	Supported attributes include:
-	- `sobject`: (Required) Type of sobject on which you want to fetch the record
-	- `recordid`: (Required) Id of the record that needs to be fetched.
-	- `fieldlist`: (Optional) Default: All fields. A list of fields that need to be fetched for the record.
-	- `autosync`: (Optional) Default: true. Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
-	- `mergemode`: (Optional) Default: "Overwrite". The merge model to use when saving record changes to salesforce.
-
-	Methods:
-	- `fetch`: Initiate the fetching of record data from the relevant data store (server/offline store).
-	- `save`: Initiate the saving of record data to the relevant data store (server/offline store).
-	- `destroy`: Initiate the deleting of record data from the relevant data store (server/offline store).
-
-	Properties:
-	- `fields`: Returns an object with map of all the sobject fields and corresponding values. Use this object to get/set the sobject field values.
-
-	Events:
-	- `save`: when the data has been successfully saved to the server.
-	- `sync`: when the data has been successfully synced with the server.
-	- `destroy`: when a record is deleted.
-	- `error`: when a request to remote server has failed.
-	- `invalid`: when the data validation fails on the client.
-
-	Example:
-
-	```
-	<force-sobject sobject="Account" recordid="001000000000AAA"></force-sobject>
-	```
-
-8. __force-sobject-store__: force-sobject-store element wraps the SmartSync `Force.StoreCache` into a polymer element. This element auto manages the lifecycle of the smartstore soup for each sobject type, auto creates index spec based on the lookup relationships on the sobject, provides a simpler DOM based interface to interact with Smartsync SObject Model and allows other polymer elements to easily comsume smartstore.
-
-	Supported attributes include:
-	- `sobject`: (Required) Type of sobject that you would like to store in this cache.
-	- `fieldstoindex`: (Optional) Addition fields (given by their name) that you want to have indexes on.
-
-	Properties:
-	- `cacheReady`: Returns a promise to track store cache creation progress.
-	- `cache`: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
-	- `cacheForOriginals`: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
-
-	Methods:
-	- `destroy`: Removes the soup from smartstore. Returns a promise to track the completion of process.
-
-	Events:
-	- `store-ready`: Fires this event when the store cache has been successfully created and ready to use.
-	- `store-destroy`: Fires this event when the store cache has been successfully removed.
-
-	Example:
-
-	```
-	<force-sobject-store sobject="Account"></force-sobject-store>
-	```
-
-9. __force-sobject-layout__: force-sobject-layout element provides the layout information for a particular sobject record. It wraps the `describeLayout` API call. The layout information is cached in memory for existing session and stored in smartstore for offline consumption. This object also provides a base definition for elements that depend on page layouts, such as force-ui-detail and force-sobject-related.
-
-	Supported attributes include:
-	- `sobject`: (Required) Type of sobject on which you want to fetch the layout
-	- `hasrecordtypes`: (Optional) Default: false. If false, the element returns the default layout. Set true if the sobject has recordtypes or if you are unsure. If set to true, "recordid" or "recordtypeid" must be provided.
-	- `recordtypeid`: (Optional) Default: null. Id of the record type for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordid" is not provided.
-	- `recordid`: (Optional) Default: null. Id of the record for which layout has to be fetched. Required if "hasrecordtypes" is true and "recordtypeid" is not provided.
-	
-	Methods:
-	- `whenDetailSections`: Initiate the fetching of layout's detail view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all detail sections.
-	- `whenEditSections`: Initiate the fetching of layout's edit view sections data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all edit sections.
-    - `whenRelatedLists`: Initiate the fetching of layout's related lists data from the relevant data store (server/offline store). Returns a promise, when complete, returns an array of all related list infos.
-
-	Example:
-
-	```
-	<force-sobject-layout sobject="Account"></force-sobject-layout>
-	```
-
-10. __force-sobject-relatedlists__: force-sobject-relatedlists element enables the rendering of related lists of a sobject record. It embeds the `force-sobject-layout` element to fetch the related lists configuraton from the page layout settings. a) Parses the related lists configuration for a particular sobject type, and b) If "recordid" attribute is provided, also generates a soql/cache query to fetch the related record items.
-
-    Supported attributes include:
-    - All attributes of force-sobject-layout
-    - `relationships`: (Optional) Default: null. A list of relationship names that should only be fetched. If null, it fetches all related lists that are queryable.
-
-    Properties:
-    - `relatedLists`: An array of all the related list information.
-
-    Example:
-
-	```
-	<force-sobject-relatedlists sobject="Account" recordid="001000000000AAA"></force-sobject-relatedlists>
-	```
-
-11. __force-selector-relatedlist__: force-selector-relatedlist element is an extension of `core-selector` element and fetches the records of related sobject using a `force-sobject-collection` element. This is a base element for UI element that needs to render the related list for a record and also needs the selector functionality.
-
-	Supported attributes include:
-	- `related`: (Required) Object instance of each related list item from the array obtained via force-sobject-relatedlists element. The object must contain the query and querytype properties to fetch the related items
-
-	Properties:
-	- `models`: Returns an array of all the related records. Each item is an object with properties "impl", "id" and "fieldValues". "impl" is the instance of the Force.SObject. "id" is the ID of the current record. "fieldValues" is an array containing field values in the column/field order on the related list.
-
-	Methods:
-	- `updateModels`: Updates the "models" property on the element based on the current set of models in the collection.
-
-	Example:
-
-	```
-	<force-selector-relatedlist related="{{related}}"></force-selector-relatedlist>
-	```
-
-12. __force-ui-relatedlist__: force-ui-relatedlist element is an extension of `force-selector-relatedlist` element and renders a list of related records to an sobject record. This element should always be a child of `force-ui-app` element to inherit the default styles.
-
-	Supported attributes include:
-    - All attributes of force-selector-relatedlist
-
-    Properties:
+    - `related`: (Required) Related list configuration obtained from `force-sobject-relatedlist`.
     - `selected`: Returns the value of "idfield" of the selected records.
 
     Example:
@@ -297,25 +259,6 @@ To create a mobile sdk app, run the following command. Make sure that the [force
 	```
 	<force-ui-relatedlist related="{{related}}"></force-ui-relatedlist>
 	```
-
-### Using these elements on a web page ###
-
-To initiate these elements to start fetching data from salesforce, you need setup a valid salesforce session information. To do so, you will need to call the `SFDC.launch()` method with `accessToken` and `instanceUrl` information of your salesforce org.
-
-Example:
-
-```
-<script>
-    document.addEventListener('WebComponentsReady', function() {
-        SFDC.launch({
-            accessToken: '<valid salesforce session id. Can be obtained via mobile sdk>',
-            instanceUrl: '<valid salesforce instance url or your salesforce org>'
-        });
-    });
-</script>
-```
-
-When using `force-signin` component for authentication, the component automatically calls `SFDC.launch` with the valid accesstoken and instanceurl after the authentication is complete.
 
 ## Third-party Code ##
 
@@ -352,7 +295,7 @@ Please check the JavaScript console to be sure of the error. You might not be ge
 
 
 ## Mobile UI Elements License ##
-Copyright (c) 2014, salesforce.com, inc. All rights reserved.
+Copyright (c) 2015, salesforce.com, inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

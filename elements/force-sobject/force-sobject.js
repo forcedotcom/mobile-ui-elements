@@ -111,7 +111,7 @@
             },
 
             /**
-             * Returns a map of fields to values for a specified record. Update this map before saving changes.
+             * Returns a map of fields to values for a specified record. Update this map to change SObject field values.
              *
              * @attribute fields
              * @type Object

@@ -50,7 +50,7 @@
             },
 
             /**
-             * An array of all the related list information.
+             * Returns an array of all the related list information.
              * 
              * @attribute relatedLists
              * @type Array
