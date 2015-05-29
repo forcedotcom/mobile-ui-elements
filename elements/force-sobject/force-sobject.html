@@ -14,20 +14,10 @@ Example:
 
 @group Salesforce Mobile Elements
 @element force-sobject
-    
-@events:
-    save: when the data has been successfully saved to the server.
-    sync: when the data has been successfully synced with the server.
-    destroy: when a record is deleted.
-    error: when a request to remote server has failed.
-    invalid: when the data validation fails on the client.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject-store/force-sobject-store.html">
 <dom-module id="force-sobject">
-    <template>
-        <force-sobject-store id="store" sobject="[[sobject]]"></force-sobject-store>
-    </template>
     <script src="force-sobject.js"></script>
 </dom-module>

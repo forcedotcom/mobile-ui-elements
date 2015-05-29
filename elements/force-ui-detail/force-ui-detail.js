@@ -2,6 +2,7 @@
 
     Polymer({
         is: 'force-ui-detail', 
+         
         properties: {
 
             /**

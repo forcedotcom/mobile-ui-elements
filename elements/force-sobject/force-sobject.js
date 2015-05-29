@@ -46,6 +46,37 @@
 
     Polymer({
         is: 'force-sobject', 
+
+        /**
+         * Fired when the data has been successfully saved to the server.
+         *
+         * @event save
+         */
+
+        /**
+         * Fired when the data has been successfully synced with the server.
+         *
+         * @event sync
+         */
+
+        /**
+         * Fired when a record is deleted successfully.
+         *
+         * @event destroy
+         */
+
+        /**
+         * Fired when a request to remote server has failed.
+         *
+         * @event error
+         */
+
+        /**
+         * Fired when the data validation fails on the client.
+         *
+         * @event invalid
+         */
+
         properties: {
             /**
              * (Required) Name of Salesforce sobject against which CRUD operations will be performed.
@@ -56,12 +87,15 @@
             sobject: String,
 
             /**
-             * (Required) Id of the record on which CRUD operations will be performed.
+             * (Optional) Id of the record on which read, update or delete operations will be performed.
              *
              * @attribute recordid
              * @type String
              */
-            recordid: String,
+            recordid: {
+                type: String,
+                value: null
+            },
 
             /**
              * (Optional) List of field names that need to be fetched for the record. 
@@ -109,6 +143,15 @@
                 type: String,
                 value: Force.MERGE_MODE.OVERWRITE
             },
+
+            /**
+             * (Optional) A Promise that returns an instance of force-sobject-store on cache ready completion.
+             * It is required to add offline capability to the component.
+             *
+             * @attribute cachePromise
+             * @type Object
+             */
+            cachePromise: Object,
 
             /**
              * Returns a map of fields to values for a specified record. Update this map to change SObject field values.
@@ -262,10 +305,13 @@
             if (this.sobject && typeof this.sobject === 'string') {
                 that._changedAttributes = [];
                 model = this._model = createModel(this.sobject);
-                model.cacheMode = this.cachemode;
-                model.fieldlist = processFieldlist(this.fieldlist);
-                model.set(model.idAttribute, this.recordid);
                 model.set({attributes: {type: this.sobject}});
+
+                // set other properties if available
+                if (this.recordid) model.set(model.idAttribute, this.recordid);
+                if (this.fieldlist) model.fieldlist = processFieldlist(this.fieldlist);
+                if (this.cachemode) model.cacheMode = this.cachemode;
+                
                 model.on('all', function(event) {
                     switch(event) {
                         case 'change':
@@ -286,12 +332,16 @@
         },
         // All CRUD operations should ensure that the model is ready by checking this promise.
         _whenModelReady: function() {
-            var model = this._model;
-            var store = this.$.store;
-            return $.when(store.cacheReady, SFDC.launcher)
+            var that = this;
+
+            return Promise.resolve(SFDC.launcher)
                 .then(function() {
-                    model.cache = store.cache;
-                    model.cacheForOriginals = store.cacheForOriginals;
+                    if (that.cachePromise) {
+                        return that.cachePromise.then(function(store) {
+                            that._model.cache = store.cache;
+                            that._model.cacheForOriginals = store.cacheForOriginals;
+                        });
+                    }
                 });
         },
         _updateCacheMode: function() {

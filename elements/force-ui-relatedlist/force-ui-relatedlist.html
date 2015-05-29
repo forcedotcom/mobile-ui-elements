@@ -22,7 +22,7 @@ Example:
 -->
 <dom-module id="force-sobject-relatedlists">
   <template>
-    <force-sobject-layout id="sobject_layout" sobject="[[sobject]]" recordid="[[recordid]]" hasrecordtypes="[[hasrecordtypes]]" recordtypeid="[[recordtypeid]]" on-layout-change="generateRelatedLists"></force-sobject-layout>
+    <force-sobject-layout id="sobject_layout" sobject="[[sobject]]" recordid="[[recordid]]" hasrecordtypes="[[hasrecordtypes]]" recordtypeid="[[recordtypeid]]" on-layout-ready="generateRelatedLists"></force-sobject-layout>
   </template>
   <script src="force-ui-relatedlist.js"></script>
 </dom-module>
@@ -41,7 +41,8 @@ Example:
 -->
 <dom-module id="force-ui-relatedlist">
   <template>
-    <force-sobject-collection id="force_sobjects" sobject="[[related.sobject]]" querytype="[[related.querytype]]" query="[[related.query]]" on-sync="_updateModels" autosync></force-sobject-collection>
+    <force-sobject-store sobject="[[related.sobject]]" cache-ready="{{cachePromise}}" autocreate></force-sobject-store>
+    <force-sobject-collection id="force_sobjects" sobject="[[related.sobject]]" querytype="[[related.querytype]]" query="[[related.query]]" cache-promise="[[cachePromise]]" on-sync="_updateModels" autosync></force-sobject-collection>
     <div id="table" class="table-view" style="display: none;">
       <div class="table-view-divider">[[related.label]]</div>
       <iron-selector id="selector" attr-for-selected="id" on-iron-select="_updateSelected">
@@ -60,6 +61,8 @@ Example:
     Polymer({
       is: 'force-ui-relatedlist',
       properties: {
+
+        cachePromise: Object,
 
         /**
          * (Required) Related list configuration obtained from force-sobject-relatedlist.
@@ -105,7 +108,7 @@ Example:
             return col.replace(new RegExp("^" + sobjectType + "\."), "");
           });
           for (var i in columns) {
-            fieldValuesAsArray.push(model.get(columns[i]));
+            fieldValuesAsArray.push(model.get(columns[i]) || "");
           }
           var wrappedModel = {
             impl: model,

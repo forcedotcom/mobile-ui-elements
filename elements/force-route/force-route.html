@@ -9,15 +9,17 @@ SFDC.RoutingBehavior provides a simple routing behavior based on Backbone JS rou
 To use this behavior, specify the path which should activate the component.
 
 @group Salesforce Mobile Elements
-    
-@events:
-    route-changed
 -->
 <script>
     SFDC.RoutingBehavior = (function() {
         var private_router;
         var pathParser = /(?::|\*)([^\/\(\)]*)/g;
         return {
+            /**
+             * Fired when the browser navigates to the path set for this behavior.
+             *
+             * @event route-changed
+             */
             properties: {
               /**
                * (Required) Path to a supported route

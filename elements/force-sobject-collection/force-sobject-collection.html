@@ -14,19 +14,11 @@ Example:
 
 @group Salesforce Mobile Elements
 @element force-sobject-collection
-    
-@events:
-    reset: when the collection's entire contents have been replaced.
-    sync: when the collection has been successfully synced with the server
-    error: when a request to remote server has failed.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
 <link rel="import" href="../force-sobject-store/force-sobject-store.html">
 <dom-module id="force-sobject-collection">
     <style> :host { display: none; } </style>
-    <template>
-        <force-sobject-store id="store" sobject="[[sobject]]"></force-sobject-store>
-    </template>
     <script src="force-sobject-collection.js"></script>
 </dom-module>

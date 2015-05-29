@@ -43,6 +43,16 @@
     }
     Polymer({
         is: 'force-sobject-layout', 
+
+
+@events:
+    
+        /**
+         * Fired when the layout information has been fetched for the specified object.
+         *
+         * @event layout-ready
+         */
+
         properties: {
     
             /**
@@ -109,7 +119,7 @@
             if (this.hasrecordtypes || this._sobject != this.sobject) {
                 this._sobject = this.sobject;
                 this._setLayout(null);
-                this.debounce("fetch-layout", this.fetch.bind(this));
+                this.debounce("fetch-layout", this.fetch);
             }
         },
 
@@ -126,7 +136,7 @@
                 .then(getLayoutInfo)
                 .then(function(layout) {
                     this._setLayout(layout);
-                    this.fire('layout-change');
+                    this.fire('layout-ready');
                 }.bind(this));
             }
         }

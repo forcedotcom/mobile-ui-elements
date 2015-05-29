@@ -15,7 +15,6 @@ describe('force-sobject', function() {
 
     beforeEach(function() {
         sobject = document.createElement('force-sobject');
-        sobject.autosync = false;
         origAjax = Force.forcetkClient.impl.ajax;
     });
 
@@ -26,16 +25,16 @@ describe('force-sobject', function() {
     describe('#model', function() {
         it('should be undefined when sobject type is not defined', function(){
             sobject.should.not.have.property('_model');
+            sobject.should.have.property('fields', null);
         });
-        it('should be defined when sobject type is defined', function(done) {
-            sobject.sobject = 'asdf';
-            sobject.async(function() {
-                sobject.should.have.property('_model');
-                done();
-            });
+        it('should be defined when sobject type and recordid are set', function() {
+            sobject.sobject = 'Account';
+            sobject.should.have.property('_model');
+            sobject.fields.should.not.be.null;
         });
         it('should have idAttribute as "Id" when standard sobject', function(done) {
             sobject.sobject = 'Account';
+            sobject.recordid = 'recordid';
             sobject.async(function() {
                 sobject._model.idAttribute.should.eql('Id');
                 done();
@@ -43,6 +42,7 @@ describe('force-sobject', function() {
         });
         it('should have idAttribute as "Id" when custom sobject', function(done) {
             sobject.sobject = 'Custom__c';
+            sobject.recordid = 'recordid';
             sobject.async(function() {
                 sobject._model.idAttribute.should.eql('Id');
                 done();
@@ -50,6 +50,7 @@ describe('force-sobject', function() {
         });
         it('should have idAttribute as "ExternalId" when external data sobject', function(done) {
             sobject.sobject = 'External__x';
+            sobject.recordid = 'recordid';
             sobject.async(function() {
                 sobject._model.idAttribute.should.eql('ExternalId');
                 done();
@@ -71,13 +72,13 @@ describe('force-sobject', function() {
 
     describe('#autosync', function() {
         it('should auto fetch data when sobject and recordid are set', function(done) {
+            sobject.autosync = true;
             sobject.sobject = 'account';
             sobject.recordid = '001000fakeid';
-            sobject.autosync = true;
             Force.forcetkClient.impl.ajax = function(path, callback, error) {
                 done();
             }
-            Platform.flush();
+            //Platform.flush();
         });
         it('should not auto fetch data when autosync is false', function(done) {
             sobject.sobject = 'account';

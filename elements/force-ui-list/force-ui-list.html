@@ -14,16 +14,14 @@ Example:
 
 @group Salesforce Mobile Elements
 @element force-sobject
-    
-@events:
-    sync: when the data has been successfully synced with the server.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-sobject-collection/force-sobject-collection.html">
 <link rel="import" href="../../dependencies/iron-selector/iron-selector.html">
 <dom-module id="force-ui-list">
   <template>
-      <force-sobject-collection id="listsource" sobject="[[sobject]]" querytype="[[querytype]]" query="[[query]]" autosync></force-sobject-collection>
+      <force-sobject-store sobject="[[sobject]]" cache-ready="{{cachePromise}}" autocreate></force-sobject-store>
+      <force-sobject-collection id="listsource" sobject="[[sobject]]" querytype="[[querytype]]" query="[[query]]" cache-promise="[[cachePromise]]" autosync></force-sobject-collection>
       <div class="table-view">
         <iron-selector id="selector" attr-for-selected="id" on-iron-select="_updateSelected">
         <template is="dom-repeat" items="[[viewModels]]">

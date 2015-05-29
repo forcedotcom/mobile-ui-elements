@@ -26,15 +26,6 @@
     // This can't be changed by the others to make sure the components don't break due to API changes.
     var SFDC_API_VERSION = 'v29.0';
 
-    SFDC.isOnline = function() {
-        // If we have cordova available, then use the bootstrap plugin to check network connection.
-        if (window.cordova) return cordova.require('com.salesforce.util.bootstrap').deviceIsOnline();
-        else return navigator.onLine ||
-               (typeof navigator.connection != 'undefined' &&
-               navigator.connection.type !== Connection.UNKNOWN &&
-               navigator.connection.type !== Connection.NONE);
-    }
-
     //SFDC.launch
     //TODO: Provide an auth provider as an argument so that the consumer can initiate fetch for new session tokens
     SFDC.launch = function(options, logLevel) {
@@ -44,6 +35,7 @@
 
             initialized = true;
             Force.init(options, SFDC_API_VERSION, null, authenticator(options.authProvider));
+            Force.setLogLevel(logLevel || "info")
 
             if (navigator.smartstore) {
                 navigator.smartstore.setLogLevel(logLevel || "info");
@@ -60,6 +52,21 @@
             Force.forcetkClient.impl.setSessionToken(options.accessToken, SFDC_API_VERSION, options.instanceUrl);
             readyDeferred.resolve();
         }
+    }
+
+    var bootstrapPlugin = null;
+    if (window.cordova) {
+        document.addEventListener('deviceready', function() { 
+            bootstrapPlugin = cordova.require('com.salesforce.util.bootstrap'); 
+        }, false);
+    }
+    SFDC.isOnline = function() {
+        // If we have cordova available, then use the bootstrap plugin to check network connection.
+        if (bootstrapPlugin) return bootstrapPlugin.deviceIsOnline();
+        else return navigator.onLine ||
+               (typeof navigator.connection != 'undefined' &&
+               navigator.connection.type !== Connection.UNKNOWN &&
+               navigator.connection.type !== Connection.NONE);
     }
 
     SFDC.cacheMode = function() {

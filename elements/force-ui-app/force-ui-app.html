@@ -15,10 +15,6 @@ Example:
 
 @group Salesforce Mobile Elements
 @element force-ui-app
-    
-@events:
-    navigation-start: Thrown before starting the navigation from one page to another.
-    navigation-end: Thrown after the navigation animation ends.
 -->
 <link rel="import" href="../../dependencies/polymer/polymer.html">
 <link rel="import" href="../force-app/force-app.html">
@@ -69,6 +65,19 @@ Example:
     (function() {
       Polymer({
         is: 'force-ui-app', 
+
+        /**
+         * Fired when starting the navigation from one page to another.
+         *
+         * @event navigation-start
+         */
+
+        /**
+         * Fired when the navigation animation ends.
+         *
+         * @event navigation-end
+         */
+
         properties: {
 
           /**

@@ -33,6 +33,25 @@ Example:
     <script>
         Polymer({
             is: 'force-signin', 
+
+            /**
+             * Fired when the OAuth flow is successfully completed and the accesstoken is obtained from salesforce.
+             *
+             * @event success
+             */
+
+             /**
+             * Fired when OAuth flow ends in an error.
+             *
+             * @event error
+             */
+
+             /**
+             * Fired when the device is offline and authentication cannot complete. The UI Elements are launched with empty session in that scenario.
+             *
+             * @event offline
+             */
+
             properties: {
                 /**
                  * Automatically trigger user authentication as soon as the component is ready. If accesstoken and instanceurl are set via attributes, OAuth will not trigger automatically.

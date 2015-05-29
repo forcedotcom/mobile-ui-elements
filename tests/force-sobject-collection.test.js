@@ -47,13 +47,12 @@ describe('force-sobject-collection', function() {
 
         describe('#autosync', function() {
             it('should auto fetch data when sobject and query options set', function(done) {
+                sobjectColl.autosync = true;
                 sobjectColl.sobject = 'account';
                 sobjectColl.querytype = 'mru';
-                sobjectColl.autosync = true;
                 Force.forcetkClient.impl.ajax = function(path, callback, error) {
                     done();
                 }
-                Platform.flush();
             });
             it('should not auto fetch data when autosync is false', function(done) {
                 sobjectColl.sobject = 'account';
@@ -165,10 +164,14 @@ describe('force-sobject-collection', function() {
                     }
                 }
                 sobjectColl.addEventListener('sync', function() {
-                    sobjectColl.collection.should.have.length(2);
-                    sobjectColl.collection.models[0].id.should.eql('mockid1');
-                    sobjectColl.collection.models[1].id.should.eql('mockid2');
-                    done();
+                    if (sobjectColl.collection.hasMore()) {
+                        sobjectColl.fetchMore();
+                    } else {
+                        sobjectColl.collection.should.have.length(2);
+                        sobjectColl.collection.models[0].id.should.eql('mockid1');
+                        sobjectColl.collection.models[1].id.should.eql('mockid2');
+                        done();
+                    }
                 });
                 sobjectColl.fetch();
             });
@@ -249,7 +252,7 @@ describe('force-sobject-collection', function() {
     describe('Offline', function() {
 
         var isOnline;
-        var sobjectColl;
+        var sobjectColl, store;
         var records = [
             {attributes: {type: 'account'}, Id:"007", Name:"JamesBond"},
             {attributes: {type: 'account'}, Id:"008", Name:"Agent008"},
@@ -268,10 +271,11 @@ describe('force-sobject-collection', function() {
 
         beforeEach(function(done) {
             sobjectColl = document.createElement('force-sobject-collection');
-            sobjectColl.sobject = 'account';
-            sobjectColl.autosync = false;
+            store = document.createElement('force-sobject-store');
+            store.autocreate = true;
 
-            var store = sobjectColl.$.store;
+            store.sobject = sobjectColl.sobject = 'account';
+            sobjectColl.cachePromise = store.cacheReady;
 
             store.cacheReady.then(function() {
                 return store.cache.saveAll(records);
@@ -281,7 +285,7 @@ describe('force-sobject-collection', function() {
         });
 
         afterEach(function(done) {
-            sobjectColl.$.store.destroy().then(function() {
+            store.destroy().then(function() {
                 done();
             });
         });

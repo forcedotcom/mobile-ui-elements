@@ -3,6 +3,7 @@ describe('force-sobject-store', function() {
 
     beforeEach(function() {
         sobjectStore = document.createElement('force-sobject-store');
+        sobjectStore.autocreate = true;
         SFDC.launch({
             accessToken: 'mock_token',
             instanceUrl: 'https://mock.salesforce.com'
@@ -11,7 +12,7 @@ describe('force-sobject-store', function() {
 
     describe('#cache', function() {
         it('all caches should be undefined when sobject type is not defined', function() {
-            sobjectStore.should.have.property('cacheReady', undefined);
+            sobjectStore.cacheReady.should.exist;
             sobjectStore.should.have.property('cache', undefined);
             sobjectStore.should.have.property('cacheForOriginals', undefined);
         });
@@ -32,7 +33,6 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
-            Platform.flush();
         });
         it('should have ExternalId as keyField when sobject type is External Data object', function(done) {
             sobjectStore.sobject = 'Mock__x';
@@ -44,7 +44,6 @@ describe('force-sobject-store', function() {
                 sobjectStore.cache.keyField.should.eql('ExternalId');
                 done();
             });
-            Platform.flush();
         });
         it('should have additional indices for all sobject parent relationships', function(done) {
             sobjectStore.sobject = 'MockSObject1';
@@ -71,7 +70,6 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
-            Platform.flush();
         });
         it('should have additional indices for additional fieldstoindex', function(done) {
             sobjectStore.sobject = 'MockSObject2';
@@ -99,7 +97,6 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
-            Platform.flush();
         });
         it('should not create index for non-existing fields in fieldstoindex', function(done) {
             sobjectStore.sobject = 'MockSObject3';
@@ -121,7 +118,6 @@ describe('force-sobject-store', function() {
                 });
                 done();
             });
-            Platform.flush();
         });
     });
 });

@@ -102,9 +102,11 @@ To create a mobile sdk app, run the following command. Make sure that the [force
     - `querytype`: (Optional) Default: mru. Type of query (mru, soql, sosl, cache). Required if query attribute is specified.
     - `autosync`: (Optional) Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
     - `maxsize`: (Optional) Default: -1. If positive, limits the maximum number of records fetched.
+    - `cachePromise`: (Optional) A Promise that returns an instance of force-sobject-store on cache ready completion. It is required to add offline capability to the component.
 
     Methods:
     - `fetch`: Initiates the fetching of records from the relevant data store (server/offline store).
+    - `fetchMore`: Initiates the fetching of more records if there's an available cursor and the collection size is less than maxsize.
     - `reset`: Replaces all the existing contents of the collection and initiates autosync if enabled.
 
     Events:
@@ -122,11 +124,12 @@ To create a mobile sdk app, run the following command. Make sure that the [force
 
     Supported attributes include:
     - `sobject`: (Required) Name of Salesforce sobject against which CRUD operations will be performed.
-    - `recordid`: (Required) Id of the record on which CRUD operations will be performed.
+    - `recordid`: (Optional) Id of the record on which read, update or delete operations will be performed.
     - `fieldlist`: (Optional) Default: All fields. List of field names that need to be fetched for the record. Provide a space delimited list. Also the field names are case sensitive.
     - `autosync`: (Optional) Auto synchronize (fetch/save) changes to the model with the remote server/local store. If false, use fetch/save methods to commit changes to server or local store.
     - `cachemode`: (Optional) Default `SFDC.cacheMode()`. The cache mode (server-first, server-only, cache-first, cache-only) to use during CRUD operations.
     - `mergemode`: (Optional) Default `Force.MERGE_MODE.OVERWRITE`. The merge model to use when saving record changes to salesforce.
+    - `cachePromise`: (Optional) A Promise that returns an instance of force-sobject-store on cache ready completion. It is required to add offline capability to the component.
     - `fields`: Returns a map of fields to values for a specified record. Update this map to change SObject field values.
 
     Methods:
@@ -151,7 +154,8 @@ To create a mobile sdk app, run the following command. Make sure that the [force
 
     Supported attributes include:
     - `sobject`: (Required) Type of sobject that you would like to store in this cache.
-    - `fieldstoindex`: (Optional) Addition fields (given by their name) that you want to have indexes on.
+    - `fieldstoindex`: (Optional) Additional fields (given by their name) that must be indexed on the soup.
+    - `autocreate`: (Optional) Auto create the soup once required fields are set.
     - `cacheReady`: Returns a promise to track store cache creation progress.
     - `cache`: Returns an instance of Force.StoreCache when it's ready to store/retrieve data.
     - `cacheForOriginals`: Returns an instance of Force.StoreCache to be used to keep data copy for conflict resolution.
