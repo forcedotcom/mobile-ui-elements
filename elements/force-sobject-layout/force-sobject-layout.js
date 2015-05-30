@@ -43,10 +43,7 @@
     }
     Polymer({
         is: 'force-sobject-layout', 
-
-
-@events:
-    
+        
         /**
          * Fired when the layout information has been fetched for the specified object.
          *
