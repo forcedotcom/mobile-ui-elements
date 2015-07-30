@@ -18,15 +18,18 @@ var server = require('http').createServer(function(req, res) {
   var endpoint = req.headers['salesforceproxy-endpoint'];
   var target = 'http://localhost:8000';
 
-  if (endpoint) {
+  if (endpoint && endpoint.length) {
     var auth = req.headers['x-authorization'];
     if (auth) req.headers['Authorization'] = auth;
-    // http-proxy module uses the url path to generate the path of new outgoing request
-    req.url = endpoint;
     
     // Building the target host url from the endpoint information.
     var targetURL = url.parse(endpoint);
     target = targetURL.protocol + "//" + targetURL.host;
+
+    // http-proxy module uses the url path to generate the path of new outgoing request
+    req.url = endpoint;
+    // Also set the host header to match the request host. HTTPS cert verification validates this for "secure: true"
+    req.headers['host'] = targetURL.host;
   }
 
   proxy.web(req, res, { target: target });
