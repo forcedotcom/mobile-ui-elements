@@ -1,0 +1,94 @@
+<!--
+    force-ui-search element
+    @attributes:
+    sobject: (Required) Type of sobject that you want to be searching on.
+    searchfields: (Required) Field you want to be searching by.
+    fieldstofetch:
+-->
+<!-- TBD: Improve query update process to chunk the changes and minimize the server calls -->
+<link rel="import" href="../force-sobject-store/force-sobject-store.html">
+<link rel="import" href="../../dependencies/paper-input/paper-input.html">
+<dom-module id="force-ui-search">
+  <template>
+      <paper-input id="input" label="Search" class="search-key" value="{{criteria}}" style="width:100%" focused="{{inputFocused}}"></paper-input>
+      <force-sobject-store id="store" sobject="{{sobject}}" fieldstoindex="{{searchfields}}"></force-sobject-store>
+  </template>
+  <script>
+    Polymer({
+        is: 'force-ui-search', 
+        properties: {
+          sobject: String,
+          fieldstofetch: String,
+          searchfields: {
+            type: String, 
+            value: "Name"
+          },
+          criteria: {
+            type: String, 
+            value: "",
+            observer: "criteriaChanged"
+          },
+          querytype: {
+            type: String, 
+            value: "soql",
+            notify: true
+          },
+          query: {
+            type: String,
+            notify: true
+          },
+          cachemode: {
+            type: String, 
+            value: Force.CACHE_MODE.SERVER_FIRST
+          },
+          inputFocused: Boolean
+        },
+        observers: [
+          "blurAction(inputFocused)",
+          "computeQuery(sobject)"
+        ],
+        ready: function() {
+          if(this.sobject) this.computeQuery();
+        },
+        focusAction: function(e) {
+          this.$.input.downAction(e);
+          this.$.input.upAction(e);
+        },
+        blurAction: function() {
+          if (!this.$.input.focused) this.fire('blur');
+        },
+        get storeName() {
+          if (this.$ && this.$.store.cache) return this.$.store.cache.soupName;
+          return this.sobject.toLowerCase();
+        },
+        criteriaChanged: function() {
+          if (this._searchtimeout) clearTimeout(this._searchtimeout);
+          this._searchtimeout = setTimeout(this.computeQuery.bind(this), 300);
+        },
+        computeQuery: function() {
+            var searchFields = this.searchfields.trim().split(/\s+/);
+            var fieldsToFetch = this.fieldstofetch ? this.fieldstofetch.trim().split(/\s+/) : [];
+            fieldsToFetch = _.union(searchFields, fieldsToFetch);
+            var query, querytype;
+            if (SFDC.isOnline() && this.cachemode == Force.CACHE_MODE.SERVER_FIRST) {
+                for (var idx in searchFields) searchFields[idx] = searchFields[idx] + " LIKE '" + this.criteria + "%'";
+                querytype = "soql";
+                query = "SELECT Id, " + fieldsToFetch.join(',') + " FROM " + this.sobject + " WHERE " + searchFields.join(" OR ");
+            }
+            else {
+                for (var idx in searchFields) 
+                  searchFields[idx] = "{" + this.storeName + ":" + searchFields[idx] + "} LIKE '" + this.criteria + "%'";
+                var filterClause;
+                if (window.cordova && !cordova.interceptExec) filterClause = searchFields.join(" OR ");
+                else filterClause = searchFields[0]; // Mockstore only supports single search field in smartsql.
+                querytype = "cache";
+                query = {queryType:"smart", smartSql:"SELECT {" + this.storeName + ":_soup} FROM {" + this.storeName + "} WHERE " + filterClause, pageSize: 100};
+            }
+            if (querytype != this.querytype || !_.isEqual(this.query, query)) {
+                this.querytype = querytype;
+                this.query = query;
+            }
+        }
+    });
+  </script>
+</dom-module>

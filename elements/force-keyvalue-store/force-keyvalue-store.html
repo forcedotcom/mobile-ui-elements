@@ -1,0 +1,43 @@
+<link rel="import" href="../../dependencies/polymer/polymer.html">
+<link rel="import" href="../force-app/force-app.html">
+<dom-module id="force-keyvalue-store">
+    <script>
+    	(function() {
+    		Polymer({
+                is: 'force-keyvalue-store', 
+                properties: {
+    				storename: String,
+    				key: String,
+    				value: {
+                        type: Object,
+                        value: null,
+                        notify: true
+                    },
+    				usedefault: {
+                        type: Boolean,
+                        value: true
+                    }
+    			},
+				observers: ["sync(storename, key, value)"],
+				sync: function() {
+					var that = this;
+					var smartstore = navigator.smartstore;
+					var storename = (this.usedefault) ? '__FORCE_KEYVALUE_STORE__' : this.storename;
+					if (smartstore && storename && this.key) {
+    					var dataStore = new Force.StoreCache(storename, null, 'Id');
+    					SFDC.launcher.then(dataStore.init.bind(dataStore)).then(function() {
+    						if (that.value) {
+    							var val = { 'Id' : that.key, value: that.value };
+    							dataStore.save(val, true);
+    						} else {
+    							dataStore.retrieve(that.key).then(function(res) {
+    								if (res) that.value = res.value;
+    							});
+    						}
+    					});
+    				}
+				}
+    		});
+    	})();
+    </script>
+</dom-module>

@@ -158,7 +158,12 @@
          * @method save
          */
         save: function(options) {
-
+            var timingtag = Date.now() + ':force-sobject:save:' + this.id;
+            console.time(timingtag);
+            console.log(timingtag);
+            console.log(JSON.stringify(this.fields));
+            console.trace();
+            
             var operation = function() {
                 var that = this,
                     model = that._model,

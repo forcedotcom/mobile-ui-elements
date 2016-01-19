@@ -1,0 +1,10 @@
+<link rel="import" href="../../dependencies/polymer/polymer.html">
+<link rel="import" href="../force-app/force-app.html">
+<link rel="import" href="../force-sobject-store/force-sobject-store.html">
+<dom-module id="force-sobject-sync">
+    <template>
+    	<!-- TBD: Figure out how to disable store cache for original --> 
+        <force-sobject-store id="store" sobject="{{sobject}}" fieldstoindex="{{fieldstoindex}}"></force-sobject-store>
+    </template>
+    <script src="force-sobject-sync.js"></script>
+</dom-module>
