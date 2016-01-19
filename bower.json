@@ -8,11 +8,16 @@
     "underscore": "latest",
     "backbone": "latest",
     "mobilesdk-shared": "forcedotcom/SalesforceMobileSDK-Shared#unstable",
-    "ratchet": "twbs/ratchet#>=2.0.2"
+    "ratchet": "twbs/ratchet#>=2.0.2",
+    "paper-elements": "PolymerElements/paper-elements#>=1.0.0",
+    "layout": "Polymer/layout"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
     "should": "~3.3.1",
     "iron-icons": "PolymerElements/iron-icons#>=0.8.0"
+  },
+  "resolutions": {
+    "polymer": "^1.2.1"
   }
 }
