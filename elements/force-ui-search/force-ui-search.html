@@ -1,5 +1,6 @@
 <!--
     force-ui-search element
+
     @attributes:
     sobject: (Required) Type of sobject that you want to be searching on.
     searchfields: (Required) Field you want to be searching by.
@@ -10,8 +11,8 @@
 <link rel="import" href="../../dependencies/paper-input/paper-input.html">
 <dom-module id="force-ui-search">
   <template>
-      <paper-input id="input" label="Search" class="search-key" value="{{criteria}}" style="width:100%" focused="{{inputFocused}}"></paper-input>
-      <force-sobject-store id="store" sobject="{{sobject}}" fieldstoindex="{{searchfields}}"></force-sobject-store>
+      <paper-input id="input" label="Search" class="search-key" inputValue="{{criteria}}" style="width:100%" focused="{{inputFocused}}"></paper-input>
+      <force-sobject-store id="search_store" sobject="{{sobject}}" fieldstoindex="{{searchfields}}"></force-sobject-store>
   </template>
   <script>
     Polymer({
@@ -58,7 +59,7 @@
           if (!this.$.input.focused) this.fire('blur');
         },
         get storeName() {
-          if (this.$ && this.$.store.cache) return this.$.store.cache.soupName;
+          if (this.$ && this.$.search_store.cache) return this.$.search_store.cache.soupName;
           return this.sobject.toLowerCase();
         },
         criteriaChanged: function() {
@@ -69,7 +70,9 @@
             var searchFields = this.searchfields.trim().split(/\s+/);
             var fieldsToFetch = this.fieldstofetch ? this.fieldstofetch.trim().split(/\s+/) : [];
             fieldsToFetch = _.union(searchFields, fieldsToFetch);
+
             var query, querytype;
+
             if (SFDC.isOnline() && this.cachemode == Force.CACHE_MODE.SERVER_FIRST) {
                 for (var idx in searchFields) searchFields[idx] = searchFields[idx] + " LIKE '" + this.criteria + "%'";
                 querytype = "soql";
@@ -78,12 +81,15 @@
             else {
                 for (var idx in searchFields) 
                   searchFields[idx] = "{" + this.storeName + ":" + searchFields[idx] + "} LIKE '" + this.criteria + "%'";
+
                 var filterClause;
                 if (window.cordova && !cordova.interceptExec) filterClause = searchFields.join(" OR ");
                 else filterClause = searchFields[0]; // Mockstore only supports single search field in smartsql.
+
                 querytype = "cache";
                 query = {queryType:"smart", smartSql:"SELECT {" + this.storeName + ":_soup} FROM {" + this.storeName + "} WHERE " + filterClause, pageSize: 100};
             }
+
             if (querytype != this.querytype || !_.isEqual(this.query, query)) {
                 this.querytype = querytype;
                 this.query = query;

@@ -18,7 +18,7 @@
             document.addEventListener('sync', this.syncEvent.bind(this));
         },
         fetch: function() {
-            var store = this.$.store;
+            var store = this.$.sync_store;
             var that = this;
             if (SFDC.isOnline() && this.sobject && this.query) {
                 $.when(store.cacheReady, SFDC.launcher)

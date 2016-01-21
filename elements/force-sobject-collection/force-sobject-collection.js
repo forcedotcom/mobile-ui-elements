@@ -86,8 +86,36 @@
     //TBD: Make collection a private property. Then expose sobjects property which contains the array of models wrapped into SObjectViewModel.
     Polymer({
         is: 'force-sobject-collection', 
+
+        /**
+         * Fired when the collection's entire contents have been replaced.
+         *
+         * @event reset
+         */
+
+        /**
+         * Fired when the data has been successfully synced with the server.
+         *
+         * @event sync
+         */
+
+        /**
+         * Fired when a request to remote server has failed.
+         *
+         * @event error
+         */
+
         properties: _.extend({
 
+            /**
+             * (Optional) A Promise that returns an instance of force-sobject-store on cache ready completion.
+             * It is required to add offline capability to the component.
+             *
+             * @attribute cachePromise
+             * @type Object
+             */
+            cachePromise: Object,
+            
             /**
              * Returns an instance of Force.SObjectCollection containing the list of records fetched by the query.
              *
@@ -101,13 +129,14 @@
                     collection.on('all', function(event) {
                         this.fire(event);
                     }.bind(this));
+                    this.resetCount = 0;
                     return collection;
                 },
                 notify: true
             }
         }, viewProps),
         observers: [
-            "reset(sobject, query, querytype)"
+            'reset(sobject, query, querytype, collection)'
         ],
         
         /**
@@ -115,10 +144,26 @@
          *
          * @method reset
          */
-        reset: function() {
+        reset: function(sobject, query, querytype, collection) {
             this.collection.config = generateConfig(_.pick(this, _.keys(viewProps)));
             this.collection.reset();
+            this.resetCount++;
             if (this.autosync) this.fetch();
+        },
+        
+        /**
+         * Initiates the fetching of more records if there's an available cursor and the collection size is less than maxsize.
+         *
+         * @method fetchMore
+         */
+        fetchMore: function() {
+            var that = this;
+            if ((this.maxsize < 0 || this.maxsize > this.collection.size())
+                && this.collection.hasMore()) 
+                return this.collection.getMore()
+                    .then(function() {
+                        that.fire('sync');
+                    });
         },
 
         /**
@@ -127,27 +172,42 @@
          * @method fetch
          */
         fetch: function() {
+            var collection = this.collection;
+            var resetCount = this.resetCount; // captured for closure below
 
             var onFetch = function() {
-                if ((this.maxsize < 0 || this.maxsize > this.collection.length)
-                    && this.collection.hasMore())
-                    this.collection.getMore().then(onFetch);
+                if (this.resetCount > resetCount) {
+                    // This is an old query -- ignore
+                    return;
+                }
+
+                if (collection.length == 0) {
+                    // Nothing came back 
+                    return;
+                }
             }.bind(this);
 
             var operation = function() {
-                var collection = this.collection;
-                var store = this.$.store;
-
+                var that = this;
+                
                 if (collection.config) {
                     // Define the collection model type. Set the idAttribute to 'ExternalId' if sobject is external object.
                     collection.model = Force.SObject.extend({
-                        idAttribute: this.sobject.toLowerCase().search(/__x$/) > 0 ? 'ExternalId' : 'Id'
+                        idAttribute: that.sobject.toLowerCase().search(/__x$/) > 0 ? 'ExternalId' : 'Id'
                     });
-                    $.when(store.cacheReady, SFDC.launcher)
-                    .done(function() {
-                        collection.cache = store.cache;
-                        collection.cacheForOriginals = store.cacheForOriginals;
-                        collection.fetch({ reset: true, success: onFetch });
+                    
+                    var promise = Promise.resolve(SFDC.launcher)
+                        .then(function() {
+                            if (that.cachePromise) {
+                                return that.cachePromise.then(function(store) {
+                                    collection.cache = store.cache;
+                                    collection.cacheForOriginals = store.cacheForOriginals;
+                                });
+                            }
+                        });
+
+                    promise.then(function() {
+                        collection.fetch({ reset: true, success: onFetch, mergeMode: 'overwrite' });
                     });
                 }
             }.bind(this);
