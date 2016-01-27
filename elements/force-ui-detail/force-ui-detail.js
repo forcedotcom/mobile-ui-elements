@@ -170,7 +170,7 @@
     var describeField = function(sobject, fieldname) {
         var sobjectType = SFDC.getSObjectType(sobject);
         // split the field path to get the base reference. eg. for field Owner.Name
-        var fieldPathParts = Path.get(fieldname);
+        //var fieldPathParts = Path.get(fieldname);
 
         var fieldPicker = function(describeInfo) {
             var fieldInfos = describeInfo.fields;

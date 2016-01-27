@@ -207,7 +207,7 @@
                         });
 
                     promise.then(function() {
-                        collection.fetch({ reset: true, success: onFetch, mergeMode: 'overwrite' });
+                        collection.fetch({ reset: true, success: onFetch });
                     });
                 }
             }.bind(this);
