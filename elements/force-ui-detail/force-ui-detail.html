@@ -53,3 +53,17 @@ Example:
     })
   </script>
 </dom-module>
+<dom-module id="force-paper-input" extends="paper-input">
+  <template>
+    <shadow></shadow>
+  </template>
+  <script type="text/javascript">
+    Polymer({
+      is: 'force-paper-input',
+      invalidChanged: function() {
+        if (this.invalid) this.classList.add('invalid');
+        else this.classList.remove('invalid');
+      }
+    })
+  </script>
+</dom-module>
