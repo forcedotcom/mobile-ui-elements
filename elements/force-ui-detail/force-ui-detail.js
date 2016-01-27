@@ -175,19 +175,19 @@
         var fieldPicker = function(describeInfo) {
             var fieldInfos = describeInfo.fields;
             // if relationship path, i.e. more than 1 parts after split
-            if (fieldPathParts.length > 1) {
+            //if (fieldPathParts.length > 1) {
                 // Find the corresponding relationship field.
-                var propFilter = {relationshipName: fieldPathParts[0]};
-                var referenceField = _.findWhere(fieldInfos, propFilter);
+            //    var propFilter = {relationshipName: fieldPathParts[0]};
+            //    var referenceField = _.findWhere(fieldInfos, propFilter);
                 // If the referenceField is found, then get the field info for rest of the path
-                if (referenceField) {
-                    return describeField(referenceField.referenceTo[0],
-                        fieldPathParts.slice(1).join('.'));
-                }
-            } else {
-                var propFilter = {name: fieldPathParts[0]};
+                //if (referenceField) {
+                //    return describeField(referenceField.referenceTo[0],
+                //        fieldPathParts.slice(1).join('.'));
+                //}
+            //} else {
+                var propFilter = {name: fieldname};
                 return _.findWhere(fieldInfos, propFilter);
-            }
+            //}
         }
 
         return sobjectType.describe().then(fieldPicker);
