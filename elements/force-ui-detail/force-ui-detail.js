@@ -417,8 +417,9 @@
     */
     //TBD: Allow way to hide empty values
     //TBD: Allow way to show selective field types
-    var compileTemplateForLayout = function(layoutSections) {
+    var compileTemplateForLayout = function(layoutSections, model) {
 
+        var view = this;
         // Utility method to return input element type for a corresponding salesforce field type.
         var inputType = function(fieldType) {
             switch(fieldType) {
@@ -454,7 +455,7 @@
                 } else if (fieldType == 'textarea')
                     html += ('<input type="textarea" value="{{' + displayField + '::change}}"/>');
                 else
-                    html += ('<input value="{{' + displayField + '::change}}" type="' + inputType(fieldType) + '" maxlength="' + fieldInfo.length + '"/>');
+                    html += ('<paper-input label="' + fieldName + '" floatingLabel value="{{' + displayField + '}}" type="' + inputType(fieldType) + '" maxlength="' + fieldInfo.length + '" error="{{__errors__.' + fieldName + '}}" invalid?="{{__errors__.' + fieldName + '}}"></paper-input>');
             }
             else {
                 if (fieldType == 'boolean')
